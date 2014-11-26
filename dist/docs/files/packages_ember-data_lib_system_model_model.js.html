@@ -165,8 +165,8 @@ var retrieveFromCurrentState = Ember.computed(&#x27;currentState&#x27;, function
   return get(get(this, &#x27;currentState&#x27;), key);
 }).readOnly();
 
-var _extractPivotNameCache = Object.create(null);
-var _splitOnDotCache = Object.create(null);
+var _extractPivotNameCache = Ember.create(null);
+var _splitOnDotCache = Ember.create(null);
 
 function splitOnDot(name) {
   return _splitOnDotCache[name] || (
@@ -611,7 +611,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
       would have a implicit post relationship in order to be do things like remove ourselves from the post
       when we are deleted
     */
-    this._implicitRelationships = Object.create(null);
+    this._implicitRelationships = Ember.create(null);
     var model = this;
     //TODO Move into a getter for better perf
     this.constructor.eachRelationship(function(key, descriptor) {
@@ -906,6 +906,20 @@ var Model = Ember.Object.extend(Ember.Evented, {
   },
 
   /**
+    @method _notifyProperties
+    @private
+  */
+  _notifyProperties: function(keys) {
+    Ember.beginPropertyChanges();
+    var key;
+    for (var i = 0, length = keys.length; i &lt; length; i++){
+      key = keys[i];
+      this.notifyPropertyChange(key);
+    }
+    Ember.endPropertyChanges();
+  },
+
+  /**
     Returns an object, whose keys are changed properties, and value is
     an [oldProp, newProp] array.
 
@@ -970,7 +984,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
 
     if (!data) { return; }
 
-    this.notifyPropertyChange(&#x27;data&#x27;);
+    this._notifyProperties(Ember.keys(data));
   },
 
   /**
@@ -1003,15 +1017,17 @@ var Model = Ember.Object.extend(Ember.Evented, {
       the existing data, not replace it.
   */
   setupData: function(data, partial) {
+    Ember.assert(&quot;Expected an object as &#x60;data&#x60; in &#x60;setupData&#x60;&quot;, Ember.typeOf(data) === &#x27;object&#x27;);
+
     if (partial) {
       Ember.merge(this._data, data);
     } else {
       this._data = data;
     }
 
-    if (data) { this.pushedData(); }
+    this.pushedData();
 
-    this.notifyPropertyChange(&#x27;data&#x27;);
+    this._notifyProperties(Ember.keys(data));
   },
 
   materializeId: function(id) {
@@ -1058,13 +1074,18 @@ var Model = Ember.Object.extend(Ember.Evented, {
       this.reconnectRelationships();
     }
 
+    if (get(this, &#x27;isNew&#x27;)) {
+      this.clearRelationships();
+    }
+
     if (!get(this, &#x27;isValid&#x27;)) {
       this._inFlightAttributes = {};
     }
 
     this.send(&#x27;rolledBack&#x27;);
 
-    this.notifyPropertyChange(&#x27;data&#x27;);
+    this._notifyProperties(Ember.keys(this._data));
+
   },
 
   toStringExtension: function() {
@@ -1115,7 +1136,9 @@ var Model = Ember.Object.extend(Ember.Evented, {
     App.ModelViewRoute = Ember.Route.extend({
       actions: {
         reload: function() {
-          this.controller.get(&#x27;model&#x27;).reload();
+          this.controller.get(&#x27;model&#x27;).reload().then(function(model) {
+            // do something with the reloaded model
+          });
         }
       }
     });

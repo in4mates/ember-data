@@ -251,6 +251,13 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_extractErrors">extractErrors</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_extractFind">extractFind</a>
 
                                 
@@ -343,6 +350,13 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
                         
                             <li class="index-item method private">
                                 <a href="#method_normalizeAttributes">normalizeAttributes</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_normalizeErrors">normalizeErrors</a>
 
                                 
                                 
@@ -511,7 +525,7 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l290"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:290</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l300"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:300</code></a>
         
         </p>
 
@@ -620,7 +634,7 @@ can be serialized</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l263"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:263</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l273"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:273</code></a>
         
         </p>
 
@@ -885,7 +899,7 @@ serializer&#39;s <code>normalize</code> method.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l678"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:678</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l688"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:688</code></a>
         
         </p>
 
@@ -1091,7 +1105,7 @@ socket.on(&#39;message&#39;, function(message) {
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l910"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:910</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l920"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:920</code></a>
         
         </p>
 
@@ -1290,7 +1304,7 @@ returned from the adapter.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l782"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:782</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l792"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:792</code></a>
         
         </p>
 
@@ -1482,7 +1496,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l814"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:814</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l824"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:824</code></a>
         
         </p>
 
@@ -1604,6 +1618,188 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 </div>
 
                 
+                    <div id="method_extractErrors" class="method item">
+    <h3 class="name"><code>extractErrors</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>store</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>payload</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Object</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l983"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:983</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><code>extractErrors</code> is used to extract model errors when a call is made
+to <code>DS.Model#save</code> which fails with an InvalidError<code>. By default
+Ember Data expects error information to be located on the</code>errors`
+property of the payload object.</p>
+<p>Example</p>
+<pre class="code prettyprint"><code class="lang-javascript">App.PostSerializer = DS.JSONSerializer.extend({
+  extractErrors: function(store, type, payload, id) {
+    if (payload &amp;&amp; typeof payload === &#39;object&#39; &amp;&amp; payload._problems) {
+      payload = payload._problems;
+      this.normalizeErrors(type, payload);
+    }
+    return payload;
+  }
+});</code></pre>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">store</code>
+                        <span class="type"><a href="../classes/DS.Store.html" class="crosslink">DS.Store</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">subclass of DS.Model</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">payload</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">String or Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Object</span>:
+                    
+                    <p>json The deserialized errors</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_extractFind" class="method item">
     <h3 class="name"><code>extractFind</code></h3>
 
@@ -1674,7 +1870,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l831"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:831</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l841"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:841</code></a>
         
         </p>
 
@@ -1866,7 +2062,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l717"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:717</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l727"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:727</code></a>
         
         </p>
 
@@ -2058,7 +2254,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l847"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:847</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l857"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:857</code></a>
         
         </p>
 
@@ -2250,7 +2446,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l765"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:765</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l775"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:775</code></a>
         
         </p>
 
@@ -2442,7 +2638,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l749"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:749</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l759"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:759</code></a>
         
         </p>
 
@@ -2634,7 +2830,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l733"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:733</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l743"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:743</code></a>
         
         </p>
 
@@ -2810,7 +3006,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l943"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:943</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l953"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:953</code></a>
         
         </p>
 
@@ -2967,7 +3163,7 @@ be located on the <code>meta</code> property of the payload object.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l863"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:863</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l873"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:873</code></a>
         
         </p>
 
@@ -3159,7 +3355,7 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l880"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:880</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l890"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:890</code></a>
         
         </p>
 
@@ -3359,7 +3555,7 @@ from the adapter.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l798"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:798</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l808"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:808</code></a>
         
         </p>
 
@@ -3527,7 +3723,7 @@ for <a href="#method_extractSave">extractSave</a>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l973"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:973</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l1018"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:1018</code></a>
         
         </p>
 
@@ -3646,7 +3842,7 @@ attribute name in your model to a key in your JSON.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l995"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:995</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l1040"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:1040</code></a>
         
         </p>
 
@@ -3911,6 +4107,62 @@ or other general-purpose normalizations.</p>
         
         
         <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l192"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:192</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_normalizeErrors" class="method item private">
+    <h3 class="name"><code>normalizeErrors</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l263"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:263</code></a>
         
         </p>
 
@@ -4267,7 +4519,7 @@ represent single records or an array.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l306"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:306</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l316"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:316</code></a>
         
         </p>
 
@@ -4503,7 +4755,7 @@ JSON.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l503"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:503</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l513"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:513</code></a>
         
         </p>
 
@@ -4658,7 +4910,7 @@ write:</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l548"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:548</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l558"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:558</code></a>
         
         </p>
 
@@ -4801,7 +5053,7 @@ properties are serialized.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l599"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:599</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l609"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:609</code></a>
         
         </p>
 
@@ -4949,7 +5201,7 @@ properties are serialized.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l475"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:475</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l485"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:485</code></a>
         
         </p>
 
@@ -5105,7 +5357,7 @@ Otherwise you can override this method to customize how the record is added to t
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l645"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:645</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l655"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:655</code></a>
         
         </p>
 
@@ -5252,7 +5504,7 @@ serialized. Objects are considered to be polymorphic if
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l1022"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:1022</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_json_serializer.js.html#l1067"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:1067</code></a>
         
         </p>
 

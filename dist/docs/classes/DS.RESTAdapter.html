@@ -369,15 +369,15 @@ be recomputed with every request.</p>
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_ajaxError">ajaxError</a>
+                            <li class="index-item method private">
+                                <a href="#method_ajaxOptions">ajaxOptions</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_ajaxOptions">ajaxOptions</a>
+                            <li class="index-item method">
+                                <a href="#method_ajaxSuccess">ajaxSuccess</a>
 
                                 
                                 
@@ -607,7 +607,7 @@ be recomputed with every request.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l768"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:768</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l780"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:780</code></a>
         
         </p>
 
@@ -726,146 +726,6 @@ data is the serialized record in the case of a save.</li>
             
                 <li class="arg">
                     
-                        <code>jsonPayload</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Object</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l742"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:742</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Takes an ajax response, and returns the json payload.</p>
-<p>By default this hook just returns the jsonPayload passed to it.
-You might want to override it in two cases:</p>
-<ol>
-<li>Your API might return useful results in the request headers.
-If you need to access these, you can override this hook to copy them
-from jqXHR to the payload object so they can be processed in you serializer.</li>
-</ol>
-<ol>
-<li>Your API might return errors as successful responses with status code
-200 and an Errors text or object. You can return a DS.InvalidError from
-this hook and it will automatically reject the promise and put your record
-into the invald state.</li>
-</ol>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">jqXHR</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">jsonPayload</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Object</span>:
-                    
-                    <p>jqXHR</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_ajaxError" class="method item">
-    <h3 class="name"><code>ajaxError</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>jqXHR</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
                         <code>responseText</code>
                     
                 </li>
@@ -903,7 +763,7 @@ into the invald state.</li>
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l699"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:699</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l705"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:705</code></a>
         
         </p>
 
@@ -914,16 +774,20 @@ into the invald state.</li>
     </div>
 
     <div class="description">
-        <p>Takes an ajax response, and returns a relevant error.</p>
+        <p>Takes an ajax response, and returns an error payload.</p>
 <p>Returning a <code>DS.InvalidError</code> from this method will cause the
 record to transition into the <code>invalid</code> state and make the
 <code>errors</code> object available on the record.</p>
+<p>This function should return the entire payload as received from the
+server.  Error object extraction and normalization of model errors
+should be performed by <code>extractErrors</code> on the serializer.</p>
+<p>Example</p>
 <pre class="code prettyprint"><code class="lang-javascript">App.ApplicationAdapter = DS.RESTAdapter.extend({
   ajaxError: function(jqXHR) {
     var error = this._super(jqXHR);
 
     if (jqXHR &amp;&amp; jqXHR.status === 422) {
-      var jsonErrors = Ember.$.parseJSON(jqXHR.responseText)[&quot;errors&quot;];
+      var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
 
       return new DS.InvalidError(jsonErrors);
     } else {
@@ -1060,7 +924,7 @@ promise libraries.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l815"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:815</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l827"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:827</code></a>
         
         </p>
 
@@ -1140,6 +1004,146 @@ promise libraries.</p>
                         <span class="type">Object</span>:
                     
                     <p>hash</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_ajaxSuccess" class="method item">
+    <h3 class="name"><code>ajaxSuccess</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>jqXHR</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>jsonPayload</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Object</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l754"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:754</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Takes an ajax response, and returns the json payload.</p>
+<p>By default this hook just returns the jsonPayload passed to it.
+You might want to override it in two cases:</p>
+<ol>
+<li>Your API might return useful results in the request headers.
+If you need to access these, you can override this hook to copy them
+from jqXHR to the payload object so they can be processed in you serializer.</li>
+</ol>
+<ol>
+<li>Your API might return errors as successful responses with status code
+200 and an Errors text or object. You can return a DS.InvalidError from
+this hook and it will automatically reject the promise and put your record
+into the invalid state.</li>
+</ol>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">jqXHR</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">jsonPayload</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Object</span>:
+                    
+                    <p>jsonPayload</p>
 
                 
             </div>
@@ -2639,7 +2643,7 @@ to the server as parameters.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l245"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:245</code></a>
+        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l249"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:249</code></a>
         
         </p>
 
@@ -2736,6 +2740,12 @@ the first parameter and the newly created record as the second parameter:</p>
             
                 <li class="arg">
                     
+                        <code>store</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code>records</code>
                     
                 </li>
@@ -2773,7 +2783,7 @@ the first parameter and the newly created record as the second parameter:</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l605"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:605</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l610"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:610</code></a>
         
         </p>
 
@@ -2803,6 +2813,21 @@ and <code>/posts/2/comments/3</code></p>
             <h4>Parameters:</h4>
 
             <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">store</code>
+                        <span class="type"><a href="../classes/DS.Store.html" class="crosslink">DS.Store</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
             
                 <li class="param">
                     
@@ -2890,7 +2915,7 @@ and <code>/posts/2/comments/3</code></p>
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l670"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:670</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l676"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:676</code></a>
         
         </p>
 
@@ -3010,7 +3035,7 @@ endpoint of &quot;/line_items/&quot;.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l273"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:273</code></a>
+        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l277"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:277</code></a>
         
         </p>
 
@@ -3469,7 +3494,7 @@ store.find(&#39;comment&#39;, 2);</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l127"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:127</code></a>
+        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l131"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:131</code></a>
         
         </p>
 

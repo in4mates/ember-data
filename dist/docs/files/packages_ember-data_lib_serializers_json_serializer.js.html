@@ -407,6 +407,16 @@ export default Ember.Object.extend({
   },
 
   /**
+    @method normalizeErrors
+    @private
+  */
+  normalizeErrors: function(type, hash) {
+    this.normalizeId(hash);
+    this.normalizeAttributes(type, hash);
+    this.normalizeRelationships(type, hash);
+  },
+
+  /**
     Looks up the property key that was set by the custom &#x60;attr&#x60; mapping
     passed to the serializer.
 
@@ -1114,6 +1124,41 @@ export default Ember.Object.extend({
       store.metaForType(type, payload.meta);
       delete payload.meta;
     }
+  },
+
+  /**
+    &#x60;extractErrors&#x60; is used to extract model errors when a call is made
+    to &#x60;DS.Model#save&#x60; which fails with an InvalidError&#x60;. By default
+    Ember Data expects error information to be located on the &#x60;errors&#x60;
+    property of the payload object.
+
+    Example
+
+    &#x60;&#x60;&#x60;javascript
+    App.PostSerializer = DS.JSONSerializer.extend({
+      extractErrors: function(store, type, payload, id) {
+        if (payload &amp;&amp; typeof payload === &#x27;object&#x27; &amp;&amp; payload._problems) {
+          payload = payload._problems;
+          this.normalizeErrors(type, payload);
+        }
+        return payload;
+      }
+    });
+    &#x60;&#x60;&#x60;
+
+    @method extractErrors
+    @param {DS.Store} store
+    @param {subclass of DS.Model} type
+    @param {Object} payload
+    @param {String or Number} id
+    @return {Object} json The deserialized errors
+  */
+  extractErrors: function(store, type, payload, id) {
+    if (payload &amp;&amp; typeof payload === &#x27;object&#x27; &amp;&amp; payload.errors) {
+      payload = payload.errors;
+      this.normalizeErrors(type, payload);
+    }
+    return payload;
   },
 
   /**

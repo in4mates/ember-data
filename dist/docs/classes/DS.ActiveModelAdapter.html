@@ -152,7 +152,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l13"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:13</code></a>
+            Defined in: <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l12"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:12</code></a>
         </div>
     
 
@@ -173,7 +173,7 @@ with a JSON API that uses an underscored naming convention instead of camelCasin
 It has been designed to work out of the box with the
 <a href="http://github.com/rails-api/active_model_serializers">active_model_serializers</a>
 Ruby gem. This Adapter expects specific settings using ActiveModel::Serializers,
-<code>embed :ids, include: true</code> which sideloads the records.</p>
+<code>embed :ids, embed_in_root: true</code> which sideloads the records.</p>
 <p>This adapter extends the DS.RESTAdapter by making consistent use of the camelization,
 decamelization and pluralization methods to normalize the serialized JSON into a
 format that is compatible with a conventional Rails backend and Ember Data.</p>
@@ -267,7 +267,7 @@ App.Occupation = DS.Model.extend({
             
         
         
-        <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l13"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:13</code></a>
+        <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l12"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:12</code></a>
         
         </p>
 
@@ -331,6 +331,13 @@ App.Occupation = DS.Model.extend({
                         
                             <li class="index-item method private inherited">
                                 <a href="#method_ajaxOptions">ajaxOptions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_ajaxSuccess">ajaxSuccess</a>
 
                                 
                                 
@@ -557,7 +564,7 @@ App.Occupation = DS.Model.extend({
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l768"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:768</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l780"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:780</code></a>
         
         </p>
 
@@ -707,7 +714,7 @@ data is the serialized record in the case of a save.</li>
             
         
         
-        <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l125"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:125</code></a>
+        <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l124"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:124</code></a>
         
         </p>
 
@@ -829,7 +836,7 @@ content was not semantically correct or meaningful per the API.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l815"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:815</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l827"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:827</code></a>
         
         </p>
 
@@ -909,6 +916,143 @@ content was not semantically correct or meaningful per the API.</p>
                         <span class="type">Object</span>:
                     
                     <p>hash</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_ajaxSuccess" class="method item inherited">
+    <h3 class="name"><code>ajaxSuccess</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>jqXHR</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>jsonPayload</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Object</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/DS.RESTAdapter.html#method_ajaxSuccess">DS.RESTAdapter</a>:
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l754"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:754</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Takes an ajax response, and returns the json payload.</p>
+<p>By default this hook just returns the jsonPayload passed to it.
+You might want to override it in two cases:</p>
+<ol>
+<li>Your API might return useful results in the request headers.
+If you need to access these, you can override this hook to copy them
+from jqXHR to the payload object so they can be processed in you serializer.</li>
+</ol>
+<ol>
+<li>Your API might return errors as successful responses with status code
+200 and an Errors text or object. You can return a DS.InvalidError from
+this hook and it will automatically reject the promise and put your record
+into the invalid state.</li>
+</ol>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">jqXHR</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">jsonPayload</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Object</span>:
+                    
+                    <p>jsonPayload</p>
 
                 
             </div>
@@ -2399,7 +2543,7 @@ to the server as parameters.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l245"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:245</code></a>
+        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l249"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:249</code></a>
         
         </p>
 
@@ -2496,6 +2640,12 @@ the first parameter and the newly created record as the second parameter:</p>
             
                 <li class="arg">
                     
+                        <code>store</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code>records</code>
                     
                 </li>
@@ -2533,7 +2683,7 @@ the first parameter and the newly created record as the second parameter:</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l605"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:605</code></a>
+        <a href="../files/packages_ember-data_lib_adapters_rest_adapter.js.html#l610"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;rest_adapter.js:610</code></a>
         
         </p>
 
@@ -2563,6 +2713,21 @@ and <code>/posts/2/comments/3</code></p>
             <h4>Parameters:</h4>
 
             <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">store</code>
+                        <span class="type"><a href="../classes/DS.Store.html" class="crosslink">DS.Store</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
             
                 <li class="param">
                     
@@ -2650,7 +2815,7 @@ and <code>/posts/2/comments/3</code></p>
             
         
         
-        <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l106"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:106</code></a>
+        <a href="../files/packages_activemodel-adapter_lib_system_active_model_adapter.js.html#l105"><code>packages&#x2F;activemodel-adapter&#x2F;lib&#x2F;system&#x2F;active_model_adapter.js:105</code></a>
         
         </p>
 
@@ -2760,7 +2925,7 @@ underscored URLs by decamelizing and pluralizing the object type name.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l273"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:273</code></a>
+        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l277"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:277</code></a>
         
         </p>
 
@@ -3216,7 +3381,7 @@ store.find(&#39;comment&#39;, 2);</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l127"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:127</code></a>
+        <a href="../files/packages_ember-data_lib_system_adapter.js.html#l131"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:131</code></a>
         
         </p>
 

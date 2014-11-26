@@ -171,13 +171,16 @@ record failed some form of server side validation. When a promise
 from an adapter is rejected with a <code>DS.InvalidError</code> the record will
 transition to the <code>invalid</code> state and the errors will be set to the
 <code>errors</code> property on the record.</p>
+<p>This function should return the entire payload as received from the
+server.  Error object extraction and normalization of model errors
+should be performed by <code>extractErrors</code> on the serializer.</p>
 <p>Example</p>
 <pre class="code prettyprint"><code class="lang-javascript">App.ApplicationAdapter = DS.RESTAdapter.extend({
   ajaxError: function(jqXHR) {
     var error = this._super(jqXHR);
 
     if (jqXHR &amp;&amp; jqXHR.status === 422) {
-      var jsonErrors = Ember.$.parseJSON(jqXHR.responseText)[&quot;errors&quot;];
+      var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
       return new DS.InvalidError(jsonErrors);
     } else {
       return error;
@@ -189,7 +192,7 @@ keys are the invalid model properties, and whose values are the
 corresponding error messages. For example:</p>
 <pre class="code prettyprint"><code class="lang-javascript">return new DS.InvalidError({
   length: &#39;Must be less than 15&#39;,
-  name: &#39;Must not be blank
+  name: &#39;Must not be blank&#39;
 });</code></pre>
 
 </div>

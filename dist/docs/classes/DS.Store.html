@@ -180,10 +180,6 @@ automatically created by their <code>Ember.Application</code>.</p>
 for a specific id, use <code>DS.Store</code>&#39;s <code>find()</code> method:</p>
 <pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;person&#39;, 123).then(function (person) {
 });</code></pre>
-<p>If your application has multiple <code>DS.Store</code> instances (an unusual case), you can
-specify which store should be used:</p>
-<pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;person&#39;, 123).then(function (person) {
-});</code></pre>
 <p>By default, the store will talk to your backend using a standard
 REST mechanism. You can customize how the store talks to your
 backend by specifying a custom adapter:</p>
@@ -324,6 +320,13 @@ values.</p>
                         
                             <li class="index-item method">
                                 <a href="#method_didUpdateAll">didUpdateAll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_fetch">fetch</a>
 
                                 
                                 
@@ -660,7 +663,7 @@ values.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l276"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:276</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l268"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:268</code></a>
         
         </p>
 
@@ -777,7 +780,7 @@ a newly created record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1178"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1178</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1205"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1205</code></a>
         
         </p>
 
@@ -903,7 +906,7 @@ a newly created record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1613"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1613</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1648"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1648</code></a>
         
         </p>
 
@@ -1012,7 +1015,7 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1551"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1551</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1586"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1586</code></a>
         
         </p>
 
@@ -1116,7 +1119,7 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l837"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:837</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l848"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:848</code></a>
         
         </p>
 
@@ -1127,12 +1130,15 @@ require changes to other normalization hooks (such as typeForRoot).</p>
     </div>
 
     <div class="description">
-        <p>This method returns a filtered array that contains all of the known records
-for a given type.</p>
-<p>Note that because it&#39;s just a filter, it will have any locally
-created records of the type.</p>
+        <p>This method returns a filtered array that contains all of the
+known records for a given type in the store.</p>
+<p>Note that because it&#39;s just a filter, the result will contain any
+locally created records of the type, however, it will not make a
+request to the backend to retrieve additional records. If you
+would like to request all the records from the backend please use
+<a href="#method_find">store.find</a>.</p>
 <p>Also note that multiple calls to <code>all</code> for a given type will always
-return the same RecordArray.</p>
+return the same <code>RecordArray</code>.</p>
 <p>Example</p>
 <pre class="code prettyprint"><code class="lang-javascript">var localPosts = store.all(&#39;post&#39;);</code></pre>
 
@@ -1241,7 +1247,7 @@ return the same RecordArray.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1479"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1479</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1514"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1514</code></a>
         
         </p>
 
@@ -1384,7 +1390,7 @@ initial data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l230"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:230</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l222"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:222</code></a>
         
         </p>
 
@@ -1516,7 +1522,7 @@ to this method are set on the newly created record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1004"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1004</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1031"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1031</code></a>
         
         </p>
 
@@ -1623,7 +1629,7 @@ To avoid thrashing, this method is invoked only once per</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l299"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:299</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l291"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:291</code></a>
         
         </p>
 
@@ -1719,7 +1725,7 @@ store.deleteRecord(post);</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1524"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1524</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1559"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1559</code></a>
         
         </p>
 
@@ -1816,7 +1822,7 @@ removes it from any record arrays so it can be GCed.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1072"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1072</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1099"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1099</code></a>
         
         </p>
 
@@ -1925,7 +1931,7 @@ update the record and the store&#39;s indexes.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l828"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:828</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l839"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:839</code></a>
         
         </p>
 
@@ -1964,6 +1970,158 @@ update the record and the store&#39;s indexes.</p>
         </div>
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_fetch" class="method item">
+    <h3 class="name"><code>fetch</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>preload</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l426"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:426</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This method returns a fresh record for a given type and id combination.</p>
+<p>If a record is available for the given type/id combination, then it will fetch this record from the store then reload it. If there&#39;s no record corresponding in the store it will simply call store.find.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">String or subclass of DS.Model</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">Object | String | Integer | Null</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">preload</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>optional set of attributes and relationships passed in either as IDs or as actual models</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>promise</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -2024,7 +2182,7 @@ update the record and the store&#39;s indexes.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l809"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:809</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l820"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:820</code></a>
         
         </p>
 
@@ -2146,7 +2304,7 @@ update the record and the store&#39;s indexes.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l487"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:487</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l498"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:498</code></a>
         
         </p>
 
@@ -2266,7 +2424,7 @@ adapter.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l896"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:896</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l910"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:910</code></a>
         
         </p>
 
@@ -2280,19 +2438,27 @@ adapter.</p>
         <p>Takes a type and filter function, and returns a live RecordArray that
 remains up to date as new records are loaded into the store or created
 locally.</p>
-<p>The callback function takes a materialized record, and returns true
+<p>The filter function takes a materialized record, and returns true
 if the record should be included in the filter and false if it should
 not.</p>
+<p>Example</p>
+<pre class="code prettyprint"><code class="lang-javascript">store.filter(&#39;post&#39;, function(post) {
+  return post.get(&#39;unread&#39;);
+});</code></pre>
 <p>The filter function is called once on all records for the type when
 it is created, and then once on each newly loaded or created record.</p>
 <p>If any of a record&#39;s properties change, or if it changes state, the
 filter function will be invoked again to determine whether it should
 still be in the array.</p>
-<p>Optionally you can pass a query which will be triggered at first. The
-results returned by the server could then appear in the filter if they
-match the filter function.</p>
+<p>Optionally you can pass a query, which is the equivalent of calling
+<a href="#method_find">find</a> with that same query, to fetch additional records
+from the server. The results returned by the server could then appear
+in the filter if they match the filter function.</p>
+<p>The query itself is not used to filter records, it&#39;s only sent to your
+server for you to be able to do server-side filtering. The filter
+function will be applied on the returned results regardless.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">store.filter(&#39;post&#39;, {unread: true}, function(post) {
+<pre class="code prettyprint"><code class="lang-javascript">store.filter(&#39;post&#39;, { unread: true }, function(post) {
   return post.get(&#39;unread&#39;);
 }).then(function(unreadPosts) {
   unreadPosts.get(&#39;length&#39;); // 5
@@ -2435,7 +2601,7 @@ match the filter function.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l342"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:342</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l334"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:334</code></a>
         
         </p>
 
@@ -2613,7 +2779,7 @@ responds.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l793"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:793</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l804"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:804</code></a>
         
         </p>
 
@@ -2733,7 +2899,7 @@ the array with records of that type.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l746"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:746</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l757"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:757</code></a>
         
         </p>
 
@@ -2882,7 +3048,7 @@ the array with records of that type.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l434"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:434</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l445"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:445</code></a>
         
         </p>
 
@@ -3029,7 +3195,7 @@ the array with records of that type.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l469"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:469</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l480"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:480</code></a>
         
         </p>
 
@@ -3165,7 +3331,7 @@ and returns a promise that resolves once they are all loaded.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l719"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:719</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l730"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:730</code></a>
         
         </p>
 
@@ -3327,7 +3493,7 @@ then use that URL in the future to make a request for the relationship.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l702"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:702</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l713"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:713</code></a>
         
         </p>
 
@@ -3485,7 +3651,7 @@ then use that URL in the future to make a request for the relationship.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l763"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:763</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l774"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:774</code></a>
         
         </p>
 
@@ -3601,7 +3767,7 @@ once the server returns.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1042"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1042</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1069"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1069</code></a>
         
         </p>
 
@@ -3677,7 +3843,7 @@ flushes any records passed into <code>scheduleSave</code></p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l613"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:613</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l624"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:624</code></a>
         
         </p>
 
@@ -3811,7 +3977,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l665"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:665</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l676"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:676</code></a>
         
         </p>
 
@@ -3918,7 +4084,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l142"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:142</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l134"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:134</code></a>
         
         </p>
 
@@ -3986,7 +4152,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l988"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:988</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1015"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1015</code></a>
         
         </p>
 
@@ -4092,7 +4258,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1465"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1465</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1500"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1500</code></a>
         
         </p>
 
@@ -4200,7 +4366,7 @@ you can call <code>metaForType</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1198"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1198</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1225"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1225</code></a>
         
         </p>
 
@@ -4312,7 +4478,7 @@ etc.)</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1381"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1381</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1418"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1418</code></a>
         
         </p>
 
@@ -4447,7 +4613,7 @@ etc.)</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1232"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1232</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1259"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1259</code></a>
         
         </p>
 
@@ -4615,7 +4781,7 @@ records, as well as to update existing records.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1444"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1444</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1479"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1479</code></a>
         
         </p>
 
@@ -4738,7 +4904,7 @@ call <code>push</code> repeatedly for you.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1323"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1323</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1360"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1360</code></a>
         
         </p>
 
@@ -4882,7 +5048,7 @@ store.pushPayload(&#39;post&#39;, pushData); // Will use the PostSerializer</cod
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l679"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:679</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l690"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:690</code></a>
         
         </p>
 
@@ -5010,7 +5176,7 @@ it builds a new record and leaves it in the <code>empty</code> state.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l964"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:964</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l991"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:991</code></a>
         
         </p>
 
@@ -5134,7 +5300,7 @@ store.find(&#39;post&#39;, 1).then(function() {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1111"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1111</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1138"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1138</code></a>
         
         </p>
 
@@ -5232,7 +5398,7 @@ is rejected (with anything other than a <code>DS.InvalidError</code>).</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1097"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1097</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1124"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1124</code></a>
         
         </p>
 
@@ -5343,7 +5509,7 @@ is rejected with a <code>DS.InvalidError</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l641"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:641</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l652"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:652</code></a>
         
         </p>
 
@@ -5456,7 +5622,7 @@ by the record&#39;s <code>reload</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1025"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1025</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1052"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1052</code></a>
         
         </p>
 
@@ -5569,7 +5735,7 @@ resolver for the promise that <code>record.save</code> returns.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l175"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:175</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l167"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:167</code></a>
         
         </p>
 
@@ -5686,7 +5852,7 @@ the JSON representation</li>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1573"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1573</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1608"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1608</code></a>
         
         </p>
 
@@ -5800,7 +5966,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1145"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1145</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1172"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1172</code></a>
         
         </p>
 
@@ -5902,7 +6068,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l871"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:871</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l885"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:885</code></a>
         
         </p>
 
@@ -5991,7 +6157,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l319"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:319</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l311"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:311</code></a>
         
         </p>
 
@@ -6094,7 +6260,7 @@ non-dirty records can be unloaded.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1406"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1406</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1443"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1443</code></a>
         
         </p>
 
@@ -6239,7 +6405,7 @@ store.get(&#39;person&#39;, 1).then(function(tom) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1124"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1124</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1151"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1151</code></a>
         
         </p>
 
@@ -6333,7 +6499,7 @@ data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l158"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:158</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l150"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:150</code></a>
         
         </p>
 
@@ -6385,7 +6551,7 @@ data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l193"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:193</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l185"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:185</code></a>
         
         </p>
 

@@ -328,14 +328,14 @@ relationship&#39;s <em>owner</em>.</p>
                             </li>
                         
                             <li class="index-item property private">
-                                <a href="#property_owner">owner</a>
+                                <a href="#property_promise">promise</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property private">
-                                <a href="#property_promise">promise</a>
+                                <a href="#property_relationship">relationship</a>
 
                                 
                                 
@@ -526,7 +526,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l120"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:120</code></a>
+        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l122"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:122</code></a>
         
         </p>
 
@@ -620,7 +620,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l90"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:90</code></a>
+        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l92"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:92</code></a>
         
         </p>
 
@@ -686,7 +686,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l81"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:81</code></a>
+        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l83"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:83</code></a>
         
         </p>
 
@@ -957,7 +957,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l112"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:112</code></a>
+        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l114"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:114</code></a>
         
         </p>
 
@@ -1255,7 +1255,7 @@ necessary, by the store.</p>
 </div>
 
                 
-                    <div id="property_isLoaded" class="property item inherited">
+                    <div id="property_isLoaded" class="property item">
     <h3 class="name"><code>isLoaded</code></h3>
     <span class="type">Boolean</span>
 
@@ -1269,13 +1269,16 @@ necessary, by the store.</p>
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/DS.RecordArray.html#property_isLoaded">
+                DS.RecordArray
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#property_isLoaded">DS.RecordArray</a>:
+            but overwritten in
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l42"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:42</code></a>
+        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l58"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:58</code></a>
         
         </p>
 
@@ -1285,10 +1288,7 @@ necessary, by the store.</p>
     </div>
 
     <div class="description">
-        <p>The flag to signal a <code>RecordArray</code> is currently loading data.</p>
-<p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var people = store.all(&#39;person&#39;);
-people.get(&#39;isLoaded&#39;); // true</code></pre>
+        <p>The loading state of this array</p>
 
     </div>
 
@@ -1394,53 +1394,6 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
 </div>
 
                 
-                    <div id="property_owner" class="property item private">
-    <h3 class="name"><code>owner</code></h3>
-    <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l62"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:62</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The relationship which manages this array.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="property_promise" class="property item private">
     <h3 class="name"><code>promise</code></h3>
     <span class="type">Ember.RSVP.Promise</span>
@@ -1466,7 +1419,7 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l72"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:72</code></a>
+        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l74"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:74</code></a>
         
         </p>
 
@@ -1478,6 +1431,53 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
     <div class="description">
         <p>Used for async <code>hasMany</code> arrays
 to keep track of when they will resolve.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_relationship" class="property item private">
+    <h3 class="name"><code>relationship</code></h3>
+    <span class="type">ManyRelationship</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l65"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:65</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The relationship which manages this array.</p>
 
     </div>
 
