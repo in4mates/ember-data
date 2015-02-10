@@ -46,6 +46,7 @@ import JSONSerializer from "ember-data/serializers/json_serializer";
 import RESTSerializer from "ember-data/serializers/rest_serializer";
 import "ember-inflector";
 import EmbeddedRecordsMixin from "ember-data/serializers/embedded_records_mixin";
+import EmbeddedModelMixin from "ember-data/system/model/embedded_model_mixin";
 import {
   ActiveModelAdapter,
   ActiveModelSerializer
@@ -104,6 +105,7 @@ DS.BooleanTransform = BooleanTransform;
 DS.ActiveModelAdapter    = ActiveModelAdapter;
 DS.ActiveModelSerializer = ActiveModelSerializer;
 DS.EmbeddedRecordsMixin  = EmbeddedRecordsMixin;
+DS.EmbeddedModelMixin = EmbeddedModelMixin;
 
 DS.belongsTo = belongsTo;
 DS.hasMany   = hasMany;

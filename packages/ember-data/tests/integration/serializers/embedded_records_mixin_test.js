@@ -4,10 +4,11 @@ var HomePlanet, SuperVillain, EvilMinion, SecretLab, SecretWeapon, Comment,
 var indexOf = Ember.EnumerableUtils.indexOf;
 var run = Ember.run;
 var LightSaber;
+var ModelEm = DS.Model.extend(DS.EmbeddedModelMixin);
 
 module("integration/embedded_records_mixin - EmbeddedRecordsMixin", {
   setup: function() {
-    SuperVillain = DS.Model.extend({
+    SuperVillain = ModelEm.extend({
       firstName:       DS.attr('string'),
       lastName:        DS.attr('string'),
       homePlanet:      DS.belongsTo("homePlanet", {inverse: 'villains'}),
@@ -15,27 +16,27 @@ module("integration/embedded_records_mixin - EmbeddedRecordsMixin", {
       secretWeapons:   DS.hasMany("secretWeapon"),
       evilMinions:     DS.hasMany("evilMinion")
     });
-    HomePlanet = DS.Model.extend({
+    HomePlanet = ModelEm.extend({
       name:            DS.attr('string'),
       villains:        DS.hasMany('superVillain', {inverse: 'homePlanet'})
     });
-    SecretLab = DS.Model.extend({
+    SecretLab = ModelEm.extend({
       minionCapacity:  DS.attr('number'),
       vicinity:        DS.attr('string'),
       superVillain:    DS.belongsTo('superVillain')
     });
-    SecretWeapon = DS.Model.extend({
+    SecretWeapon = ModelEm.extend({
       name:            DS.attr('string'),
       superVillain:    DS.belongsTo('superVillain')
     });
     LightSaber = SecretWeapon.extend({
       color:           DS.attr('string')
     });
-    EvilMinion = DS.Model.extend({
+    EvilMinion = ModelEm.extend({
       superVillain:    DS.belongsTo('superVillain'),
       name:            DS.attr('string')
     });
-    Comment = DS.Model.extend({
+    Comment = ModelEm.extend({
       body:            DS.attr('string'),
       root:            DS.attr('boolean'),
       children:        DS.hasMany('comment')
@@ -65,6 +66,7 @@ module("integration/embedded_records_mixin - EmbeddedRecordsMixin", {
 
   teardown: function() {
     run(env.store, 'destroy');
+    env.store = null;
   }
 });
 
@@ -1359,36 +1361,7 @@ test("serialize adds _destroy for destroyed objects", function() {
     var json = serializer.serialize(league);
     equal(json.villains_attributes[0]._destroy, true,"_destroy should be present and true");
     //simulate load so teardown works
-    var apiResponse = {home_planet: json};
-    apiResponse.home_planet.villains = json.villains_attributes;
-    var data = serializer.extractSingle(env.store, HomePlanet, apiResponse);
-  });
-});
-test("serialize stores a client id for any new embedded object", function() {
-  var tom;
-  run(function(){
-    league = env.store.createRecord(HomePlanet, { name: "Villain League", id: "123" });
-    tom = env.store.createRecord(SuperVillain, { firstName: "Tom", lastName: "Dale", homePlanet: league }),
-    yehuda = env.store.createRecord(SuperVillain, { firstName: "Yehuda", lastName: "Katz", homePlanet: league });
-  });
-  env.container.register('serializer:homePlanet', DS.ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
-    attrs: {
-      villains: {embedded: 'always'}
-    }
-  }));
-  var serializer = env.container.lookup("serializer:homePlanet");
-  run(function(){
-    var json = serializer.serialize(league);
-    equal(Object.keys(serializer.clientIdMap).length, 2, "serializer client id map should contain 2 references");
-    notEqual(json.villains_attributes[0]._clientId, json.villains_attributes[1]._clientId, "client id should be different for each object");
-    ok(serializer.clientIdMap[json.villains_attributes[0]._clientId], "serializer client id should be present in map");
-    ok(serializer.clientIdMap[json.villains_attributes[1]._clientId], "serializer client id should be present in map");
-    equal(serializer.clientIdMap[json.villains_attributes[0]._clientId], tom, "serializer client id map should point to the correct embedded record");
-    equal(serializer.clientIdMap[json.villains_attributes[1]._clientId], yehuda, "serializer client id map should point to the correct embedded record");
-    //simulate load so teardown works
-    var apiResponse = {home_planet: json};
-    apiResponse.home_planet.villains = json.villains_attributes;
-    var data = serializer.extractSingle(env.store, HomePlanet, apiResponse);
+    tom.transitionTo('deleted.uncommitted');
   });
 });
 test("serialize + extractSingle updates new embedded records in memory instead of creating duplicates", function() {

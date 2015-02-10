@@ -29,7 +29,7 @@ var camelize = Ember.String.camelize;
   The `attrs` option for a resource `{ embedded: 'always' }` is shorthand for:
 
   ```js
-  { 
+  {
     serialize: 'records',
     deserialize: 'records'
   }
@@ -56,7 +56,7 @@ var camelize = Ember.String.camelize;
   If you do not overwrite `attrs` for a specific relationship, the `EmbeddedRecordsMixin`
   will behave in the following way:
 
-  BelongsTo: `{ serialize: 'id', deserialize: 'id' }`  
+  BelongsTo: `{ serialize: 'id', deserialize: 'id' }`
   HasMany:   `{ serialize: false, deserialize: 'ids' }`
 
   ### Model Relationships
@@ -120,20 +120,20 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
   **/
   normalize: function(type, hash, prop) {
     var normalizedHash = this._super(type, hash, prop);
-    removeRemovedObjects(this, this.store);
     return extractEmbeddedRecords(this, this.store, type, normalizedHash);
   },
-  storePush: function(store, typeName, hash, primarySerializer) {
-    if(!primarySerializer)
-      store.push(typeName, hash);
-    
-    var clientId = hash[primarySerializer.clientIdKey];
-    var clientRecord = primarySerializer.clientIdMap[clientId];
-    
+  storePush: function(store, typeName, hash) {
+    var clientId = hash[this.clientIdKey];
+    var clientRecord = null;
+    if(clientId){
+      clientRecord = store.all(typeName).find(function(item,idx,array){
+        return Ember.guidFor(item) === clientId;
+      });
+    }
+
     // if embedded hash contains client id, mimic a createRecord/save
     if (clientRecord) {
       store.didSaveRecord(clientRecord, hash);
-      delete primarySerializer.clientIdMap[clientId];
     } else {
       var record = store.getById(typeName, hash.id);
       if(record && !record.get('isEmpty')){
@@ -182,7 +182,6 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
   init: function () {
     this._super();
     this.clientIdMap = {};
-    this.embededToRemove = [];
   },
 
    /**
@@ -194,7 +193,6 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
   createClientId: function (record) {
      var guid = Ember.guidFor(record);
 
-     this.clientIdMap[guid] = record;
      return guid;
   },
   /**
@@ -374,7 +372,7 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
         this.removeEmbeddedForeignKey(record, embeddedRecord, relationship, serializedEmbeddedRecord);
         if (embeddedRecord.get('isDeleted')) {
           serializedEmbeddedRecord['_destroy'] = true;
-          this.embededToRemove.push(embeddedRecord);
+          embeddedRecord.send('deleteRecord');
         } else {
           var clientIdKey = this.clientIdKey;
           if (serializedEmbeddedRecord['id'] == null) {
@@ -384,6 +382,10 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
           embeddedRecord._attributes = {};
         }
         embeddedRecord.send('willCommit');
+        if(!record.putEmbeddedRecordInFlight){
+          throw new Error('You need to extend your DS.Model with DS.EmbeddedModelMixin to use EmbeddedRecordMixin.');
+        }
+        record.putEmbeddedRecordInFlight(attr, embeddedRecord);
         return serializedEmbeddedRecord;
       }, this);
     }
@@ -460,15 +462,6 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
     return attrs && (attrs[camelize(attr)] || attrs[attr]);
   }
 });
-function removeRemovedObjects(serializer, store){
-  if (serializer && serializer.embededToRemove){
-    forEach(serializer.embededToRemove, function(clientRecord) {
-      clientRecord.send('didCommit');
-      clientRecord.unloadRecord();
-    });
-    serializer.embededToRemove = [];
-  }
-}
 // chooses a relationship kind to branch which function is used to update payload
 // does not change payload if attr is not embedded
 function extractEmbeddedRecords(serializer, store, type, partial) {
@@ -481,7 +474,7 @@ function extractEmbeddedRecords(serializer, store, type, partial) {
           extractEmbeddedHasManyPolymorphic(store, key, partial);
         }
         else {
-          extractEmbeddedHasMany(store, key, embeddedType, partial, serializer);
+          extractEmbeddedHasMany(store, key, embeddedType, partial);
         }
       }
       if (relationship.kind === "belongsTo") {
@@ -494,7 +487,7 @@ function extractEmbeddedRecords(serializer, store, type, partial) {
 }
 
 // handles embedding for `hasMany` relationship
-function extractEmbeddedHasMany(store, key, embeddedType, hash, parentSerializer) {
+function extractEmbeddedHasMany(store, key, embeddedType, hash) {
   if (!hash[key]) {
     return hash;
   }
@@ -504,7 +497,7 @@ function extractEmbeddedHasMany(store, key, embeddedType, hash, parentSerializer
   var embeddedSerializer = store.serializerFor(embeddedType.typeKey);
   forEach(hash[key], function(data) {
     var embeddedRecord = embeddedSerializer.normalize(embeddedType, data, null);
-    embeddedSerializer.storePush(store, embeddedType, embeddedRecord, parentSerializer);
+    embeddedSerializer.storePush(store, embeddedType, embeddedRecord);
     ids.push(embeddedRecord.id);
   });
 
