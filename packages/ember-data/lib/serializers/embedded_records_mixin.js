@@ -266,6 +266,7 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
       if (!embeddedRecord) {
         json[key] = null;
       } else {
+        embeddedRecord.send('willCommit');
         json[key] = embeddedRecord.serialize({includeId: true});
         this.removeEmbeddedForeignKey(record, embeddedRecord, relationship, json[key]);
       }

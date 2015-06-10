@@ -1,8 +1,5 @@
 (function() {
     "use strict";
-    /**
-      @module ember-data
-    */
 
     var ember$data$lib$system$adapter$$get = Ember.get;
 
@@ -463,9 +460,6 @@
     });
 
     var ember$data$lib$system$adapter$$default = ember$data$lib$system$adapter$$Adapter;
-    /**
-      @module ember-data
-    */
     var ember$data$lib$adapters$fixture_adapter$$get = Ember.get;
     var ember$data$lib$adapters$fixture_adapter$$fmt = Ember.String.fmt;
     var ember$data$lib$adapters$fixture_adapter$$indexOf = Ember.EnumerableUtils.indexOf;
@@ -779,10 +773,6 @@
       }
     });
 
-    /**
-     * Polyfill Ember.Map behavior for Ember <= 1.7
-     * This can probably be removed before 1.0 final
-    */
     var ember$data$lib$system$map$$mapForEach, ember$data$lib$system$map$$deleteFn;
 
     function ember$data$lib$system$map$$OrderedSet(){
@@ -1573,8 +1563,6 @@
       }
     }
 
-    var ember$inflector$lib$system$inflector$$capitalize = Ember.String.capitalize;
-
     var ember$inflector$lib$system$inflector$$BLANK_REGEX = /^\s*$/;
     var ember$inflector$lib$system$inflector$$LAST_WORD_DASHED_REGEX = /(\w+[_-])([a-z\d]+$)/;
     var ember$inflector$lib$system$inflector$$LAST_WORD_CAMELIZED_REGEX = /(\w+)([A-Z][a-z\d]*$)/;
@@ -1814,9 +1802,9 @@
       */
       inflect: function(word, typeRules, irregular) {
         var inflection, substitution, result, lowercase, wordSplit,
-          firstPhrase, lastWord, isBlank, isCamelized, isUncountable,
+          firstPhrase, lastWord, isBlank, isCamelized, isUncountable, 
           isIrregular, isIrregularInverse, rule;
-
+      
         isBlank = ember$inflector$lib$system$inflector$$BLANK_REGEX.test(word);
         isCamelized = ember$inflector$lib$system$inflector$$CAMELIZED_REGEX.test(word);
         firstPhrase = "";
@@ -1845,7 +1833,7 @@
             return isIrregular;
           }
           else {
-            isIrregular = (isCamelized) ? ember$inflector$lib$system$inflector$$capitalize(isIrregular) : isIrregular;
+            isIrregular = (isCamelized) ? isIrregular.capitalize() : isIrregular;
             return firstPhrase + isIrregular;
           }
         }
@@ -4285,14 +4273,6 @@
     });
 
     var activemodel$adapter$lib$system$active_model_serializer$$default = activemodel$adapter$lib$system$active_model_serializer$$ActiveModelSerializer;
-    /**
-      This is used internally to enable deprecation of container paths and provide
-      a decent message to the user indicating how to fix the issue.
-
-      @class ContainerProxy
-      @namespace DS
-      @private
-    */
     function ember$data$lib$system$container_proxy$$ContainerProxy(container){
       this.container = container;
     }
@@ -4344,24 +4324,6 @@
       container.register('adapter:-active-model', activemodel$adapter$lib$system$active_model_adapter$$default);
     }
     var activemodel$adapter$lib$setup$container$$default = activemodel$adapter$lib$setup$container$$setupActiveModelAdapter;
-    /**
-      @module ember-data
-    */
-
-    /**
-      All Ember Data methods and functions are defined inside of this namespace.
-
-      @class DS
-      @static
-    */
-
-    /**
-      @property VERSION
-      @type String
-      @default '<%= versionStamp %>'
-      @static
-    */
-    /*jshint -W079 */
     var ember$data$lib$core$$DS = Ember.Namespace.create({
       VERSION: '<%= versionStamp %>'
     });
@@ -4803,10 +4765,6 @@
         Ember.run.once(this, 'trigger', 'didLoad');
       }
     });
-
-    /**
-      @module ember-data
-    */
 
     var ember$data$lib$system$record_arrays$many_array$$get = Ember.get, ember$data$lib$system$record_arrays$many_array$$set = Ember.set;
 
@@ -5256,9 +5214,6 @@
 
       return result;
     }
-    /**
-      @module ember-data
-    */
 
     var ember$data$lib$system$model$states$$get = Ember.get;
     var ember$data$lib$system$model$states$$set = Ember.set;
@@ -10585,21 +10540,6 @@
         initialize: ember$data$lib$ember$initializer$$K
       });
     });
-    /**
-      @module ember-data
-    */
-
-    /**
-      Date.parse with progressive enhancement for ISO 8601 <https://github.com/csnover/js-iso8601>
-
-      © 2011 Colin Snover <http://zetafleet.com>
-
-      Released under MIT license.
-
-      @class Date
-      @namespace Ember
-      @static
-    */
     Ember.Date = Ember.Date || {};
 
     var origParse = Date.parse, numericKeys = [ 1, 4, 5, 6, 7, 10, 11 ];
@@ -10646,11 +10586,6 @@
     if (Ember.EXTEND_PROTOTYPES === true || Ember.EXTEND_PROTOTYPES.Date) {
       Date.parse = Ember.Date.parse;
     }
-    /*
-      Detect if the user has a correct Object.create shim.
-      Ember has provided this for a long time but has had an incorrect shim before 1.8
-      TODO: Remove for Ember Data 1.0.
-    */
     var object = Ember.create(null);
     if (object.toString !== undefined && Ember.keys(Ember.create({}))[0] === '__proto__'){
       throw new Error("Ember Data requires a correct Object.create shim. You should upgrade to Ember >= 1.8 which provides one for you. If you are using ES5-shim, you should try removing that after upgrading Ember.");
@@ -10992,6 +10927,7 @@
           if (!embeddedRecord) {
             json[key] = null;
           } else {
+            embeddedRecord.send('willCommit');
             json[key] = embeddedRecord.serialize({includeId: true});
             this.removeEmbeddedForeignKey(record, embeddedRecord, relationship, json[key]);
           }
@@ -12158,14 +12094,6 @@
       }
 
     });
-    /**
-      Ember Data
-
-      @module ember-data
-      @main ember-data
-    */
-
-    // support RSVP 2.x via resolve,  but prefer RSVP 3.x's Promise.cast
     Ember.RSVP.Promise.cast = Ember.RSVP.Promise.cast || Ember.RSVP.resolve;
 
     ember$data$lib$core$$default.Store         = ember$data$lib$system$store$$Store;
