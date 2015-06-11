@@ -11023,8 +11023,25 @@
           if (!embeddedRecord) {
             json[key] = null;
           } else {
+            var serializedEmbeddedRecord = embeddedRecord.serialize({includeId: true});
+            if (embeddedRecord.get('isDeleted')) {
+              serializedEmbeddedRecord['_destroy'] = true;
+              embeddedRecord.send('deleteRecord');
+            } else {
+              var clientIdKey = this.clientIdKey;
+              if (serializedEmbeddedRecord['id'] == null) {
+                serializedEmbeddedRecord[clientIdKey] = this.createClientId(embeddedRecord);
+              }
+              embeddedRecord._inFlightAttributes = embeddedRecord._attributes;
+              embeddedRecord._attributes = {};
+            }
             embeddedRecord.send('willCommit');
-            json[key] = embeddedRecord.serialize({includeId: true});
+            if(!record.putEmbeddedRecordInFlight){
+              throw new Error('You need to extend your DS.Model with DS.EmbeddedModelMixin to use EmbeddedRecordMixin.');
+            }
+            record.putEmbeddedRecordInFlight(attr, embeddedRecord);
+
+            json[key] = serializedEmbeddedRecord;
             this.removeEmbeddedForeignKey(record, embeddedRecord, relationship, json[key]);
           }
         }

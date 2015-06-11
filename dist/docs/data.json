@@ -2284,7 +2284,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/embedded_records_mixin.js",
-            "line": 276,
+            "line": 293,
             "description": "Serialize `hasMany` relationship when it is configured as embedded objects.\n\nThis example of a post model has many comments:\n\n```js\nPost = DS.Model.extend({\n  title:    DS.attr('string'),\n  body:     DS.attr('string'),\n  comments: DS.hasMany('comment')\n});\n\nComment = DS.Model.extend({\n  body:     DS.attr('string'),\n  post:     DS.belongsTo('post')\n});\n```\n\nUse a custom (type) serializer for the post model to configure embedded comments\n\n```js\nApp.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {\n  attrs: {\n    comments: {embedded: 'always'}\n  }\n})\n```\n\nA payload with an attribute configured for embedded records can serialize\nthe records together under the root attribute's payload:\n\n```js\n{\n  \"post\": {\n    \"id\": \"1\"\n    \"title\": \"Rails is omakase\",\n    \"body\": \"I want this for my ORM, I want that for my template language...\"\n    \"comments\": [{\n      \"id\": \"1\",\n      \"body\": \"Rails is unagi\"\n    }, {\n      \"id\": \"2\",\n      \"body\": \"Omakase O_o\"\n    }]\n  }\n}\n```\n\nThe attrs options object can use more specific instruction for extracting and\nserializing. When serializing, an option to embed `ids` or `records` can be set.\nWhen extracting the only option is `records`.\n\nSo `{embedded: 'always'}` is shorthand for:\n`{serialize: 'records', deserialize: 'records'}`\n\nTo embed the `ids` for a related object (using a hasMany relationship):\n\n```js\nApp.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {\n  attrs: {\n    comments: {serialize: 'ids', deserialize: 'records'}\n  }\n})\n```\n\n```js\n{\n  \"post\": {\n    \"id\": \"1\"\n    \"title\": \"Rails is omakase\",\n    \"body\": \"I want this for my ORM, I want that for my template language...\"\n    \"comments\": [\"1\", \"2\"]\n  }\n}\n```",
             "itemtype": "method",
             "name": "serializeHasMany",
@@ -2311,7 +2311,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/embedded_records_mixin.js",
-            "line": 395,
+            "line": 412,
             "description": "When serializing an embedded record, modify the property (in the json payload)\nthat refers to the parent record (foreign key for relationship).\n\nSerializing a `belongsTo` relationship removes the property that refers to the\nparent record\n\nSerializing a `hasMany` relationship does not remove the property that refers to\nthe parent record.",
             "itemtype": "method",
             "name": "removeEmbeddedForeignKey",
