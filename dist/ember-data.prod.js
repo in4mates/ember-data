@@ -8165,7 +8165,16 @@
         if (arguments.length > 1) {
                     var oldValue = ember$data$lib$system$model$attributes$$getValue(this, key);
 
-          if (value !== oldValue) {
+          var newVal = value;
+          var oldVal = oldValue;
+          if (newVal !== null && newVal !== undefined && (typeof newVal.valueOf) === 'function') {
+            newVal = newVal.valueOf();
+          }
+          if (oldVal !== null && oldVal !== undefined && (typeof oldVal.valueOf) === 'function') {
+            oldVal = oldVal.valueOf();
+          }
+
+          if (newVal !== oldVal) {
             // Add the new value to the changed attributes hash; it will get deleted by
             // the 'didSetProperty' handler if it is no different from the original value
             this._attributes[key] = value;

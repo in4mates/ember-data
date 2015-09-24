@@ -286,7 +286,16 @@ export default function attr(type, options) {
       Ember.assert("You may not set `id` as an attribute on your model. Please remove any lines that look like: `id: DS.attr('<type>')` from " + this.constructor.toString(), key !== 'id');
       var oldValue = getValue(this, key);
 
-      if (value !== oldValue) {
+      var newVal = value;
+      var oldVal = oldValue;
+      if (newVal !== null && newVal !== undefined && (typeof newVal.valueOf) === 'function') {
+        newVal = newVal.valueOf();
+      }
+      if (oldVal !== null && oldVal !== undefined && (typeof oldVal.valueOf) === 'function') {
+        oldVal = oldVal.valueOf();
+      }
+
+      if (newVal !== oldVal) {
         // Add the new value to the changed attributes hash; it will get deleted by
         // the 'didSetProperty' handler if it is no different from the original value
         this._attributes[key] = value;
