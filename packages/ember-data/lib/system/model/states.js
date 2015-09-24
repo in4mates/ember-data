@@ -174,10 +174,18 @@ var set = Ember.set;
 */
 
 function didSetProperty(record, context) {
-  if (context.value === context.originalValue) {
+  var newVal = context.value;
+  var oldVal = context.originalValue;
+  if (newVal !== null && newVal !== undefined && (typeof newVal.valueOf) === 'function') {
+    newVal = newVal.valueOf();
+  }
+  if (oldVal !== null && oldVal !== undefined && (typeof oldVal.valueOf) === 'function') {
+    oldVal = oldVal.valueOf();
+  }
+  if (newVal === oldVal) {
     delete record._attributes[context.name];
     record.send('propertyWasReset', context.name);
-  } else if (context.value !== context.oldValue) {
+  } else if (newVal !== oldVal) {
     record.send('becomeDirty');
   }
 
