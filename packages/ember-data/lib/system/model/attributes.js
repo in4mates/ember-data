@@ -3,6 +3,8 @@ import {
   Map
 } from "ember-data/system/map";
 
+import computedPolyfill from "ember-new-computed";
+
 /**
   @module ember-data
 */
@@ -21,15 +23,21 @@ Model.reopenClass({
 
     Example
 
-    ```javascript
+    ```app/models/person.js
+    import DS from 'ember-data';
 
-    App.Person = DS.Model.extend({
+    export default DS.Model.extend({
       firstName: attr('string'),
       lastName: attr('string'),
       birthday: attr('date')
     });
+    ```
 
-    var attributes = Ember.get(App.Person, 'attributes')
+    ```javascript
+    import Ember from 'ember';
+    import Person from 'app/models/person';
+
+    var attributes = Ember.get(Person, 'attributes')
 
     attributes.forEach(function(name, meta) {
       console.log(name, meta);
@@ -69,14 +77,21 @@ Model.reopenClass({
 
     Example
 
-    ```javascript
-    App.Person = DS.Model.extend({
+    ```app/models/person.js
+    import DS from 'ember-data';
+
+    export default DS.Model.extend({
       firstName: attr(),
       lastName: attr('string'),
       birthday: attr('date')
     });
+    ```
 
-    var transformedAttributes = Ember.get(App.Person, 'transformedAttributes')
+    ```javascript
+    import Ember from 'ember';
+    import Person from 'app/models/person';
+
+    var transformedAttributes = Ember.get(Person, 'transformedAttributes')
 
     transformedAttributes.forEach(function(field, type) {
       console.log(field, type);
@@ -124,13 +139,15 @@ Model.reopenClass({
     Example
 
     ```javascript
-    App.Person = DS.Model.extend({
+    import DS from 'ember-data';
+
+    var Person = DS.Model.extend({
       firstName: attr('string'),
       lastName: attr('string'),
       birthday: attr('date')
     });
 
-    App.Person.eachAttribute(function(name, meta) {
+    Person.eachAttribute(function(name, meta) {
       console.log(name, meta);
     });
 
@@ -142,7 +159,7 @@ Model.reopenClass({
 
     @method eachAttribute
     @param {Function} callback The callback to execute
-    @param {Object} [target] The target object to use
+    @param {Object} [binding] the value to which the callback's `this` should be bound
     @static
   */
   eachAttribute: function(callback, binding) {
@@ -173,13 +190,15 @@ Model.reopenClass({
     Example
 
     ```javascript
-    App.Person = DS.Model.extend({
+    import DS from 'ember-data';
+
+    var Person = DS.Model.extend({
       firstName: attr(),
       lastName: attr('string'),
       birthday: attr('date')
     });
 
-    App.Person.eachTransformedAttribute(function(name, type) {
+    Person.eachTransformedAttribute(function(name, type) {
       console.log(name, type);
     });
 
@@ -190,7 +209,7 @@ Model.reopenClass({
 
     @method eachTransformedAttribute
     @param {Function} callback The callback to execute
-    @param {Object} [target] The target object to use
+    @param {Object} [binding] the value to which the callback's `this` should be bound
     @static
   */
   eachTransformedAttribute: function(callback, binding) {
@@ -218,7 +237,7 @@ function getDefaultValue(record, options, key) {
 function hasValue(record, key) {
   return key in record._attributes ||
          key in record._inFlightAttributes ||
-         record._data.hasOwnProperty(key);
+         key in record._data;
 }
 
 function getValue(record, key) {
@@ -249,13 +268,28 @@ function getValue(record, key) {
 
   Example
 
-  ```javascript
-  var attr = DS.attr;
+  ```app/models/user.js
+  import DS from 'ember-data';
 
-  App.User = DS.Model.extend({
+  export default DS.Model.extend({
+    username: DS.attr('string'),
+    email: DS.attr('string'),
+    verified: DS.attr('boolean', { defaultValue: false })
+  });
+  ```
+
+  Default value can also be a function. This is useful it you want to return
+  a new object for each attribute.
+
+  ```app/models/user.js
+  import DS from 'ember-data';
+
+  export default DS.Model.extend({
     username: attr('string'),
     email: attr('string'),
-    verified: attr('boolean', {defaultValue: false})
+    settings: attr({defaultValue: function() {
+      return {};
+    }})
   });
   ```
 
@@ -281,10 +315,19 @@ export default function attr(type, options) {
     options: options
   };
 
-  return Ember.computed(function(key, value) {
-    if (arguments.length > 1) {
+  return computedPolyfill({
+    get: function(key) {
+      var internalModel = this._internalModel;
+      if (hasValue(internalModel, key)) {
+        return getValue(internalModel, key);
+      } else {
+        return getDefaultValue(this, options, key);
+      }
+    },
+    set: function(key, value) {
       Ember.assert("You may not set `id` as an attribute on your model. Please remove any lines that look like: `id: DS.attr('<type>')` from " + this.constructor.toString(), key !== 'id');
-      var oldValue = getValue(this, key);
+      var internalModel = this._internalModel;
+      var oldValue = getValue(internalModel, key);
 
       var newVal = value;
       var oldVal = oldValue;
@@ -298,25 +341,17 @@ export default function attr(type, options) {
       if (newVal !== oldVal) {
         // Add the new value to the changed attributes hash; it will get deleted by
         // the 'didSetProperty' handler if it is no different from the original value
-        this._attributes[key] = value;
+        internalModel._attributes[key] = value;
 
-        this.send('didSetProperty', {
+        this._internalModel.send('didSetProperty', {
           name: key,
           oldValue: oldValue,
-          originalValue: this._data[key],
+          originalValue: internalModel._data[key],
           value: value
         });
       }
 
       return value;
-    } else if (hasValue(this, key)) {
-      return getValue(this, key);
-    } else {
-      return getDefaultValue(this, options, key);
     }
-
-  // `data` is never set directly. However, it may be
-  // invalidated from the state manager's setData
-  // event.
   }).meta(meta);
 }

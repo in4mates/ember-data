@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -145,16 +167,27 @@
                         <h1>DS.ManyArray Class</h1>
 <div class="box meta">
     
+        <div class="uses">
+            Uses
+            <ul class="inline commas">
+                
+                    <li><a href="Ember.MutableArray.html">Ember.MutableArray</a></li>
+                
+                    <li><a href="Ember.Evented.html">Ember.Evented</a></li>
+                
+            </ul>
+        </div>
+    
 
     
         <div class="extends">
-            Extends <a href="../classes/DS.RecordArray.html" class="crosslink">DS.RecordArray</a>
+            Extends Ember.Object
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l7"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:7</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_system_many-array.js.html#l11"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:11</code></a>
         </div>
     
 
@@ -170,7 +203,7 @@
 
 
 <div class="box intro">
-    <p>A <code>ManyArray</code> is a <code>RecordArray</code> that represents the contents of a has-many
+    <p>A <code>ManyArray</code> is a <code>MutableArray</code> that represents the contents of a has-many
 relationship.</p>
 <p>The <code>ManyArray</code> is instantiated lazily the first time the relationship is
 requested.</p>
@@ -178,11 +211,14 @@ requested.</p>
 <p>Often, the relationships in Ember Data applications will have
 an inverse. For example, imagine the following models are
 defined:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Post = DS.Model.extend({
-  comments: DS.hasMany(&#39;comment&#39;)
-});
+<pre class="code prettyprint"><code class="lang-app/models/post.js">import DS from &#39;ember-data&#39;;
 
-App.Comment = DS.Model.extend({
+export default DS.Model.extend({
+  comments: DS.hasMany(&#39;comment&#39;)
+});</code></pre>
+<pre class="code prettyprint"><code class="lang-app/models/comment.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   post: DS.belongsTo(&#39;post&#39;)
 });</code></pre>
 <p>If you created a new instance of <code>App.Post</code> and added
@@ -221,17 +257,12 @@ relationship&#39;s <em>owner</em>.</p>
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method__unregisterFromManager">_unregisterFromManager</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
+                            <li class="index-item method deprecated">
                                 <a href="#method_addRecord">addRecord</a>
 
                                 
+                                
+                                    <span class="flag deprecated">deprecated</span>
                                 
                             </li>
                         
@@ -256,20 +287,6 @@ relationship&#39;s <em>owner</em>.</p>
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
-                                <a href="#method_objectAtContent">objectAtContent</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
-                                <a href="#method_pushRecord">pushRecord</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method public">
                                 <a href="#method_reload">reload</a>
 
@@ -277,22 +294,17 @@ relationship&#39;s <em>owner</em>.</p>
                                 
                             </li>
                         
-                            <li class="index-item method private inherited">
+                            <li class="index-item method deprecated">
                                 <a href="#method_removeRecord">removeRecord</a>
 
                                 
                                 
+                                    <span class="flag deprecated">deprecated</span>
+                                
                             </li>
                         
-                            <li class="index-item method inherited">
+                            <li class="index-item method">
                                 <a href="#method_save">save</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_update">update</a>
 
                                 
                                 
@@ -308,14 +320,7 @@ relationship&#39;s <em>owner</em>.</p>
 
                     <ul class="index-list properties extends">
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property_content">content</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
+                            <li class="index-item property">
                                 <a href="#property_isLoaded">isLoaded</a>
 
                                 
@@ -329,8 +334,8 @@ relationship&#39;s <em>owner</em>.</p>
                                 
                             </li>
                         
-                            <li class="index-item property inherited">
-                                <a href="#property_isUpdating">isUpdating</a>
+                            <li class="index-item property public">
+                                <a href="#property_meta">meta</a>
 
                                 
                                 
@@ -350,20 +355,6 @@ relationship&#39;s <em>owner</em>.</p>
                                 
                             </li>
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property_store">store</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
-                                <a href="#property_type">type</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -378,60 +369,7 @@ relationship&#39;s <em>owner</em>.</p>
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method__unregisterFromManager" class="method item private inherited">
-    <h3 class="name"><code>_unregisterFromManager</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method__unregisterFromManager">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l198"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:198</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_addRecord" class="method item private inherited">
+                    <div id="method_addRecord" class="method item deprecated">
     <h3 class="name"><code>addRecord</code></h3>
 
     
@@ -444,12 +382,6 @@ relationship&#39;s <em>owner</em>.</p>
                     
                 </li>
             
-                <li class="arg">
-                    
-                        <code>an</code>
-                    
-                </li>
-            
             </ul><span class="paren">)</span>
         </div>
     
@@ -457,9 +389,9 @@ relationship&#39;s <em>owner</em>.</p>
     
 
     
-
+        <span class="flag deprecated" title="Use &#x60;addObject()&#x60; instead">deprecated</span>
     
-        <span class="flag private">private</span>
+
     
 
     
@@ -473,24 +405,28 @@ relationship&#39;s <em>owner</em>.</p>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_addRecord">DS.RecordArray</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l121"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:121</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l289"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:289</code></a>
         
         </p>
 
 
+        
+            <p>Deprecated: Use &#x60;addObject()&#x60; instead</p>
         
 
         
     </div>
 
     <div class="description">
-        <p>Adds a record to the <code>RecordArray</code> without duplicates</p>
-
+        
     </div>
 
     
@@ -509,22 +445,6 @@ relationship&#39;s <em>owner</em>.</p>
 
                     <div class="param-description">
                          
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">an</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>optional index to insert at</p>
-
                     </div>
 
                     
@@ -588,7 +508,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l186"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:186</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l268"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:268</code></a>
         
         </p>
 
@@ -682,7 +602,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l166"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:166</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l219"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:219</code></a>
         
         </p>
 
@@ -748,7 +668,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l157"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:157</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l210"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:210</code></a>
         
         </p>
 
@@ -772,198 +692,6 @@ relationship&#39;s <em>owner</em>.</p>
                     
                         <code class="param-name">count</code>
                         <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_objectAtContent" class="method item private inherited">
-    <h3 class="name"><code>objectAtContent</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>index</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_objectAtContent">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l83"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:83</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Retrieves an object from the content by index.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">index</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>:
-                    
-                    <p>record</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_pushRecord" class="method item private inherited">
-    <h3 class="name"><code>pushRecord</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>record</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_pushRecord">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l140"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:140</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Adds a record to the <code>RecordArray</code>, but allows duplicates</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -1019,7 +747,7 @@ relationship&#39;s <em>owner</em>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l178"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:178</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l231"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:231</code></a>
         
         </p>
 
@@ -1041,7 +769,7 @@ relationship&#39;s <em>owner</em>.</p>
 </div>
 
                 
-                    <div id="method_removeRecord" class="method item private inherited">
+                    <div id="method_removeRecord" class="method item deprecated">
     <h3 class="name"><code>removeRecord</code></h3>
 
     
@@ -1061,9 +789,9 @@ relationship&#39;s <em>owner</em>.</p>
     
 
     
-
+        <span class="flag deprecated" title="Use &#x60;removeObject()&#x60; instead">deprecated</span>
     
-        <span class="flag private">private</span>
+
     
 
     
@@ -1077,24 +805,28 @@ relationship&#39;s <em>owner</em>.</p>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_removeRecord">DS.RecordArray</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l150"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:150</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l302"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:302</code></a>
         
         </p>
 
 
+        
+            <p>Deprecated: Use &#x60;removeObject()&#x60; instead</p>
         
 
         
     </div>
 
     <div class="description">
-        <p>Removes a record to the <code>RecordArray</code>.</p>
-
+        
     </div>
 
     
@@ -1128,7 +860,7 @@ relationship&#39;s <em>owner</em>.</p>
 </div>
 
                 
-                    <div id="method_save" class="method item inherited">
+                    <div id="method_save" class="method item">
     <h3 class="name"><code>save</code></h3>
 
     
@@ -1156,12 +888,15 @@ relationship&#39;s <em>owner</em>.</p>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_save">DS.RecordArray</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l161"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:161</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l239"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:239</code></a>
         
         </p>
 
@@ -1172,13 +907,16 @@ relationship&#39;s <em>owner</em>.</p>
     </div>
 
     <div class="description">
-        <p>Saves all of the records in the <code>RecordArray</code>.</p>
+        <p>Saves all of the records in the <code>ManyArray</code>.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var messages = store.all(&#39;message&#39;);
-messages.forEach(function(message) {
-  message.set(&#39;hasBeenSeen&#39;, true);
-});
-messages.save();</code></pre>
+<pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;inbox&#39;, 1).then(function(inbox) {
+  inbox.get(&#39;messages&#39;).then(function(messages) {
+    messages.forEach(function(message) {
+      message.set(&#39;isRead&#39;, true);
+    });
+    messages.save()
+  });
+});</code></pre>
 
     </div>
 
@@ -1204,117 +942,12 @@ messages.save();</code></pre>
 </div>
 
                 
-                    <div id="method_update" class="method item inherited">
-    <h3 class="name"><code>update</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_update">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l97"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:97</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Used to get the latest version of all of the records in this array
-from the adapter.</p>
-<p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var people = store.all(&#39;person&#39;);
-people.get(&#39;isUpdating&#39;); // false
-people.update();
-people.get(&#39;isUpdating&#39;); // true</code></pre>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
             </div>
         
 
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
-
-                
-                    <div id="property_content" class="property item private inherited">
-    <h3 class="name"><code>content</code></h3>
-    <span class="type">Ember.Array</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#property_content">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l31"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:31</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The array of client ids backing the record array. When a
-record is requested from the record array, the record
-for the client id at the same index is materialized, if
-necessary, by the store.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
 
                 
                     <div id="property_isLoaded" class="property item">
@@ -1331,16 +964,16 @@ necessary, by the store.</p>
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/DS.RecordArray.html#property_isLoaded">
-                DS.RecordArray
-            </a>
             
-            but overwritten in
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l91"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:91</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l103"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:103</code></a>
         
         </p>
 
@@ -1387,7 +1020,7 @@ necessary, by the store.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l83"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:83</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l95"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:95</code></a>
         
         </p>
 
@@ -1409,12 +1042,14 @@ necessary, by the store.</p>
 </div>
 
                 
-                    <div id="property_isUpdating" class="property item inherited">
-    <h3 class="name"><code>isUpdating</code></h3>
-    <span class="type">Boolean</span>
+                    <div id="property_meta" class="property item public">
+    <h3 class="name"><code>meta</code></h3>
+    <span class="type">Object</span>
 
     
 
+    
+        <span class="flag public">public</span>
     
 
     
@@ -1424,12 +1059,15 @@ necessary, by the store.</p>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#property_isUpdating">DS.RecordArray</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l57"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:57</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l118"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:118</code></a>
         
         </p>
 
@@ -1439,12 +1077,30 @@ necessary, by the store.</p>
     </div>
 
     <div class="description">
-        <p>The flag to signal a <code>RecordArray</code> is currently loading data.</p>
+        <p>Metadata associated with the request for async hasMany relationships.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var people = store.all(&#39;person&#39;);
-people.get(&#39;isUpdating&#39;); // false
-people.update();
-people.get(&#39;isUpdating&#39;); // true</code></pre>
+<p>Given that the server returns the following JSON payload when fetching a
+hasMany relationship:</p>
+<pre class="code prettyprint"><code class="lang-js">{
+  &quot;comments&quot;: [{
+    &quot;id&quot;: 1,
+    &quot;comment&quot;: &quot;This is the first comment&quot;,
+  }, {
+    // ...
+  }],
+
+  &quot;meta&quot;: {
+    &quot;page&quot;: 1,
+    &quot;total&quot;: 5
+  }
+}</code></pre>
+<p>You can then access the metadata via the <code>meta</code> property:</p>
+<pre class="code prettyprint"><code class="lang-js">post.get(&#39;comments&#39;).then(function(comments) {
+  var meta = comments.get(&#39;meta&#39;);
+
+  // meta.page =&gt; 1
+  // meta.total =&gt; 5
+});</code></pre>
 
     </div>
 
@@ -1481,7 +1137,7 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l148"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:148</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l201"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:201</code></a>
         
         </p>
 
@@ -1529,7 +1185,7 @@ to keep track of when they will resolve.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_many_array.js.html#l98"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;many_array.js:98</code></a>
+        <a href="../files/packages_ember-data_lib_system_many-array.js.html#l110"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;many-array.js:110</code></a>
         
         </p>
 
@@ -1540,92 +1196,6 @@ to keep track of when they will resolve.</p>
 
     <div class="description">
         <p>The relationship which manages this array.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_store" class="property item private inherited">
-    <h3 class="name"><code>store</code></h3>
-    <span class="type"><a href="../classes/DS.Store.html" class="crosslink">DS.Store</a></span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#property_store">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l74"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:74</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The store that created this record array.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_type" class="property item inherited">
-    <h3 class="name"><code>type</code></h3>
-    <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#property_type">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l23"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:23</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The model type contained by this record array.</p>
 
     </div>
 

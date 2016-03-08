@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -150,7 +172,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l5"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:5</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l8"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:8</code></a>
         </div>
     
 
@@ -171,7 +193,9 @@
 <p>To set up embedded records, include the mixin when extending a serializer
 then define and configure embedded (model) relationships.</p>
 <p>Below is an example of a per-type serializer (&#39;post&#39; type).</p>
-<pre class="code prettyprint"><code class="lang-js">App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+<pre class="code prettyprint"><code class="lang-app/serializers/post.js">import DS from &#39;ember-data&#39;;
+
+export default DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
   attrs: {
     author: { embedded: &#39;always&#39; },
     comments: { serialize: &#39;ids&#39; }
@@ -208,8 +232,9 @@ HasMany:   <code>{ serialize: false, deserialize: &#39;ids&#39; }</code></p>
 <p>Embedded records must have a model defined to be extracted and serialized. Note that
 when defining any relationships on your model such as <code>belongsTo</code> and <code>hasMany</code>, you
 should not both specify <code>async:true</code> and also indicate through the serializer&#39;s
-<code>attrs</code> attribute that the related model should be embedded.  If a model is
-declared embedded, then do not use <code>async:true</code>.</p>
+<code>attrs</code> attribute that the related model should be embedded for deserialization.
+If a model is declared embedded for deserialization (<code>embedded: &#39;always&#39;</code>,
+<code>deserialize: &#39;record&#39;</code> or <code>deserialize: &#39;records&#39;</code>), then do not use <code>async:true</code>.</p>
 <p>To successfully extract and serialize embedded records the model relationships
 must be setup correcty See the
 <a href="/guides/models/defining-models/#toc_defining-relationships">defining relationships</a>
@@ -254,6 +279,55 @@ to modify it to fit your specific needs.</strong></p>
                     <h3>Methods</h3>
 
                     <ul class="index-list methods">
+                        
+                            <li class="index-item method private">
+                                <a href="#method__extractEmbeddedBelongsTo">_extractEmbeddedBelongsTo</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__extractEmbeddedBelongsToPolymorphic">_extractEmbeddedBelongsToPolymorphic</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__extractEmbeddedHasMany">_extractEmbeddedHasMany</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__extractEmbeddedHasManyPolymorphic">_extractEmbeddedHasManyPolymorphic</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__extractEmbeddedRecords">_extractEmbeddedRecords</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__normalizeEmbeddedRelationship">_normalizeEmbeddedRelationship</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_initializeStore">initializeStore</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method">
                                 <a href="#method_initializeStore">initializeStore</a>
@@ -356,6 +430,342 @@ to modify it to fit your specific needs.</strong></p>
                 <h2 class="off-left">Methods</h2>
 
                 
+                    <div id="method__extractEmbeddedBelongsTo" class="method item private">
+    <h3 class="name"><code>_extractEmbeddedBelongsTo</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l616"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:616</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__extractEmbeddedBelongsToPolymorphic" class="method item private">
+    <h3 class="name"><code>_extractEmbeddedBelongsToPolymorphic</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l640"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:640</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__extractEmbeddedHasMany" class="method item private">
+    <h3 class="name"><code>_extractEmbeddedHasMany</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l558"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:558</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__extractEmbeddedHasManyPolymorphic" class="method item private">
+    <h3 class="name"><code>_extractEmbeddedHasManyPolymorphic</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l587"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:587</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__extractEmbeddedRecords" class="method item private">
+    <h3 class="name"><code>_extractEmbeddedRecords</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l526"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:526</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__normalizeEmbeddedRelationship" class="method item private">
+    <h3 class="name"><code>_normalizeEmbeddedRelationship</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l666"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:666</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_initializeStore" class="method item">
     <h3 class="name"><code>initializeStore</code></h3>
 
@@ -365,7 +775,7 @@ to modify it to fit your specific needs.</strong></p>
             
                 <li class="arg">
                     
-                        <code>container</code>
+                        <code>registry</code>
                     
                 </li>
             
@@ -415,7 +825,7 @@ to modify it to fit your specific needs.</strong></p>
     </div>
 
     <div class="description">
-        <p>Configures a container for use with an Ember-Data
+        <p>Configures a registry for use with an Ember-Data
 store. Accepts an optional namespace argument.</p>
 
     </div>
@@ -428,8 +838,8 @@ store. Accepts an optional namespace argument.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">container</code>
-                        <span class="type">Ember.Container</span>
+                        <code class="param-name">registry</code>
+                        <span class="type">Ember.Registry</span>
                     
 
                     
@@ -468,8 +878,8 @@ store. Accepts an optional namespace argument.</p>
 </div>
 
                 
-                    <div id="method_initializeStoreInjections" class="method item">
-    <h3 class="name"><code>initializeStoreInjections</code></h3>
+                    <div id="method_initializeStore" class="method item">
+    <h3 class="name"><code>initializeStore</code></h3>
 
     
         <div class="args">
@@ -477,7 +887,7 @@ store. Accepts an optional namespace argument.</p>
             
                 <li class="arg">
                     
-                        <code>container</code>
+                        <code>applicationOrRegistry</code>
                     
                 </li>
             
@@ -510,7 +920,7 @@ store. Accepts an optional namespace argument.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_initializers_data_adapter.js.html#l3"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;initializers&#x2F;data_adapter.js:3</code></a>
+        <a href="../files/packages_ember-data_lib_instance-initializers_initialize-store-service.js.html#l1"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;instance-initializers&#x2F;initialize-store-service.js:1</code></a>
         
         </p>
 
@@ -521,8 +931,8 @@ store. Accepts an optional namespace argument.</p>
     </div>
 
     <div class="description">
-        <p>Configures a container with injections on Ember applications
-for the Ember-Data store. Accepts an optional namespace argument.</p>
+        <p>Configures a registry for use with an Ember-Data
+store.</p>
 
     </div>
 
@@ -534,8 +944,8 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">container</code>
-                        <span class="type">Ember.Container</span>
+                        <code class="param-name">applicationOrRegistry</code>
+                        <span class="type">Ember.ApplicationInstance</span>
                     
 
                     
@@ -566,7 +976,7 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
             
                 <li class="arg">
                     
-                        <code>container</code>
+                        <code>registry</code>
                     
                 </li>
             
@@ -599,7 +1009,7 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_initializers_store_injections.js.html#l1"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;initializers&#x2F;store_injections.js:1</code></a>
+        <a href="../files/packages_ember-data_lib_initializers_data-adapter.js.html#l3"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;initializers&#x2F;data-adapter.js:3</code></a>
         
         </p>
 
@@ -610,7 +1020,7 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
     </div>
 
     <div class="description">
-        <p>Configures a container with injections on Ember applications
+        <p>Configures a registry with injections on Ember applications
 for the Ember-Data store. Accepts an optional namespace argument.</p>
 
     </div>
@@ -623,8 +1033,97 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">container</code>
-                        <span class="type">Ember.Container</span>
+                        <code class="param-name">registry</code>
+                        <span class="type">Ember.Registry</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_initializeStoreInjections" class="method item">
+    <h3 class="name"><code>initializeStoreInjections</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>registry</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_initializers_store-injections.js.html#l1"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;initializers&#x2F;store-injections.js:1</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Configures a registry with injections on Ember applications
+for the Ember-Data store. Accepts an optional namespace argument.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">registry</code>
+                        <span class="type">Ember.Registry</span>
                     
 
                     
@@ -655,7 +1154,7 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
             
                 <li class="arg">
                     
-                        <code>container</code>
+                        <code>registry</code>
                     
                 </li>
             
@@ -699,7 +1198,7 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
     </div>
 
     <div class="description">
-        <p>Configures a container for use with Ember-Data
+        <p>Configures a registry for use with Ember-Data
 transforms.</p>
 
     </div>
@@ -712,8 +1211,8 @@ transforms.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">container</code>
-                        <span class="type">Ember.Container</span>
+                        <code class="param-name">registry</code>
+                        <span class="type">Ember.Registry</span>
                     
 
                     
@@ -744,7 +1243,7 @@ transforms.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
@@ -756,7 +1255,7 @@ transforms.</p>
             
                 <li class="arg">
                     
-                        <code>key</code>
+                        <code>prop</code>
                     
                 </li>
             
@@ -793,7 +1292,7 @@ transforms.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l94"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:94</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l100"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:100</code></a>
         
         </p>
 
@@ -831,8 +1330,8 @@ while pushing them into the store as they are encountered</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">subclass of DS.Model</span>
+                        <code class="param-name">typeClass</code>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -862,7 +1361,7 @@ while pushing them into the store as they are encountered</p>
             
                 <li class="param">
                     
-                        <code class="param-name">key</code>
+                        <code class="param-name">prop</code>
                         <span class="type">String</span>
                     
 
@@ -909,13 +1408,13 @@ while pushing them into the store as they are encountered</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>snapshot</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>embeddedRecord</code>
+                        <code>embeddedSnapshot</code>
                     
                 </li>
             
@@ -960,7 +1459,7 @@ while pushing them into the store as they are encountered</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l412"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:412</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l452"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:452</code></a>
         
         </p>
 
@@ -988,8 +1487,8 @@ the parent record.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">snapshot</code>
+                        <span class="type"><a href="../classes/DS.Snapshot.html" class="crosslink">DS.Snapshot</a></span>
                     
 
                     
@@ -1003,8 +1502,8 @@ the parent record.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">embeddedRecord</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">embeddedSnapshot</code>
+                        <span class="type"><a href="../classes/DS.Snapshot.html" class="crosslink">DS.Snapshot</a></span>
                     
 
                     
@@ -1065,7 +1564,7 @@ the parent record.</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>snapshot</code>
                     
                 </li>
             
@@ -1110,7 +1609,7 @@ the parent record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l198"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:198</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l211"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:211</code></a>
         
         </p>
 
@@ -1134,9 +1633,11 @@ Author = DS.Model.extend({
   post:     DS.belongsTo(&#39;post&#39;)
 });</code></pre>
 <p>Use a custom (type) serializer for the post model to configure embedded author</p>
-<pre class="code prettyprint"><code class="lang-js">App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+<pre class="code prettyprint"><code class="lang-app/serializers/post.js">import DS from &#39;ember-data;
+
+export default DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
   attrs: {
-    author: {embedded: &#39;always&#39;}
+    author: { embedded: &#39;always&#39; }
   }
 })</code></pre>
 <p>A payload with an attribute configured for embedded records can serialize
@@ -1162,8 +1663,8 @@ the records together under the root attribute&#39;s payload:</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">snapshot</code>
+                        <span class="type"><a href="../classes/DS.Snapshot.html" class="crosslink">DS.Snapshot</a></span>
                     
 
                     
@@ -1224,7 +1725,7 @@ the records together under the root attribute&#39;s payload:</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>snapshot</code>
                     
                 </li>
             
@@ -1269,7 +1770,7 @@ the records together under the root attribute&#39;s payload:</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l293"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:293</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l317"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:317</code></a>
         
         </p>
 
@@ -1293,7 +1794,9 @@ Comment = DS.Model.extend({
   post:     DS.belongsTo(&#39;post&#39;)
 });</code></pre>
 <p>Use a custom (type) serializer for the post model to configure embedded comments</p>
-<pre class="code prettyprint"><code class="lang-js">App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+<pre class="code prettyprint"><code class="lang-app/serializers/post.js">import DS from &#39;ember-data;
+
+export default DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
   attrs: {
     comments: {embedded: &#39;always&#39;}
   }
@@ -1317,12 +1820,14 @@ the records together under the root attribute&#39;s payload:</p>
 <p>The attrs options object can use more specific instruction for extracting and
 serializing. When serializing, an option to embed <code>ids</code> or <code>records</code> can be set.
 When extracting the only option is <code>records</code>.</p>
-<p>So <code>{embedded: &#39;always&#39;}</code> is shorthand for:
-<code>{serialize: &#39;records&#39;, deserialize: &#39;records&#39;}</code></p>
+<p>So <code>{ embedded: &#39;always&#39; }</code> is shorthand for:
+<code>{ serialize: &#39;records&#39;, deserialize: &#39;records&#39; }</code></p>
 <p>To embed the <code>ids</code> for a related object (using a hasMany relationship):</p>
-<pre class="code prettyprint"><code class="lang-js">App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+<pre class="code prettyprint"><code class="lang-app/serializers/post.js">import DS from &#39;ember-data;
+
+export default DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
   attrs: {
-    comments: {serialize: &#39;ids&#39;, deserialize: &#39;records&#39;}
+    comments: { serialize: &#39;ids&#39;, deserialize: &#39;records&#39; }
   }
 })</code></pre>
 <pre class="code prettyprint"><code class="lang-js">{
@@ -1344,8 +1849,8 @@ When extracting the only option is <code>records</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">snapshot</code>
+                        <span class="type"><a href="../classes/DS.Snapshot.html" class="crosslink">DS.Snapshot</a></span>
                     
 
                     
@@ -1428,7 +1933,7 @@ When extracting the only option is <code>records</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l157"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:157</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l168"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:168</code></a>
         
         </p>
 
@@ -1473,7 +1978,7 @@ When extracting the only option is <code>records</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l165"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:165</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l176"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:176</code></a>
         
         </p>
 
@@ -1521,7 +2026,7 @@ entry will be deleted</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_serializers_embedded_records_mixin.js.html#l187"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded_records_mixin.js:187</code></a>
+        <a href="../files/packages_ember-data_lib_serializers_embedded-records-mixin.js.html#l198"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;embedded-records-mixin.js:198</code></a>
         
         </p>
 

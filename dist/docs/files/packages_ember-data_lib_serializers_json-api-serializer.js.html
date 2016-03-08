@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>packages/ember-data/lib/serializers/json-api-serializer.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
+                <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
+            
+                <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
+            
+                <li><a href="../classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a></li>
+            
+                <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
+            
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
+                <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
+            
+                <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
+            
+                <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
+            
+                <li><a href="../classes/DS.DateTransform.html">DS.DateTransform</a></li>
+            
+                <li><a href="../classes/DS.DebugAdapter.html">DS.DebugAdapter</a></li>
+            
+                <li><a href="../classes/DS.EmbeddedRecordsMixin.html">DS.EmbeddedRecordsMixin</a></li>
+            
+                <li><a href="../classes/DS.Errors.html">DS.Errors</a></li>
+            
+                <li><a href="../classes/DS.FilteredRecordArray.html">DS.FilteredRecordArray</a></li>
+            
+                <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
+            
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
+                <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
+            
+                <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
+            
+                <li><a href="../classes/DS.ManyArray.html">DS.ManyArray</a></li>
+            
+                <li><a href="../classes/DS.Model.html">DS.Model</a></li>
+            
+                <li><a href="../classes/DS.NumberTransform.html">DS.NumberTransform</a></li>
+            
+                <li><a href="../classes/DS.PromiseArray.html">DS.PromiseArray</a></li>
+            
+                <li><a href="../classes/DS.PromiseManyArray.html">DS.PromiseManyArray</a></li>
+            
+                <li><a href="../classes/DS.PromiseObject.html">DS.PromiseObject</a></li>
+            
+                <li><a href="../classes/DS.RecordArray.html">DS.RecordArray</a></li>
+            
+                <li><a href="../classes/DS.RecordArrayManager.html">DS.RecordArrayManager</a></li>
+            
+                <li><a href="../classes/DS.RESTAdapter.html">DS.RESTAdapter</a></li>
+            
+                <li><a href="../classes/DS.RESTSerializer.html">DS.RESTSerializer</a></li>
+            
+                <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
+            
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
+                <li><a href="../classes/DS.Store.html">DS.Store</a></li>
+            
+                <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
+            
+                <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
+            
+                <li><a href="../classes/Ember.Date.html">Ember.Date</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/ember-data.html">ember-data</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: packages/ember-data/lib/serializers/json-api-serializer.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+  @module ember-data
+*/
+
+import JSONSerializer from &#x27;ember-data/serializers/json-serializer&#x27;;
+import normalizeModelName from &#x27;ember-data/system/normalize-model-name&#x27;;
+import ArrayPolyfills  from &#x27;ember-data/ext/ember/array&#x27;;
+import Ember from &#x27;ember&#x27;;
+import { pluralize, singularize } from &#x27;ember-inflector&#x27;;
+
+const map = ArrayPolyfills.map;
+const dasherize = Ember.String.dasherize;
+const get = Ember.get;
+
+/**
+  Ember Data 2.0 Serializer:
+
+  In Ember Data a Serializer is used to serialize and deserialize
+  records when they are transferred in and out of an external source.
+  This process involves normalizing property names, transforming
+  attribute values and serializing relationships.
+
+  &#x60;JSONAPISerializer&#x60; supports the http://jsonapi.org/ spec and is the
+  serializer recommended by Ember Data.
+
+  This serializer normalizes a JSON API payload that looks like:
+
+  &#x60;&#x60;&#x60;js
+
+    // models/player.js
+    import DS from &quot;ember-data&quot;;
+
+    export default DS.Model.extend({
+      name: DS.attr(),
+      skill: DS.attr(),
+      gamesPlayed: DS.attr(),
+      club: DS.belongsTo(&#x27;club&#x27;)
+    });
+
+    // models/club.js
+    import DS from &quot;ember-data&quot;;
+
+    export default DS.Model.extend({
+      name: DS.attr(),
+      location: DS.attr(),
+      players: DS.hasMany(&#x27;player&#x27;)
+    });
+  &#x60;&#x60;&#x60;
+
+  &#x60;&#x60;&#x60;js
+
+    {
+      &quot;data&quot;: [
+        {
+          &quot;attributes&quot;: {
+            &quot;name&quot;: &quot;Benfica&quot;,
+            &quot;location&quot;: &quot;Portugal&quot;
+          },
+          &quot;id&quot;: &quot;1&quot;,
+          &quot;relationships&quot;: {
+            &quot;players&quot;: {
+              &quot;data&quot;: [
+                {
+                  &quot;id&quot;: &quot;3&quot;,
+                  &quot;type&quot;: &quot;players&quot;
+                }
+              ]
+            }
+          },
+          &quot;type&quot;: &quot;clubs&quot;
+        }
+      ],
+      &quot;included&quot;: [
+        {
+          &quot;attributes&quot;: {
+            &quot;name&quot;: &quot;Eusebio Silva Ferreira&quot;,
+            &quot;skill&quot;: &quot;Rocket shot&quot;,
+            &quot;games-played&quot;: 431
+          },
+          &quot;id&quot;: &quot;3&quot;,
+          &quot;relationships&quot;: {
+            &quot;club&quot;: {
+              &quot;data&quot;: {
+                &quot;id&quot;: &quot;1&quot;,
+                &quot;type&quot;: &quot;clubs&quot;
+              }
+            }
+          },
+          &quot;type&quot;: &quot;players&quot;
+        }
+      ]
+    }
+  &#x60;&#x60;&#x60;
+
+  to the format that the Ember Data store expects.
+
+  @class JSONAPISerializer
+  @namespace DS
+  @extends DS.JSONSerializer
+*/
+export default JSONSerializer.extend({
+
+  /**
+    This is only to be used temporarily during the transition from the old
+    serializer API to the new one.
+
+    &#x60;JSONAPISerializer&#x60; only supports the new Serializer API.
+
+    @property isNewSerializerAPI
+  */
+  isNewSerializerAPI: true,
+
+  /**
+    @method _normalizeDocumentHelper
+    @param {Object} documentHash
+    @return {Object}
+    @private
+  */
+  _normalizeDocumentHelper: function(documentHash) {
+
+    if (Ember.typeOf(documentHash.data) === &#x27;object&#x27;) {
+      documentHash.data = this._normalizeResourceHelper(documentHash.data);
+    } else if (Ember.typeOf(documentHash.data) === &#x27;array&#x27;) {
+      documentHash.data = map.call(documentHash.data, this._normalizeResourceHelper, this);
+    }
+
+    if (Ember.typeOf(documentHash.included) === &#x27;array&#x27;) {
+      documentHash.included = map.call(documentHash.included, this._normalizeResourceHelper, this);
+    }
+
+    return documentHash;
+  },
+
+  /**
+    @method _normalizeRelationshipDataHelper
+    @param {Object} relationshipDataHash
+    @return {Object}
+    @private
+  */
+  _normalizeRelationshipDataHelper: function(relationshipDataHash) {
+    let type = this.modelNameFromPayloadKey(relationshipDataHash.type);
+    relationshipDataHash.type = type;
+    return relationshipDataHash;
+  },
+
+  /**
+    @method _normalizeResourceHelper
+    @param {Object} resourceHash
+    @return {Object}
+    @private
+  */
+  _normalizeResourceHelper: function(resourceHash) {
+    let modelName = this.modelNameFromPayloadKey(resourceHash.type);
+    let modelClass = this.store.modelFor(modelName);
+    let serializer = this.store.serializerFor(modelName);
+
+    Ember.assert(&#x60;${this.toString()} is using the ${get(this, &#x27;isNewSerializerAPI&#x27;) ? &#x27;new&#x27; : &#x27;old&#x27;} serializer API and expects ${serializer.toString()} it collaborates with to do the same. Make sure to set \&#x60;isNewSerializerAPI: true\&#x60; in your custom serializers if you want to use the new Serializer API.&#x60;, get(this, &#x27;isNewSerializerAPI&#x27;) === get(serializer, &#x27;isNewSerializerAPI&#x27;));
+
+    let { data } = serializer.normalize(modelClass, resourceHash);
+    return data;
+  },
+
+  /**
+    @method pushPayload
+    @param {DS.Store} store
+    @param {Object} payload
+  */
+  pushPayload: function(store, payload) {
+    let normalizedPayload = this._normalizeDocumentHelper(payload);
+    store.push(normalizedPayload);
+  },
+
+  /**
+    @method _normalizeResponse
+    @param {DS.Store} store
+    @param {DS.Model} primaryModelClass
+    @param {Object} payload
+    @param {String|Number} id
+    @param {String} requestType
+    @param {Boolean} isSingle
+    @return {Object} JSON-API Document
+    @private
+  */
+  _normalizeResponse: function(store, primaryModelClass, payload, id, requestType, isSingle) {
+    let normalizedPayload = this._normalizeDocumentHelper(payload);
+    return normalizedPayload;
+  },
+
+  /**
+    @method extractAttributes
+    @param {DS.Model} modelClass
+    @param {Object} resourceHash
+    @return {Object}
+  */
+  extractAttributes: function(modelClass, resourceHash) {
+    var attributes = {};
+
+    if (resourceHash.attributes) {
+      modelClass.eachAttribute((key) =&gt; {
+        let attributeKey = this.keyForAttribute(key, &#x27;deserialize&#x27;);
+        if (resourceHash.attributes.hasOwnProperty(attributeKey)) {
+          attributes[key] = resourceHash.attributes[attributeKey];
+        }
+      });
+    }
+
+    return attributes;
+  },
+
+  /**
+    @method extractRelationship
+    @param {Object} relationshipHash
+    @return {Object}
+  */
+  extractRelationship: function(relationshipHash) {
+
+    if (Ember.typeOf(relationshipHash.data) === &#x27;object&#x27;) {
+      relationshipHash.data = this._normalizeRelationshipDataHelper(relationshipHash.data);
+    }
+
+    if (Ember.typeOf(relationshipHash.data) === &#x27;array&#x27;) {
+      relationshipHash.data = map.call(relationshipHash.data, this._normalizeRelationshipDataHelper, this);
+    }
+
+    return relationshipHash;
+  },
+
+  /**
+    @method extractRelationships
+    @param {Object} modelClass
+    @param {Object} resourceHash
+    @return {Object}
+  */
+  extractRelationships: function(modelClass, resourceHash) {
+    let relationships = {};
+
+    if (resourceHash.relationships) {
+      modelClass.eachRelationship((key, relationshipMeta) =&gt; {
+        let relationshipKey = this.keyForRelationship(key, relationshipMeta.kind, &#x27;deserialize&#x27;);
+        if (resourceHash.relationships.hasOwnProperty(relationshipKey)) {
+
+          let relationshipHash = resourceHash.relationships[relationshipKey];
+          relationships[key] = this.extractRelationship(relationshipHash);
+
+        }
+      });
+    }
+
+    return relationships;
+  },
+
+  /**
+    @method _extractType
+    @param {DS.Model} modelClass
+    @param {Object} resourceHash
+    @return {String}
+    @private
+  */
+  _extractType: function(modelClass, resourceHash) {
+    return this.modelNameFromPayloadKey(resourceHash.type);
+  },
+
+  /**
+    @method modelNameFromPayloadKey
+    @param {String} key
+    @return {String} the model&#x27;s modelName
+  */
+  modelNameFromPayloadKey: function(key) {
+    return singularize(normalizeModelName(key));
+  },
+
+  /**
+    @method payloadKeyFromModelName
+    @param {String} modelName
+    @return {String}
+  */
+  payloadKeyFromModelName: function(modelName) {
+    return pluralize(modelName);
+  },
+
+  /**
+    @method normalize
+    @param {DS.Model} modelClass
+    @param {Object} resourceHash
+    @return {String}
+  */
+  normalize: function(modelClass, resourceHash) {
+    if (resourceHash.attributes) {
+      this.normalizeUsingDeclaredMapping(modelClass, resourceHash.attributes);
+    }
+
+    if (resourceHash.relationships) {
+      this.normalizeUsingDeclaredMapping(modelClass, resourceHash.relationships);
+    }
+
+    let data = {
+      id:            this.extractId(modelClass, resourceHash),
+      type:          this._extractType(modelClass, resourceHash),
+      attributes:    this.extractAttributes(modelClass, resourceHash),
+      relationships: this.extractRelationships(modelClass, resourceHash)
+    };
+
+    this.applyTransforms(modelClass, data.attributes);
+
+    return { data };
+  },
+
+  /**
+   &#x60;keyForAttribute&#x60; can be used to define rules for how to convert an
+   attribute name in your model to a key in your JSON.
+   By default &#x60;JSONAPISerializer&#x60; follows the format used on the examples of
+   http://jsonapi.org/format and uses dashes as the word separator in the JSON
+   attribute keys.
+
+   This behaviour can be easily customized by extending this method.
+
+   Example
+
+   &#x60;&#x60;&#x60;app/serializers/application.js
+   import DS from &#x27;ember-data&#x27;;
+
+   export default DS.JSONAPISerializer.extend({
+     keyForAttribute: function(attr, method) {
+       return Ember.String.dasherize(attr).toUpperCase();
+     }
+   });
+   &#x60;&#x60;&#x60;
+
+   @method keyForAttribute
+   @param {String} key
+   @param {String} method
+   @return {String} normalized key
+  */
+  keyForAttribute: function(key, method) {
+    return dasherize(key);
+  },
+
+  /**
+   &#x60;keyForRelationship&#x60; can be used to define a custom key when
+   serializing and deserializing relationship properties.
+   By default &#x60;JSONAPISerializer&#x60; follows the format used on the examples of
+   http://jsonapi.org/format and uses dashes as word separators in
+   relationship properties.
+
+   This behaviour can be easily customized by extending this method.
+
+   Example
+
+    &#x60;&#x60;&#x60;app/serializers/post.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.JSONAPISerializer.extend({
+      keyForRelationship: function(key, relationship, method) {
+        return Ember.String.underscore(key);
+      }
+    });
+    &#x60;&#x60;&#x60;
+   @method keyForRelationship
+   @param {String} key
+   @param {String} typeClass
+   @param {String} method
+   @return {String} normalized key
+  */
+  keyForRelationship: function(key, typeClass, method) {
+    return dasherize(key);
+  },
+
+  /**
+    @method serialize
+    @param {DS.Snapshot} snapshot
+    @param {Object} options
+    @return {Object} json
+  */
+  serialize: function(snapshot, options) {
+    let data = this._super(...arguments);
+    data.type = this.payloadKeyFromModelName(snapshot.modelName);
+    return { data };
+  },
+
+  /**
+   @method serializeAttribute
+   @param {DS.Snapshot} snapshot
+   @param {Object} json
+   @param {String} key
+   @param {Object} attribute
+  */
+  serializeAttribute: function(snapshot, json, key, attribute) {
+    var type = attribute.type;
+
+    if (this._canSerialize(key)) {
+      json.attributes = json.attributes || {};
+
+      var value = snapshot.attr(key);
+      if (type) {
+        var transform = this.transformFor(type);
+        value = transform.serialize(value);
+      }
+
+      var payloadKey =  this._getMappedKey(key);
+      if (payloadKey === key) {
+        payloadKey = this.keyForAttribute(key, &#x27;serialize&#x27;);
+      }
+
+      json.attributes[payloadKey] = value;
+    }
+  },
+
+  /**
+   @method serializeBelongsTo
+   @param {DS.Snapshot} snapshot
+   @param {Object} json
+   @param {Object} relationship
+  */
+  serializeBelongsTo: function(snapshot, json, relationship) {
+    var key = relationship.key;
+
+    if (this._canSerialize(key)) {
+      var belongsTo = snapshot.belongsTo(key);
+      if (belongsTo !== undefined) {
+
+        json.relationships = json.relationships || {};
+
+        var payloadKey = this._getMappedKey(key);
+        if (payloadKey === key) {
+          payloadKey = this.keyForRelationship(key, &#x27;belongsTo&#x27;, &#x27;serialize&#x27;);
+        }
+
+        let data = null;
+        if (belongsTo) {
+          data = {
+            type: this.payloadKeyFromModelName(belongsTo.modelName),
+            id: belongsTo.id
+          };
+        }
+
+        json.relationships[payloadKey] = { data };
+      }
+    }
+  },
+
+  /**
+   @method serializeHasMany
+   @param {DS.Snapshot} snapshot
+   @param {Object} json
+   @param {Object} relationship
+  */
+  serializeHasMany: function(snapshot, json, relationship) {
+    var key = relationship.key;
+
+    if (this._shouldSerializeHasMany(snapshot, key, relationship)) {
+      var hasMany = snapshot.hasMany(key);
+      if (hasMany !== undefined) {
+
+        json.relationships = json.relationships || {};
+
+        var payloadKey = this._getMappedKey(key);
+        if (payloadKey === key &amp;&amp; this.keyForRelationship) {
+          payloadKey = this.keyForRelationship(key, &#x27;hasMany&#x27;, &#x27;serialize&#x27;);
+        }
+
+        let data = map.call(hasMany, (item) =&gt; {
+          return {
+            type: this.payloadKeyFromModelName(item.modelName),
+            id: item.id
+          };
+        });
+
+        json.relationships[payloadKey] = { data };
+      }
+    }
+  }
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -1,10 +1,9 @@
-import {
-  OrderedSet
-} from "ember-data/system/map";
+import OrderedSet from "ember-data/system/ordered-set";
+import ArrayPolyfills from 'ember-data/ext/ember/array';
 
-var forEach = Ember.EnumerableUtils.forEach;
+var forEach = ArrayPolyfills.forEach;
 
-var Relationship = function(store, record, inverseKey, relationshipMeta) {
+function Relationship(store, record, inverseKey, relationshipMeta) {
   this.members = new OrderedSet();
   this.canonicalMembers = new OrderedSet();
   this.store = store;
@@ -14,48 +13,55 @@ var Relationship = function(store, record, inverseKey, relationshipMeta) {
   this.isAsync = relationshipMeta.options.async;
   this.relationshipMeta = relationshipMeta;
   //This probably breaks for polymorphic relationship in complex scenarios, due to
-  //multiple possible typeKeys
-  this.inverseKeyForImplicit = this.store.modelFor(this.record.constructor).typeKey + this.key;
+  //multiple possible modelNames
+  this.inverseKeyForImplicit = this.record.constructor.modelName + this.key;
   this.linkPromise = null;
-};
+  this.meta = null;
+  this.hasData = false;
+  this.hasLoaded = false;
+}
 
 Relationship.prototype = {
   constructor: Relationship,
 
   destroy: Ember.K,
 
+  updateMeta: function(meta) {
+    this.meta = meta;
+  },
+
   clear: function() {
     var members = this.members.list;
     var member;
 
-    while (members.length > 0){
+    while (members.length > 0) {
       member = members[0];
       this.removeRecord(member);
     }
   },
 
-  disconnect: function(){
+  disconnect: function() {
     this.members.forEach(function(member) {
       this.removeRecordFromInverse(member);
     }, this);
   },
 
-  reconnect: function(){
+  reconnect: function() {
     this.members.forEach(function(member) {
       this.addRecordToInverse(member);
     }, this);
   },
 
-  removeRecords: function(records){
+  removeRecords: function(records) {
     var self = this;
-    forEach(records, function(record){
+    forEach.call(records, function(record) {
       self.removeRecord(record);
     });
   },
 
-  addRecords: function(records, idx){
+  addRecords: function(records, idx) {
     var self = this;
-    forEach(records, function(record){
+    forEach.call(records, function(record) {
       self.addRecord(record, idx);
       if (idx !== undefined) {
         idx++;
@@ -77,15 +83,16 @@ Relationship.prototype = {
     if (!this.canonicalMembers.has(record)) {
       this.canonicalMembers.add(record);
       if (this.inverseKey) {
-        record._relationships[this.inverseKey].addCanonicalRecord(this.record);
+        record._relationships.get(this.inverseKey).addCanonicalRecord(this.record);
       } else {
         if (!record._implicitRelationships[this.inverseKeyForImplicit]) {
-          record._implicitRelationships[this.inverseKeyForImplicit] = new Relationship(this.store, record, this.key,  {options:{}});
+          record._implicitRelationships[this.inverseKeyForImplicit] = new Relationship(this.store, record, this.key,  { options: {} });
         }
         record._implicitRelationships[this.inverseKeyForImplicit].addCanonicalRecord(this.record);
       }
     }
     this.flushCanonicalLater();
+    this.setHasData(true);
   },
 
   removeCanonicalRecords: function(records, idx) {
@@ -114,18 +121,19 @@ Relationship.prototype = {
 
   addRecord: function(record, idx) {
     if (!this.members.has(record)) {
-      this.members.add(record);
+      this.members.addWithIndex(record, idx);
       this.notifyRecordRelationshipAdded(record, idx);
       if (this.inverseKey) {
-        record._relationships[this.inverseKey].addRecord(this.record);
+        record._relationships.get(this.inverseKey).addRecord(this.record);
       } else {
         if (!record._implicitRelationships[this.inverseKeyForImplicit]) {
-          record._implicitRelationships[this.inverseKeyForImplicit] = new Relationship(this.store, record, this.key,  {options:{}});
+          record._implicitRelationships[this.inverseKeyForImplicit] = new Relationship(this.store, record, this.key,  { options: {} });
         }
         record._implicitRelationships[this.inverseKeyForImplicit].addRecord(this.record);
       }
-      this.record.updateRecordArrays();
+      this.record.updateRecordArraysLater();
     }
+    this.setHasData(true);
   },
 
   removeRecord: function(record) {
@@ -143,12 +151,12 @@ Relationship.prototype = {
 
   addRecordToInverse: function(record) {
     if (this.inverseKey) {
-      record._relationships[this.inverseKey].addRecord(this.record);
+      record._relationships.get(this.inverseKey).addRecord(this.record);
     }
   },
 
   removeRecordFromInverse: function(record) {
-    var inverseRelationship = record._relationships[this.inverseKey];
+    var inverseRelationship = record._relationships.get(this.inverseKey);
     //Need to check for existence, as the record might unloading at the moment
     if (inverseRelationship) {
       inverseRelationship.removeRecordFromOwn(this.record);
@@ -162,7 +170,7 @@ Relationship.prototype = {
   },
 
   removeCanonicalRecordFromInverse: function(record) {
-    var inverseRelationship = record._relationships[this.inverseKey];
+    var inverseRelationship = record._relationships.get(this.inverseKey);
     //Need to check for existence, as the record might unloading at the moment
     if (inverseRelationship) {
       inverseRelationship.removeCanonicalRecordFromOwn(this.record);
@@ -180,7 +188,7 @@ Relationship.prototype = {
     //TODO remove once we have proper diffing
     var newRecords = [];
     for (var i=0; i<this.members.list.length; i++) {
-      if (this.members.list[i].get('isNew')) {
+      if (this.members.list[i].isNew()) {
         newRecords.push(this.members.list[i]);
       }
     }
@@ -203,11 +211,14 @@ Relationship.prototype = {
   },
 
   updateLink: function(link) {
-    Ember.warn("You have pushed a record of type '" + this.record.constructor.typeKey + "' with '" + this.key + "' as a link, but the association is not an aysnc relationship.", this.isAsync);
-    Ember.assert("You have pushed a record of type '" + this.record.constructor.typeKey + "' with '" + this.key + "' as a link, but the value of that link is not a string.", typeof link === 'string' || link === null);
+    Ember.warn(`You have pushed a record of type '${this.record.type.modelName}' with '${this.key}' as a link, but the association is not an async relationship.`, this.isAsync, {
+      id: 'ds.store.push-link-for-sync-relationship'
+    });
+    Ember.assert("You have pushed a record of type '" + this.record.type.modelName + "' with '" + this.key + "' as a link, but the value of that link is not a string.", typeof link === 'string' || link === null);
     if (link !== this.link) {
       this.link = link;
       this.linkPromise = null;
+      this.setHasLoaded(false);
       this.record.notifyPropertyChange(this.key);
     }
   },
@@ -226,13 +237,42 @@ Relationship.prototype = {
 
   updateRecordsFromAdapter: function(records) {
     //TODO(Igor) move this to a proper place
-    var self = this;
     //TODO Once we have adapter support, we need to handle updated and canonical changes
-    self.computeChanges(records);
+    this.computeChanges(records);
+    this.setHasData(true);
+    this.setHasLoaded(true);
   },
 
   notifyRecordRelationshipAdded: Ember.K,
-  notifyRecordRelationshipRemoved: Ember.K
+  notifyRecordRelationshipRemoved: Ember.K,
+
+  /*
+    `hasData` for a relationship is a flag to indicate if we consider the
+    content of this relationship "known". Snapshots uses this to tell the
+    difference between unknown (`undefined`) or empty (`null`). The reason for
+    this is that we wouldn't want to serialize unknown relationships as `null`
+    as that might overwrite remote state.
+
+    All relationships for a newly created (`store.createRecord()`) are
+    considered known (`hasData === true`).
+   */
+  setHasData: function(value) {
+    this.hasData = value;
+  },
+
+  /*
+    `hasLoaded` is a flag to indicate if we have gotten data from the adapter or
+    not when the relationship has a link.
+
+    This is used to be able to tell when to fetch the link and when to return
+    the local data in scenarios where the local state is considered known
+    (`hasData === true`).
+
+    Updating the link will automatically set `hasLoaded` to `false`.
+   */
+  setHasLoaded: function(value) {
+    this.hasLoaded = value;
+  }
 };
 
 

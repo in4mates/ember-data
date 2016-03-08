@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -148,52 +170,79 @@
     <pre class="code prettyprint linenums">
 /**
   Ember Data
-
   @module ember-data
   @main ember-data
 */
 
+if (Ember.VERSION.match(/^1\.[0-7]\./)) {
+  throw new Ember.Error(&quot;Ember Data requires at least Ember 1.8.0, but you have &quot; +
+                        Ember.VERSION +
+                        &quot;. Please upgrade your version of Ember, then upgrade Ember Data&quot;);
+}
+
+if (Ember.VERSION.match(/^1\.12\.0/)) {
+  throw new Ember.Error(&quot;Ember Data does not work with Ember 1.12.0. Please upgrade to Ember 1.12.1 or higher.&quot;);
+}
+
 // support RSVP 2.x via resolve,  but prefer RSVP 3.x&#x27;s Promise.cast
 Ember.RSVP.Promise.cast = Ember.RSVP.Promise.cast || Ember.RSVP.resolve;
 
-import &quot;ember-data/system/create&quot;;
+
 import DS from &quot;ember-data/core&quot;;
 import &quot;ember-data/ext/date&quot;;
+
+import normalizeModelName from &quot;ember-data/system/normalize-model-name&quot;;
+
+import InternalModel from &quot;ember-data/system/model/internal-model&quot;;
 
 import {
   PromiseArray,
   PromiseObject,
   PromiseManyArray
-} from &quot;ember-data/system/promise_proxies&quot;;
+} from &quot;ember-data/system/promise-proxies&quot;;
 import {
   Store
 } from &quot;ember-data/system/store&quot;;
 import {
-  Model,
   Errors,
   RootState,
   attr
 } from &quot;ember-data/system/model&quot;;
-import {
-  InvalidError,
-  Adapter
-} from &quot;ember-data/system/adapter&quot;;
+import Model from &quot;ember-data/system/model&quot;;
+import Snapshot from &quot;ember-data/system/snapshot&quot;;
+import Adapter from &quot;ember-data/system/adapter&quot;;
+import Serializer from &quot;ember-data/system/serializer&quot;;
 import DebugAdapter from &quot;ember-data/system/debug&quot;;
+
+import {
+  AdapterError,
+  InvalidError,
+  TimeoutError,
+  AbortError,
+  errorsHashToArray,
+  errorsArrayToHash
+} from &quot;ember-data/adapters/errors&quot;;
+
 import {
   RecordArray,
   FilteredRecordArray,
-  AdapterPopulatedRecordArray,
-  ManyArray
-} from &quot;ember-data/system/record_arrays&quot;;
-import RecordArrayManager from &quot;ember-data/system/record_array_manager&quot;;
+  AdapterPopulatedRecordArray
+} from &quot;ember-data/system/record-arrays&quot;;
+import ManyArray from &quot;ember-data/system/many-array&quot;;
+import RecordArrayManager from &quot;ember-data/system/record-array-manager&quot;;
 import {
-  RESTAdapter,
-  FixtureAdapter
+  FixtureAdapter,
+  JSONAPIAdapter,
+  RESTAdapter
 } from &quot;ember-data/adapters&quot;;
-import JSONSerializer from &quot;ember-data/serializers/json_serializer&quot;;
-import RESTSerializer from &quot;ember-data/serializers/rest_serializer&quot;;
+import BuildURLMixin from &quot;ember-data/adapters/build-url-mixin&quot;;
+import {
+  JSONAPISerializer,
+  JSONSerializer,
+  RESTSerializer
+} from &quot;ember-data/serializers&quot;;
 import &quot;ember-inflector&quot;;
-import EmbeddedRecordsMixin from &quot;ember-data/serializers/embedded_records_mixin&quot;;
+import EmbeddedRecordsMixin from &quot;ember-data/serializers/embedded-records-mixin&quot;;
 import EmbeddedModelMixin from &quot;ember-data/system/model/embedded_model_mixin&quot;;
 import {
   ActiveModelAdapter,
@@ -212,7 +261,7 @@ import {hasMany, belongsTo} from &quot;ember-data/system/relationships&quot;;
 import &quot;ember-data/ember-initializer&quot;;
 import setupContainer from &quot;ember-data/setup-container&quot;;
 
-import ContainerProxy from &quot;ember-data/system/container_proxy&quot;;
+import ContainerProxy from &quot;ember-data/system/container-proxy&quot;;
 import Relationship from &quot;ember-data/system/relationships/state/relationship&quot;;
 
 DS.Store         = Store;
@@ -226,8 +275,20 @@ DS.RootState = RootState;
 DS.attr      = attr;
 DS.Errors    = Errors;
 
+DS.InternalModel = InternalModel;
+DS.Snapshot = Snapshot;
+
 DS.Adapter      = Adapter;
+
+DS.AdapterError = AdapterError;
 DS.InvalidError = InvalidError;
+DS.TimeoutError = TimeoutError;
+DS.AbortError   = AbortError;
+
+DS.errorsHashToArray = errorsHashToArray;
+DS.errorsArrayToHash = errorsArrayToHash;
+
+DS.Serializer = Serializer;
 
 DS.DebugAdapter = DebugAdapter;
 
@@ -239,10 +300,13 @@ DS.ManyArray                   = ManyArray;
 DS.RecordArrayManager = RecordArrayManager;
 
 DS.RESTAdapter    = RESTAdapter;
-DS.FixtureAdapter = FixtureAdapter;
+DS.BuildURLMixin  = BuildURLMixin;
 
 DS.RESTSerializer = RESTSerializer;
 DS.JSONSerializer = JSONSerializer;
+
+DS.JSONAPIAdapter = JSONAPIAdapter;
+DS.JSONAPISerializer = JSONAPISerializer;
 
 DS.Transform       = Transform;
 DS.DateTransform   = DateTransform;
@@ -250,8 +314,44 @@ DS.StringTransform = StringTransform;
 DS.NumberTransform = NumberTransform;
 DS.BooleanTransform = BooleanTransform;
 
-DS.ActiveModelAdapter    = ActiveModelAdapter;
-DS.ActiveModelSerializer = ActiveModelSerializer;
+var _ActiveModelAdapter = ActiveModelAdapter;
+var _ActiveModelSerializer = ActiveModelSerializer;
+
+if (Ember.platform.hasPropertyAccessors) {
+  Ember.defineProperty(DS, &#x27;ActiveModelAdapter&#x27;, {
+    get: function() {
+      if (_ActiveModelSerializer === ActiveModelAdapter) {
+        Ember.deprecate(&#x27;The ActiveModelAdapter has been moved into a plugin. It will not be bundled with Ember Data in 2.0&#x27;, false, {
+          url: &#x27;https://github.com/ember-data/active-model-adapter&#x27;,
+          id: &#x27;ds.adapter.active-model-adapter-deprecated&#x27;,
+          until: &#x27;2.0.0&#x27;
+        });
+      }
+      return _ActiveModelAdapter;
+    },
+    set: function(ActiveModelAdapter) {
+      _ActiveModelAdapter = ActiveModelAdapter;
+    }
+  });
+  Ember.defineProperty(DS, &#x27;ActiveModelSerializer&#x27;, {
+    get: function() {
+      if (_ActiveModelSerializer === ActiveModelSerializer) {
+        Ember.deprecate(&#x27;The ActiveModelSerializer has been moved into a plugin. It will not be bundled with Ember Data in 2.0&#x27;, false, {
+          url: &#x27;https://github.com/ember-data/active-model-adapter&#x27;,
+          id: &#x27;ds.serializer.active-model-serializer-deprecated&#x27;,
+          until: &#x27;2.0.0&#x27;
+        });
+      }
+      return _ActiveModelSerializer;
+    },
+    set: function(ActiveModelSerializer) {
+      _ActiveModelSerializer = ActiveModelSerializer;
+    }
+  });
+} else {
+  DS.ActiveModelAdapter    = ActiveModelAdapter;
+  DS.ActiveModelSerializer = ActiveModelSerializer;
+}
 DS.EmbeddedRecordsMixin  = EmbeddedRecordsMixin;
 DS.EmbeddedModelMixin = EmbeddedModelMixin;
 
@@ -263,6 +363,34 @@ DS.Relationship  = Relationship;
 DS.ContainerProxy = ContainerProxy;
 
 DS._setupContainer = setupContainer;
+
+Ember.defineProperty(DS, &#x27;normalizeModelName&#x27;, {
+  enumerable: true,
+  writable: false,
+  configurable: false,
+  value: normalizeModelName
+});
+
+var _FixtureAdapter = FixtureAdapter;
+
+if (Ember.platform.hasPropertyAccessors) {
+  Ember.defineProperty(DS, &#x27;FixtureAdapter&#x27;, {
+    get: function() {
+      if (_FixtureAdapter === FixtureAdapter) {
+        Ember.deprecate(&#x27;DS.FixtureAdapter has been deprecated and moved into an unsupported addon: https://github.com/emberjs/ember-data-fixture-adapter/tree/master&#x27;, false, {
+          id: &#x27;ds.adapter.fixture-adapter-deprecated&#x27;,
+          until: &#x27;2.0.0&#x27;
+        });
+      }
+      return _FixtureAdapter;
+    },
+    set:  function(FixtureAdapter) {
+      _FixtureAdapter = FixtureAdapter;
+    }
+  });
+} else {
+  DS.FixtureAdapter = FixtureAdapter;
+}
 
 Ember.lookup.DS = DS;
 

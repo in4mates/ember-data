@@ -1,19 +1,25 @@
 ---
 language: node_js
+sudo: false
+cache:
+  directories:
+    - node_modules
 node_js:
   - "0.10"
+before_install:
+  - "npm config set spin false"
+  - "npm install -g npm@^2"
 install:
-- npm config set registry http://registry.nodejitsu.com
 - "npm install"
-- "bower install"
-- "npm run-script dist"
 script:
+  - ./bin/lint-features
   - npm run-script test
-  - npm run-script testem-beta
-  - npm run-script testem-canary
+#  - npm run-script test:beta
+#  - npm run-script test:canary
+  - npm run-script test:optional-features
 after_success:
-- npm run-script publish-build
-- "./bin/bower-ember-data-build"
+  - npm run-script publish-build:prebuilt
+  - "./bin/bower-ember-data-build"
 env:
   global:
   - BROCCOLI_ENV="production"

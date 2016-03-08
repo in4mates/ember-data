@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -165,7 +187,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l13"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:13</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l16"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:16</code></a>
         </div>
     
 
@@ -189,7 +211,9 @@ This works automatically with <code>DS.ActiveModelAdapter</code>, but you
 can implement <a href="/api/data/classes/DS.RESTAdapter.html#method_ajaxError">ajaxError</a>
 in other adapters as well.</p>
 <p>For Example, if you had an <code>User</code> model that looked like this:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.User = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/user.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   username: attr(&#39;string&#39;),
   email: attr(&#39;string&#39;)
 });</code></pre>
@@ -208,24 +232,30 @@ this. This response will be used to populate the error object.</p>
   }
 }</code></pre>
 <p>Errors can be displayed to the user by accessing their property name
-or using the <code>messages</code> property to get an array of all errors.</p>
-<pre class="code prettyprint"><code class="lang-handlebars">{{#each message in errors.messages}}
-  &lt;div class=&quot;error&quot;&gt;
-    {{message}}
-  &lt;/div&gt;
-{{/each}}
-
-&lt;label&gt;Username: {{input value=username}} &lt;/label&gt;
-{{#each error in errors.username}}
+to get an array of all the error objects for that property. Each
+error object is a JavaScript object with two keys:</p>
+<ul>
+<li><code>message</code> A string containing the error message from the backend</li>
+<li><code>attribute</code> The name of the property associated with this error message</li>
+</ul>
+<pre class="code prettyprint"><code class="lang-handlebars">&lt;label&gt;Username: {{input value=username}} &lt;/label&gt;
+{{#each model.errors.username as |error|}}
   &lt;div class=&quot;error&quot;&gt;
     {{error.message}}
   &lt;/div&gt;
 {{/each}}
 
 &lt;label&gt;Email: {{input value=email}} &lt;/label&gt;
-{{#each error in errors.email}}
+{{#each model.errors.email as |error|}}
   &lt;div class=&quot;error&quot;&gt;
     {{error.message}}
+  &lt;/div&gt;
+{{/each}}</code></pre>
+<p>You can also access the special <code>messages</code> property on the error
+object to get an array of all the error strings.</p>
+<pre class="code prettyprint"><code class="lang-handlebars">{{#each model.errors.messages as |message|}}
+  &lt;div class=&quot;error&quot;&gt;
+    {{message}}
   &lt;/div&gt;
 {{/each}}</code></pre>
 
@@ -287,13 +317,6 @@ or using the <code>messages</code> property to get an array of all errors.</p>
                         
                             <li class="index-item method">
                                 <a href="#method_has">has</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_nextObject">nextObject</a>
 
                                 
                                 
@@ -413,7 +436,7 @@ or using the <code>messages</code> property to get an array of all errors.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l237"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:237</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l228"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:228</code></a>
         
         </p>
 
@@ -483,7 +506,7 @@ or using the <code>messages</code> property to get an array of all errors.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l207"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:207</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l198"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:198</code></a>
         
         </p>
 
@@ -527,7 +550,7 @@ or using the <code>messages</code> property to get an array of all errors.</p>
                 <li class="param">
                     
                         <code class="param-name">messages</code>
-                        <span class="type">Array | String</span>
+                        <span class="type">(Array | String)</span>
                     
 
                     
@@ -581,7 +604,7 @@ or using the <code>messages</code> property to get an array of all errors.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l294"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:294</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l291"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:291</code></a>
         
         </p>
 
@@ -595,7 +618,9 @@ or using the <code>messages</code> property to get an array of all errors.</p>
         <p>Removes all error messages and sends <code>becameValid</code> event
 to the record.</p>
 <p>Example:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.UserEditRoute = Ember.Route.extend({
+<pre class="code prettyprint"><code class="lang-app/routes/user/edit.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
   actions: {
     retrySave: function(user) {
        user.get(&#39;errors&#39;).clear();
@@ -772,7 +797,7 @@ user.save().catch(function(){
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l322"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:322</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l332"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:332</code></a>
         
         </p>
 
@@ -784,7 +809,9 @@ user.save().catch(function(){
 
     <div class="description">
         <p>Checks if there is error messages for the given attribute.</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.UserEditRoute = Ember.Route.extend({
+<pre class="code prettyprint"><code class="lang-app/routes/user/edit.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
   actions: {
     save: function(user) {
        if (user.get(&#39;errors&#39;).has(&#39;email&#39;)) {
@@ -836,62 +863,6 @@ user.save().catch(function(){
                 
             </div>
         </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_nextObject" class="method item private">
-    <h3 class="name"><code>nextObject</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l183"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:183</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
     
 
     
@@ -952,7 +923,7 @@ user.save().catch(function(){
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l85"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:85</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l99"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:99</code></a>
         
         </p>
 
@@ -1070,7 +1041,7 @@ user.save().catch(function(){
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l252"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:252</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l243"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:243</code></a>
         
         </p>
 
@@ -1084,13 +1055,16 @@ user.save().catch(function(){
         <p>Removes all error messages from the given attribute and sends
 <code>becameValid</code> event to the record if there no more errors left.</p>
 <p>Example:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.User = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/user.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   email: DS.attr(&#39;string&#39;),
   twoFactorAuth: DS.attr(&#39;boolean&#39;),
   phone: DS.attr(&#39;string&#39;)
-});
+});</code></pre>
+<pre class="code prettyprint"><code class="lang-app/routes/user/edit.js">import Ember from &#39;ember&#39;;
 
-App.UserEditRoute = Ember.Route.extend({
+export default Ember.Route.extend({
   actions: {
     save: function(user) {
        if (!user.get(&#39;twoFactorAuth&#39;)) {
@@ -1269,7 +1243,7 @@ App.UserEditRoute = Ember.Route.extend({
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l98"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:98</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l112"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:112</code></a>
         
         </p>
 
@@ -1313,7 +1287,7 @@ App.UserEditRoute = Ember.Route.extend({
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l200"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:200</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l191"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:191</code></a>
         
         </p>
 
@@ -1357,7 +1331,7 @@ App.UserEditRoute = Ember.Route.extend({
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l191"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:191</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_errors.js.html#l183"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;errors.js:183</code></a>
         
         </p>
 
@@ -1414,7 +1388,7 @@ App.UserEditRoute = Ember.Route.extend({
     <div class="description">
         <p>An array containing all of the error messages for this
 record. This is useful for displaying all errors to the user.</p>
-<pre class="code prettyprint"><code class="lang-handlebars">{{#each message in errors.messages}}
+<pre class="code prettyprint"><code class="lang-handlebars">{{#each model.errors.messages as |message|}}
   &lt;div class=&quot;error&quot;&gt;
     {{message}}
   &lt;/div&gt;

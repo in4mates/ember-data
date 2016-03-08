@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -163,7 +185,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l97"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:97</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l99"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:99</code></a>
         </div>
     
 
@@ -179,8 +201,11 @@
 
 
 <div class="box intro">
-    <p>These observers observe all <code>belongsTo</code> relationships on the record. See
-<code>relationships/ext</code> to see how these observers get their dependencies.</p>
+    <p>The model class that all Ember Data records descend from.
+  This is the public API of Ember Data models. If you are using Ember Data
+  in your application, this is the class you should use.
+  If you are working on Ember Data internals, you most likely want to be dealing
+  with <code>InternalModel</code></p>
 
 </div>
 
@@ -236,42 +261,7 @@
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method__preloadData">_preloadData</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_adapterDidCommit">adapterDidCommit</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
                                 <a href="#method_adapterDidDirty">adapterDidDirty</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_adapterDidError">adapterDidError</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_adapterDidInvalidate">adapterDidInvalidate</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_adapterWillCommit">adapterWillCommit</a>
 
                                 
                                 
@@ -279,13 +269,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_changedAttributes">changedAttributes</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_clearRelationships">clearRelationships</a>
 
                                 
                                 
@@ -343,14 +326,14 @@
                                 <a href="#method_eachRelationship">eachRelationship</a>
 
                                 
+                                    <span class="flag static">static</span>
+                                
                                 
                             </li>
                         
                             <li class="index-item method">
                                 <a href="#method_eachRelationship">eachRelationship</a>
 
-                                
-                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
@@ -373,34 +356,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_loadedData">loadedData</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_loadingData">loadingData</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_notFound">notFound</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_pushedData">pushedData</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method">
                                 <a href="#method_reload">reload</a>
 
@@ -408,8 +363,17 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method deprecated">
                                 <a href="#method_rollback">rollback</a>
+
+                                
+                                
+                                    <span class="flag deprecated">deprecated</span>
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_rollbackAttributes">rollbackAttributes</a>
 
                                 
                                 
@@ -431,13 +395,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_serialize">serialize</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_setupData">setupData</a>
 
                                 
                                 
@@ -480,20 +437,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_updateRecordArrays">updateRecordArrays</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_updateRecordArraysLater">updateRecordArraysLater</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -505,17 +448,17 @@
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property">
-                                <a href="#property_attributes">attributes</a>
+                                <a href="#property_adapterError">adapterError</a>
 
-                                
-                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property_clientId">clientId</a>
+                            <li class="index-item property">
+                                <a href="#property_attributes">attributes</a>
 
+                                
+                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
@@ -541,6 +484,15 @@
                                 
                             </li>
                         
+                            <li class="index-item property deprecated">
+                                <a href="#property_error">error</a>
+
+                                
+                                
+                                    <span class="flag deprecated">deprecated</span>
+                                
+                            </li>
+                        
                             <li class="index-item property">
                                 <a href="#property_errors">errors</a>
 
@@ -553,6 +505,13 @@
 
                                 
                                     <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_hasDirtyAttributes">hasDirtyAttributes</a>
+
                                 
                                 
                             </li>
@@ -571,10 +530,12 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
+                            <li class="index-item property deprecated">
                                 <a href="#property_isDirty">isDirty</a>
 
                                 
+                                
+                                    <span class="flag deprecated">deprecated</span>
                                 
                             </li>
                         
@@ -629,6 +590,13 @@
                         
                             <li class="index-item property">
                                 <a href="#property_isValid">isValid</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_modelName">modelName</a>
 
                                 
                                 
@@ -733,6 +701,20 @@
                                 
                             </li>
                         
+                            <li class="index-item event">
+                                <a href="#event_ready">ready</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_rolledBack">rolledBack</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -779,7 +761,7 @@
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l1118"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:1118</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l879"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:879</code></a>
         
         </p>
 
@@ -838,7 +820,7 @@ instances from within the store, but if end users accidentally call <code>create
             
         
         
-        <a href="../files/packages_ember-data_lib_system_debug_debug_info.js.html#l5"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;debug&#x2F;debug_info.js:5</code></a>
+        <a href="../files/packages_ember-data_lib_system_debug_debug-info.js.html#l5"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;debug&#x2F;debug-info.js:5</code></a>
         
         </p>
 
@@ -904,7 +886,7 @@ by grouping the properties into more semantic groups.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l761"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:761</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l633"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:633</code></a>
         
         </p>
 
@@ -916,160 +898,6 @@ by grouping the properties into more semantic groups.</p>
 
     <div class="description">
         
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method__preloadData" class="method item private">
-    <h3 class="name"><code>_preloadData</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>preload</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l695"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:695</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>When a find request is triggered on the store, the user can optionally pass in
-attributes and relationships to be preloaded. These are meant to behave as if they
-came back from the server, except the user obtained them out of band and is informing
-the store of their existence. The most common use case is for supporting client side
-nested URLs, such as <code>/posts/1/comments/2</code> so the user can do
-<code>store.find(&#39;comment&#39;, 2, {post:1})</code> without having to fetch the post.</p>
-<p>Preloaded data can be attributes and relationships passed in either as IDs or as actual
-models.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">preload</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_adapterDidCommit" class="method item">
-    <h3 class="name"><code>adapterDidCommit</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l817"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:817</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>If the adapter did not return a hash in response to a commit,
-merge the changed attributes and relationships into the existing
-saved data.</p>
-
     </div>
 
     
@@ -1114,175 +942,7 @@ saved data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l843"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:843</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_adapterDidError" class="method item private">
-    <h3 class="name"><code>adapterDidError</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l1042"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:1042</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_adapterDidInvalidate" class="method item private">
-    <h3 class="name"><code>adapterDidInvalidate</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l1025"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:1025</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_adapterWillCommit" class="method item private">
-    <h3 class="name"><code>adapterWillCommit</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l809"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:809</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l691"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:691</code></a>
         
         </p>
 
@@ -1340,7 +1000,7 @@ saved data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l775"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:775</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l647"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:647</code></a>
         
         </p>
 
@@ -1354,14 +1014,15 @@ saved data.</p>
         <p>Returns an object, whose keys are changed properties, and value is
 an [oldProp, newProp] array.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Mascot = DS.Model.extend({
-  name: attr(&#39;string&#39;)
-});
+<pre class="code prettyprint"><code class="lang-app/models/mascot.js">import DS from &#39;ember-data&#39;;
 
-var person = store.createRecord(&#39;person&#39;);
-person.changedAttributes(); // {}
-person.set(&#39;name&#39;, &#39;Tomster&#39;);
-person.changedAttributes(); // {name: [undefined, &#39;Tomster&#39;]}</code></pre>
+export default DS.Model.extend({
+  name: attr(&#39;string&#39;)
+});</code></pre>
+<pre class="code prettyprint"><code class="lang-javascript">var mascot = store.createRecord(&#39;mascot&#39;);
+mascot.changedAttributes(); // {}
+mascot.set(&#39;name&#39;, &#39;Tomster&#39;);
+mascot.changedAttributes(); // {name: [undefined, &#39;Tomster&#39;]}</code></pre>
 
     </div>
 
@@ -1382,62 +1043,6 @@ person.changedAttributes(); // {name: [undefined, &#39;Tomster&#39;]}</code></pr
                 
             </div>
         </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_clearRelationships" class="method item private">
-    <h3 class="name"><code>clearRelationships</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l650"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:650</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
     
 
     
@@ -1480,7 +1085,7 @@ person.changedAttributes(); // {name: [undefined, &#39;Tomster&#39;]}</code></pr
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l1129"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:1129</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l890"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:890</code></a>
         
         </p>
 
@@ -1539,7 +1144,7 @@ by calling the <code>_create()</code> method. To create an instance of a
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l583"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:583</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l562"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:562</code></a>
         
         </p>
 
@@ -1552,10 +1157,12 @@ by calling the <code>_create()</code> method. To create an instance of a
     <div class="description">
         <p>Marks the record as deleted but does not save it. You must call
 <code>save</code> afterwards if you want to persist it. You might use this
-method if you want to allow the user to still <code>rollback()</code> a
-delete after it was made.</p>
+method if you want to allow the user to still <code>rollbackAttributes()</code>
+after a delete it was made.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.ModelDeleteRoute = Ember.Route.extend({
+<pre class="code prettyprint"><code class="lang-app/routes/model/delete.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
   actions: {
     softDelete: function() {
       this.controller.get(&#39;model&#39;).deleteRecord();
@@ -1564,7 +1171,7 @@ delete after it was made.</p>
       this.controller.get(&#39;model&#39;).save();
     },
     undo: function() {
-      this.controller.get(&#39;model&#39;).rollback();
+      this.controller.get(&#39;model&#39;).rollbackAttributes();
     }
   }
 });</code></pre>
@@ -1583,7 +1190,17 @@ delete after it was made.</p>
     <h3 class="name"><code>destroyRecord</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>options</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -1615,7 +1232,7 @@ delete after it was made.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l613"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:613</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l594"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:594</code></a>
         
         </p>
 
@@ -1628,7 +1245,9 @@ delete after it was made.</p>
     <div class="description">
         <p>Same as <code>deleteRecord</code>, but saves the record immediately.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.ModelDeleteRoute = Ember.Route.extend({
+<pre class="code prettyprint"><code class="lang-app/routes/model/delete.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
   actions: {
     delete: function() {
       var controller = this.controller;
@@ -1641,6 +1260,29 @@ delete after it was made.</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1718,7 +1360,7 @@ successfully or rejected if the adapter returns with an error.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l103"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:103</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l105"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:105</code></a>
         
         </p>
 
@@ -1821,7 +1463,7 @@ property returned by <code>DS.belongsTo</code> as the value.</p>
             
                 <li class="arg">
                     
-                        <code class="optional">[target]</code>
+                        <code class="optional">[binding]</code>
                     
                 </li>
             
@@ -1856,7 +1498,7 @@ property returned by <code>DS.belongsTo</code> as the value.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l107"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:107</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l122"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:122</code></a>
         
         </p>
 
@@ -1879,13 +1521,15 @@ parameters are optional):</p>
 <p>Note that in addition to a callback, you can also pass an optional target
 object that will be set as <code>this</code> on the context.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Person = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-javascript">import DS from &#39;ember-data&#39;;
+
+var Person = DS.Model.extend({
   firstName: attr(&#39;string&#39;),
   lastName: attr(&#39;string&#39;),
   birthday: attr(&#39;date&#39;)
 });
 
-App.Person.eachAttribute(function(name, meta) {
+Person.eachAttribute(function(name, meta) {
   console.log(name, meta);
 });
 
@@ -1920,7 +1564,7 @@ App.Person.eachAttribute(function(name, meta) {
             
                 <li class="param">
                     
-                        <code class="param-name optional">[target]</code>
+                        <code class="param-name optional">[binding]</code>
                         <span class="type">Object</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
@@ -1928,7 +1572,7 @@ App.Person.eachAttribute(function(name, meta) {
                     
 
                     <div class="param-description">
-                        <p>The target object to use</p>
+                        <p>the value to which the callback&#39;s <code>this</code> should be bound</p>
 
                     </div>
 
@@ -1995,7 +1639,7 @@ App.Person.eachAttribute(function(name, meta) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l518"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:518</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l562"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:562</code></a>
         
         </p>
 
@@ -2093,6 +1737,8 @@ with a model.</p>
     
 
     
+        <span class="flag static">static</span>
+    
 
     
 
@@ -2109,7 +1755,7 @@ with a model.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l558"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:558</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l546"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:546</code></a>
         
         </p>
 
@@ -2206,8 +1852,6 @@ descriptor.</p>
     
 
     
-        <span class="flag static">static</span>
-    
 
     
 
@@ -2224,7 +1868,7 @@ descriptor.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l502"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:502</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l602"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:602</code></a>
         
         </p>
 
@@ -2238,6 +1882,40 @@ descriptor.</p>
         <p>Given a callback, iterates over each of the relationships in the model,
 invoking the callback with the name of each relationship and its relationship
 descriptor.</p>
+<p>The callback method you provide should have the following signature (all
+parameters are optional):</p>
+<pre class="code prettyprint"><code class="lang-javascript">function(name, descriptor);</code></pre>
+<ul>
+<li><code>name</code> the name of the current property in the iteration</li>
+<li><code>descriptor</code> the meta object that describes this relationship</li>
+</ul>
+<p>The relationship descriptor argument is an object with the following properties.</p>
+<ul>
+<li><strong>key</strong> <span class="type">String</span> the name of this relationship on the Model</li>
+<li><strong>kind</strong> <span class="type">String</span> &quot;hasMany&quot; or &quot;belongsTo&quot;</li>
+<li><strong>options</strong> <span class="type">Object</span> the original options hash passed when the relationship was declared</li>
+<li><strong>parentType</strong> <span class="type">DS.Model</span> the type of the Model that owns this relationship</li>
+<li><strong>type</strong> <span class="type">DS.Model</span> the type of the related Model</li>
+</ul>
+<p>Note that in addition to a callback, you can also pass an optional target
+object that will be set as <code>this</code> on the context.</p>
+<p>Example</p>
+<pre class="code prettyprint"><code class="lang-app/serializers/application.js">import DS from &#39;ember-data&#39;;
+
+export default DS.JSONSerializer.extend({
+  serialize: function(record, options) {
+    var json = {};
+
+    record.eachRelationship(function(name, descriptor) {
+      if (descriptor.kind === &#39;hasMany&#39;) {
+        var serializedHasManyName = name.toUpperCase() + &#39;_IDS&#39;;
+        json[name.toUpperCase()] = record.get(name).mapBy(&#39;id&#39;);
+      }
+    });
+
+    return json;
+  }
+});</code></pre>
 
     </div>
 
@@ -2304,7 +1982,7 @@ descriptor.</p>
             
                 <li class="arg">
                     
-                        <code class="optional">[target]</code>
+                        <code class="optional">[binding]</code>
                     
                 </li>
             
@@ -2339,7 +2017,7 @@ descriptor.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l154"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:154</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l171"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:171</code></a>
         
         </p>
 
@@ -2364,13 +2042,15 @@ applied to the attribute</li>
 <p>Note that in addition to a callback, you can also pass an optional target
 object that will be set as <code>this</code> on the context.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Person = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-javascript">import DS from &#39;ember-data&#39;;
+
+var Person = DS.Model.extend({
   firstName: attr(),
   lastName: attr(&#39;string&#39;),
   birthday: attr(&#39;date&#39;)
 });
 
-App.Person.eachTransformedAttribute(function(name, type) {
+Person.eachTransformedAttribute(function(name, type) {
   console.log(name, type);
 });
 
@@ -2404,7 +2084,7 @@ App.Person.eachTransformedAttribute(function(name, type) {
             
                 <li class="param">
                     
-                        <code class="param-name optional">[target]</code>
+                        <code class="param-name optional">[binding]</code>
                         <span class="type">Object</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
@@ -2412,7 +2092,7 @@ App.Person.eachTransformedAttribute(function(name, type) {
                     
 
                     <div class="param-description">
-                        <p>The target object to use</p>
+                        <p>the value to which the callback&#39;s <code>this</code> should be bound</p>
 
                     </div>
 
@@ -2477,7 +2157,7 @@ App.Person.eachTransformedAttribute(function(name, type) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l189"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:189</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l194"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:194</code></a>
         
         </p>
 
@@ -2490,15 +2170,18 @@ App.Person.eachTransformedAttribute(function(name, type) {
     <div class="description">
         <p>Find the relationship which is the inverse of the one asked for.</p>
 <p>For example, if you define models like this:</p>
-<pre class="code prettyprint"><code class="lang-javascript">  App.Post = DS.Model.extend({
-    comments: DS.hasMany(&#39;message&#39;)
-  });
+<pre class="code prettyprint"><code class="lang-app/models/post.js">import DS from &#39;ember-data&#39;;
 
-  App.Message = DS.Model.extend({
-    owner: DS.belongsTo(&#39;post&#39;)
-  });</code></pre>
-<p>App.Post.inverseFor(&#39;comments&#39;) -&gt; {type: App.Message, name:&#39;owner&#39;, kind:&#39;belongsTo&#39;}
-App.Message.inverseFor(&#39;owner&#39;) -&gt; {type: App.Post, name:&#39;comments&#39;, kind:&#39;hasMany&#39;}</p>
+export default DS.Model.extend({
+  comments: DS.hasMany(&#39;message&#39;)
+});</code></pre>
+<pre class="code prettyprint"><code class="lang-app/models/message.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
+  owner: DS.belongsTo(&#39;post&#39;)
+});</code></pre>
+<p>App.Post.inverseFor(&#39;comments&#39;) -&gt; { type: App.Message, name: &#39;owner&#39;, kind: &#39;belongsTo&#39; }
+App.Message.inverseFor(&#39;owner&#39;) -&gt; { type: App.Post, name: &#39;comments&#39;, kind: &#39;hasMany&#39; }</p>
 
     </div>
 
@@ -2548,263 +2231,6 @@ App.Message.inverseFor(&#39;owner&#39;) -&gt; {type: App.Post, name:&#39;comment
 </div>
 
                 
-                    <div id="method_loadedData" class="method item private">
-    <h3 class="name"><code>loadedData</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l559"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:559</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_loadingData" class="method item private">
-    <h3 class="name"><code>loadingData</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>promise</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l550"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:550</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">promise</code>
-                        <span class="type">Promise</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_notFound" class="method item private">
-    <h3 class="name"><code>notFound</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l567"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:567</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_pushedData" class="method item private">
-    <h3 class="name"><code>pushedData</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l575"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:575</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="method_reload" class="method item">
     <h3 class="name"><code>reload</code></h3>
 
@@ -2841,7 +2267,7 @@ App.Message.inverseFor(&#39;owner&#39;) -&gt; {type: App.Post, name:&#39;comment
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l974"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:974</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l792"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:792</code></a>
         
         </p>
 
@@ -2857,7 +2283,9 @@ App.Message.inverseFor(&#39;owner&#39;) -&gt; {type: App.Post, name:&#39;comment
 and has not yet been modified (<code>isLoaded</code> but not <code>isDirty</code>,
 or <code>isSaving</code>).</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.ModelViewRoute = Ember.Route.extend({
+<pre class="code prettyprint"><code class="lang-app/routes/model/view.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
   actions: {
     reload: function() {
       this.controller.get(&#39;model&#39;).reload().then(function(model) {
@@ -2893,8 +2321,74 @@ with an error.</p>
 </div>
 
                 
-                    <div id="method_rollback" class="method item">
+                    <div id="method_rollback" class="method item deprecated">
     <h3 class="name"><code>rollback</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+        <span class="flag deprecated" title="Use &#x60;rollbackAttributes()&#x60; instead">deprecated</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l707"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:707</code></a>
+        
+        </p>
+
+
+        
+            <p>Deprecated: Use &#x60;rollbackAttributes()&#x60; instead</p>
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>If the model <code>isDirty</code> this function will discard any unsaved
+changes. If the model <code>isNew</code> it will be removed from the store.</p>
+<p>Example</p>
+<pre class="code prettyprint"><code class="lang-javascript">record.get(&#39;name&#39;); // &#39;Untitled Document&#39;
+record.set(&#39;name&#39;, &#39;Doc 1&#39;);
+record.get(&#39;name&#39;); // &#39;Doc 1&#39;
+record.rollback();
+record.get(&#39;name&#39;); // &#39;Untitled Document&#39;</code></pre>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_rollbackAttributes" class="method item">
+    <h3 class="name"><code>rollbackAttributes</code></h3>
 
     
         <span class="paren">()</span>
@@ -2925,7 +2419,7 @@ with an error.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l893"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:893</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l732"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:732</code></a>
         
         </p>
 
@@ -2937,12 +2431,12 @@ with an error.</p>
 
     <div class="description">
         <p>If the model <code>isDirty</code> this function will discard any unsaved
-changes</p>
+changes. If the model <code>isNew</code> it will be removed from the store.</p>
 <p>Example</p>
 <pre class="code prettyprint"><code class="lang-javascript">record.get(&#39;name&#39;); // &#39;Untitled Document&#39;
 record.set(&#39;name&#39;, &#39;Doc 1&#39;);
 record.get(&#39;name&#39;); // &#39;Doc 1&#39;
-record.rollback();
+record.rollbackAttributes();
 record.get(&#39;name&#39;); // &#39;Untitled Document&#39;</code></pre>
 
     </div>
@@ -2959,7 +2453,17 @@ record.get(&#39;name&#39;); // &#39;Untitled Document&#39;</code></pre>
     <h3 class="name"><code>save</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>options</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -2991,7 +2495,7 @@ record.get(&#39;name&#39;); // &#39;Untitled Document&#39;</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l943"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:943</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l764"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:764</code></a>
         
         </p>
 
@@ -3006,7 +2510,7 @@ record.get(&#39;name&#39;); // &#39;Untitled Document&#39;</code></pre>
 external source via the adapter.</p>
 <p>Example</p>
 <pre class="code prettyprint"><code class="lang-javascript">record.set(&#39;name&#39;, &#39;Tomster&#39;);
-record.save().then(function(){
+record.save().then(function() {
   // Success callback
 }, function() {
   // Error callback
@@ -3014,6 +2518,29 @@ record.save().then(function(){
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -3087,7 +2614,7 @@ successfully or rejected if the adapter returns with an error.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l476"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:476</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l542"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:542</code></a>
         
         </p>
 
@@ -3193,7 +2720,7 @@ successfully or rejected if the adapter returns with an error.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l342"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:342</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l437"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:437</code></a>
         
         </p>
 
@@ -3260,95 +2787,6 @@ JSON representation.</li>
 </div>
 
                 
-                    <div id="method_setupData" class="method item private">
-    <h3 class="name"><code>setupData</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>data</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l865"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:865</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">data</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="method_toJSON" class="method item">
     <h3 class="name"><code>toJSON</code></h3>
 
@@ -3395,7 +2833,7 @@ JSON representation.</li>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l361"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:361</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l455"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:455</code></a>
         
         </p>
 
@@ -3506,7 +2944,7 @@ JSON representation.</li>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l492"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:492</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l552"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:552</code></a>
         
         </p>
 
@@ -3595,7 +3033,7 @@ JSON representation.</li>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l1062"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:1062</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l830"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:830</code></a>
         
         </p>
 
@@ -3655,13 +3093,19 @@ also call methods with the given name.</p>
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code>store</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
 
     
         <span class="returns-inline">
-            <span class="type">subclass of DS.Model</span>
+            <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
         </span>
     
 
@@ -3690,7 +3134,7 @@ also call methods with the given name.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l162"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:162</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l164"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:164</code></a>
         
         </p>
 
@@ -3703,7 +3147,9 @@ also call methods with the given name.</p>
     <div class="description">
         <p>For a given relationship name, returns the model type of the relationship.</p>
 <p>For example, if you define a model like this:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Post = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/post.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   comments: DS.hasMany(&#39;comment&#39;)
 });</code></pre>
 <p>Calling <code>App.Post.typeForRelationship(&#39;comments&#39;)</code> will return <code>App.Comment</code>.</p>
@@ -3732,6 +3178,22 @@ also call methods with the given name.</p>
                     
                 </li>
             
+                <li class="param">
+                    
+                        <code class="param-name">store</code>
+                        <span class="type">Store</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>an instance of DS.Store</p>
+
+                    </div>
+
+                    
+                </li>
+            
             </ul>
         </div>
     
@@ -3743,7 +3205,7 @@ also call methods with the given name.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">subclass of DS.Model</span>:
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>:
                     
                     <p>the type of the relationship, or undefined</p>
 
@@ -3790,119 +3252,7 @@ also call methods with the given name.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l640"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:640</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_updateRecordArrays" class="method item private">
-    <h3 class="name"><code>updateRecordArrays</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l686"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:686</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_updateRecordArraysLater" class="method item private">
-    <h3 class="name"><code>updateRecordArraysLater</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l853"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:853</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l624"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:624</code></a>
         
         </p>
 
@@ -3932,6 +3282,52 @@ also call methods with the given name.</p>
                 <h2 class="off-left">Properties</h2>
 
                 
+                    <div id="property_adapterError" class="property item">
+    <h3 class="name"><code>adapterError</code></h3>
+    <span class="type"><a href="../classes/DS.AdapterError.html" class="crosslink">DS.AdapterError</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l428"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:428</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This property holds the <code>DS.AdapterError</code> object with which
+last adapter operation was rejected.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_attributes" class="property item">
     <h3 class="name"><code>attributes</code></h3>
     <span class="type">Ember.Map</span>
@@ -3957,7 +3353,7 @@ also call methods with the given name.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l17"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:17</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l19"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:19</code></a>
         
         </p>
 
@@ -3971,14 +3367,17 @@ also call methods with the given name.</p>
 described by DS.attr) and whose values are the meta object for the
 property.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">
-App.Person = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/person.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   firstName: attr(&#39;string&#39;),
   lastName: attr(&#39;string&#39;),
   birthday: attr(&#39;date&#39;)
-});
+});</code></pre>
+<pre class="code prettyprint"><code class="lang-javascript">import Ember from &#39;ember&#39;;
+import Person from &#39;app/models/person&#39;;
 
-var attributes = Ember.get(App.Person, &#39;attributes&#39;)
+var attributes = Ember.get(Person, &#39;attributes&#39;)
 
 attributes.forEach(function(name, meta) {
   console.log(name, meta);
@@ -3988,56 +3387,6 @@ attributes.forEach(function(name, meta) {
 // firstName {type: &quot;string&quot;, isAttribute: true, options: Object, parentType: function, name: &quot;firstName&quot;}
 // lastName {type: &quot;string&quot;, isAttribute: true, options: Object, parentType: function, name: &quot;lastName&quot;}
 // birthday {type: &quot;date&quot;, isAttribute: true, options: Object, parentType: function, name: &quot;birthday&quot;}</code></pre>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_clientId" class="property item private">
-    <h3 class="name"><code>clientId</code></h3>
-    <span class="type">Number | String</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l274"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:274</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The <code>clientId</code> property is a transient numerical identifier
-generated at runtime by the data store. It is important
-primarily because newly created objects may not yet have an
-externally generated id.</p>
 
     </div>
 
@@ -4074,7 +3423,7 @@ externally generated id.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l306"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:306</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l357"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:357</code></a>
         
         </p>
 
@@ -4120,7 +3469,7 @@ externally generated id.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l423"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:423</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l534"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:534</code></a>
         
         </p>
 
@@ -4164,7 +3513,7 @@ externally generated id.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l215"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:215</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l276"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:276</code></a>
         
         </p>
 
@@ -4186,6 +3535,52 @@ state. Possible values are:</p>
 <pre class="code prettyprint"><code class="lang-javascript">var record = store.createRecord(&#39;model&#39;);
 record.get(&#39;dirtyType&#39;); // &#39;created&#39;</code></pre>
 
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_error" class="property item deprecated">
+    <h3 class="name"><code>error</code></h3>
+    <span class="type">Boolean</span>
+
+    
+        <span class="flag deprecated">deprecated</span>
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l141"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:141</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
     </div>
 
     
@@ -4219,7 +3614,7 @@ record.get(&#39;dirtyType&#39;); // &#39;created&#39;</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l313"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:313</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l363"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:363</code></a>
         
         </p>
 
@@ -4231,13 +3626,39 @@ record.get(&#39;dirtyType&#39;); // &#39;created&#39;</code></pre>
     <div class="description">
         <p>When the record is in the <code>invalid</code> state this object will contain
 any errors returned by the adapter. When present the errors hash
-typically contains keys corresponding to the invalid property names
-and values which are an array of error messages.</p>
+contains keys corresponding to the invalid property names
+and values which are arrays of Javascript objects with two keys:</p>
+<ul>
+<li><code>message</code> A string containing the error message from the backend</li>
+<li><code>attribute</code> The name of the property associated with this error message</li>
+</ul>
 <pre class="code prettyprint"><code class="lang-javascript">record.get(&#39;errors.length&#39;); // 0
 record.set(&#39;foo&#39;, &#39;invalid value&#39;);
-record.save().then(null, function() {
-  record.get(&#39;errors&#39;).get(&#39;foo&#39;); // [&#39;foo should be a number.&#39;]
+record.save().catch(function() {
+  record.get(&#39;errors&#39;).get(&#39;foo&#39;);
+  // [{message: &#39;foo should be a number.&#39;, attribute: &#39;foo&#39;}]
 });</code></pre>
+<p>The <code>errors</code> property us useful for displaying error messages to
+the user.</p>
+<pre class="code prettyprint"><code class="lang-handlebars">&lt;label&gt;Username: {{input value=username}} &lt;/label&gt;
+{{#each model.errors.username as |error|}}
+  &lt;div class=&quot;error&quot;&gt;
+    {{error.message}}
+  &lt;/div&gt;
+{{/each}}
+&lt;label&gt;Email: {{input value=email}} &lt;/label&gt;
+{{#each model.errors.email as |error|}}
+  &lt;div class=&quot;error&quot;&gt;
+    {{error.message}}
+  &lt;/div&gt;
+{{/each}}</code></pre>
+<p>You can also access the special <code>messages</code> property on the error
+object to get an array of all the error strings.</p>
+<pre class="code prettyprint"><code class="lang-handlebars">{{#each model.errors.messages as |message|}}
+  &lt;div class=&quot;error&quot;&gt;
+    {{message}}
+  &lt;/div&gt;
+{{/each}}</code></pre>
 
     </div>
 
@@ -4274,7 +3695,7 @@ record.save().then(null, function() {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l453"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:453</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l491"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:491</code></a>
         
         </p>
 
@@ -4288,17 +3709,20 @@ record.save().then(null, function() {
 describing the kind of the field. A model&#39;s fields are the union of all of its
 attributes and relationships.</p>
 <p>For example:</p>
-<pre class="code prettyprint"><code class="lang-javascript">
-App.Blog = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/blog.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   users: DS.hasMany(&#39;user&#39;),
   owner: DS.belongsTo(&#39;user&#39;),
 
   posts: DS.hasMany(&#39;post&#39;),
 
   title: DS.attr(&#39;string&#39;)
-});
+});</code></pre>
+<pre class="code prettyprint"><code class="lang-js">import Ember from &#39;ember&#39;;
+import Blog from &#39;app/models/blog&#39;;
 
-var fields = Ember.get(App.Blog, &#39;fields&#39;);
+var fields = Ember.get(Blog, &#39;fields&#39;);
 fields.forEach(function(kind, field) {
   console.log(field, kind);
 });
@@ -4308,6 +3732,63 @@ fields.forEach(function(kind, field) {
 // owner, belongsTo
 // posts, hasMany
 // title, attribute</code></pre>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_hasDirtyAttributes" class="property item">
+    <h3 class="name"><code>hasDirtyAttributes</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l156"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:156</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>If this property is <code>true</code> the record is in the <code>dirty</code> state. The
+record has local changes that have not yet been saved by the
+adapter. This includes records that have been created (but not yet
+saved) or deleted.</p>
+<p>Example</p>
+<pre class="code prettyprint"><code class="lang-javascript">var record = store.createRecord(&#39;model&#39;);
+record.get(&#39;hasDirtyAttributes&#39;); // true
+
+store.find(&#39;model&#39;, 1).then(function(model) {
+  model.get(&#39;hasDirtyAttributes&#39;); // false
+  model.set(&#39;foo&#39;, &#39;some value&#39;);
+  model.get(&#39;hasDirtyAttributes&#39;); // true
+});</code></pre>
 
     </div>
 
@@ -4342,7 +3823,7 @@ fields.forEach(function(kind, field) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l285"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:285</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l336"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:336</code></a>
         
         </p>
 
@@ -4397,7 +3878,7 @@ store.find(&#39;model&#39;, 1).then(function(model) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l144"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:144</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l205"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:205</code></a>
         
         </p>
 
@@ -4445,10 +3926,12 @@ promise.then(function() {
 </div>
 
                 
-                    <div id="property_isDirty" class="property item">
+                    <div id="property_isDirty" class="property item deprecated">
     <h3 class="name"><code>isDirty</code></h3>
     <span class="type">Boolean</span>
 
+    
+        <span class="flag deprecated">deprecated</span>
     
 
     
@@ -4468,7 +3951,7 @@ promise.then(function() {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l97"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:97</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l109"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:109</code></a>
         
         </p>
 
@@ -4525,7 +4008,7 @@ store.find(&#39;model&#39;, 1).then(function(model) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l50"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:50</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l62"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:62</code></a>
         
         </p>
 
@@ -4576,7 +4059,7 @@ unable to locate the record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l237"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:237</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l298"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:298</code></a>
         
         </p>
 
@@ -4629,7 +4112,7 @@ record.save().then(null, function() {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l75"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:75</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l87"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:87</code></a>
         
         </p>
 
@@ -4684,7 +4167,7 @@ store.find(&#39;model&#39;, 1).then(function(model) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l64"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:64</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l76"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:76</code></a>
         
         </p>
 
@@ -4732,7 +4215,7 @@ requested data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l182"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:182</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l243"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:243</code></a>
         
         </p>
 
@@ -4787,7 +4270,7 @@ record.save().then(function(model) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l257"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:257</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l319"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:319</code></a>
         
         </p>
 
@@ -4836,7 +4319,7 @@ record.get(&#39;isReloading&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l121"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:121</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l182"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:182</code></a>
         
         </p>
 
@@ -4892,7 +4375,7 @@ promise.then(function() {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l204"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:204</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l265"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:265</code></a>
         
         </p>
 
@@ -4905,6 +4388,63 @@ promise.then(function() {
         <p>If this property is <code>true</code> the record is in the <code>valid</code> state.</p>
 <p>A record will be in the <code>valid</code> state when the adapter did not report any
 server-side validation failures.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_modelName" class="property item">
+    <h3 class="name"><code>modelName</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l905"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:905</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Represents the model&#39;s class name as a string. This can be used to look up the model through
+DS.Store&#39;s modelFor method.</p>
+<p><code>modelName</code> is generated for you by Ember Data. It will be a lowercased, dasherized string.
+For example:</p>
+<pre class="code prettyprint"><code class="lang-javascript">store.modelFor(&#39;post&#39;).modelName; // &#39;post&#39;
+store.modelFor(&#39;blog-post&#39;).modelName; // &#39;blog-post&#39;</code></pre>
+<p>The most common place you&#39;ll want to access <code>modelName</code> is in your serializer&#39;s <code>payloadKeyFromModelName</code> method. For example, to change payload
+keys to underscore (instead of dasherized), you might use the following code:</p>
+<pre class="code prettyprint"><code class="lang-javascript">export default var PostSerializer = DS.RESTSerializer.extend({
+  payloadKeyFromModelName: function(modelName) {
+    return Ember.String.underscore(modelName);
+  }
+});</code></pre>
 
     </div>
 
@@ -4941,7 +4481,7 @@ server-side validation failures.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l390"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:390</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l418"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:418</code></a>
         
         </p>
 
@@ -4955,14 +4495,19 @@ server-side validation failures.</p>
 included once, regardless of the number of relationships it has with
 the model.</p>
 <p>For example, given a model with this definition:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Blog = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/blog.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   users: DS.hasMany(&#39;user&#39;),
   owner: DS.belongsTo(&#39;user&#39;),
 
   posts: DS.hasMany(&#39;post&#39;)
 });</code></pre>
 <p>This property would contain the following:</p>
-<pre class="code prettyprint"><code class="lang-javascript">var relatedTypes = Ember.get(App.Blog, &#39;relatedTypes&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">import Ember from &#39;ember&#39;;
+import Blog from &#39;app/models/blog&#39;;
+
+var relatedTypes = Ember.get(Blog, &#39;relatedTypes&#39;);
 //=&gt; [ App.User, App.Post ]</code></pre>
 
     </div>
@@ -5000,7 +4545,7 @@ the model.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l346"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:346</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l369"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:369</code></a>
         
         </p>
 
@@ -5013,14 +4558,19 @@ the model.</p>
         <p>A hash containing lists of the model&#39;s relationships, grouped
 by the relationship kind. For example, given a model with this
 definition:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Blog = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/blog.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   users: DS.hasMany(&#39;user&#39;),
   owner: DS.belongsTo(&#39;user&#39;),
 
   posts: DS.hasMany(&#39;post&#39;)
 });</code></pre>
 <p>This property would contain the following:</p>
-<pre class="code prettyprint"><code class="lang-javascript">var relationshipNames = Ember.get(App.Blog, &#39;relationshipNames&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">import Ember from &#39;ember&#39;;
+import Blog from &#39;app/models/blog&#39;;
+
+var relationshipNames = Ember.get(Blog, &#39;relationshipNames&#39;);
 relationshipNames.hasMany;
 //=&gt; [&#39;users&#39;, &#39;posts&#39;]
 relationshipNames.belongsTo;
@@ -5061,7 +4611,7 @@ relationshipNames.belongsTo;
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l310"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:310</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l328"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:328</code></a>
         
         </p>
 
@@ -5076,14 +4626,19 @@ relationship. The value of each entry is an array containing a descriptor
 for each relationship with that type, describing the name of the relationship
 as well as the type.</p>
 <p>For example, given the following model definition:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Blog = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/blog.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   users: DS.hasMany(&#39;user&#39;),
   owner: DS.belongsTo(&#39;user&#39;),
   posts: DS.hasMany(&#39;post&#39;)
 });</code></pre>
 <p>This computed property would return a map describing these
 relationships, like this:</p>
-<pre class="code prettyprint"><code class="lang-javascript">var relationships = Ember.get(App.Blog, &#39;relationships&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">import Ember from &#39;ember&#39;;
+import Blog from &#39;app/models/blog&#39;;
+
+var relationships = Ember.get(Blog, &#39;relationships&#39;);
 relationships.get(App.User);
 //=&gt; [ { name: &#39;users&#39;, kind: &#39;hasMany&#39; },
 //     { name: &#39;owner&#39;, kind: &#39;belongsTo&#39; } ]
@@ -5125,7 +4680,7 @@ relationships.get(App.Post);
             
         
         
-        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l420"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:420</code></a>
+        <a href="../files/packages_ember-data_lib_system_relationships_ext.js.html#l453"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;relationships&#x2F;ext.js:453</code></a>
         
         </p>
 
@@ -5139,14 +4694,19 @@ relationships.get(App.Post);
 relationship descriptors.</p>
 <p>For example, given a model with this
 definition:</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Blog = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/blog.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   users: DS.hasMany(&#39;user&#39;),
   owner: DS.belongsTo(&#39;user&#39;),
 
   posts: DS.hasMany(&#39;post&#39;)
 });</code></pre>
 <p>This property would contain the following:</p>
-<pre class="code prettyprint"><code class="lang-javascript">var relationshipsByName = Ember.get(App.Blog, &#39;relationshipsByName&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">import Ember from &#39;ember&#39;;
+import Blog from &#39;app/models/blog&#39;;
+
+var relationshipsByName = Ember.get(Blog, &#39;relationshipsByName&#39;);
 relationshipsByName.get(&#39;users&#39;);
 //=&gt; { key: &#39;users&#39;, kind: &#39;hasMany&#39;, type: App.User }
 relationshipsByName.get(&#39;owner&#39;);
@@ -5187,7 +4747,7 @@ relationshipsByName.get(&#39;owner&#39;);
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l64"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:64</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_attributes.js.html#l72"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;attributes.js:72</code></a>
         
         </p>
 
@@ -5202,13 +4762,17 @@ described by DS.attr) and whose values are type of transformation
 applied to each attribute. This map does not include any
 attributes that do not have an transformation type.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.Person = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/person.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   firstName: attr(),
   lastName: attr(&#39;string&#39;),
   birthday: attr(&#39;date&#39;)
-});
+});</code></pre>
+<pre class="code prettyprint"><code class="lang-javascript">import Ember from &#39;ember&#39;;
+import Person from &#39;app/models/person&#39;;
 
-var transformedAttributes = Ember.get(App.Person, &#39;transformedAttributes&#39;)
+var transformedAttributes = Ember.get(Person, &#39;transformedAttributes&#39;)
 
 transformedAttributes.forEach(function(field, type) {
   console.log(field, type);
@@ -5261,7 +4825,7 @@ transformedAttributes.forEach(function(field, type) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l416"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:416</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l520"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:520</code></a>
         
         </p>
 
@@ -5305,7 +4869,7 @@ transformedAttributes.forEach(function(field, type) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l409"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:409</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l513"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:513</code></a>
         
         </p>
 
@@ -5349,7 +4913,7 @@ transformedAttributes.forEach(function(field, type) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l395"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:395</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l499"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:499</code></a>
         
         </p>
 
@@ -5359,7 +4923,7 @@ transformedAttributes.forEach(function(field, type) {
     </div>
 
     <div class="description">
-        <p>Fired when the record is created.</p>
+        <p>Fired when a new record is commited to the server.</p>
 
     </div>
 
@@ -5393,7 +4957,7 @@ transformedAttributes.forEach(function(field, type) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l402"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:402</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l506"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:506</code></a>
         
         </p>
 
@@ -5437,7 +5001,7 @@ transformedAttributes.forEach(function(field, type) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l381"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:381</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l485"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:485</code></a>
         
         </p>
 
@@ -5481,7 +5045,7 @@ transformedAttributes.forEach(function(field, type) {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l388"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:388</code></a>
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l492"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:492</code></a>
         
         </p>
 
@@ -5492,6 +5056,95 @@ transformedAttributes.forEach(function(field, type) {
 
     <div class="description">
         <p>Fired when the record is updated.</p>
+
+    </div>
+
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_ready" class="events item">
+    <h3 class="name"><code>ready</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l477"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:477</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when the record is ready to be interacted with,
+that is either loaded from the server or created locally.</p>
+
+    </div>
+
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_rolledBack" class="events item">
+    <h3 class="name"><code>rolledBack</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_model_model.js.html#l527"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;model&#x2F;model.js:527</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when the record is rolled back.</p>
 
     </div>
 

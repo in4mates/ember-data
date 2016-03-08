@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -151,6 +173,8 @@ import {
   Map
 } from &quot;ember-data/system/map&quot;;
 
+import computedPolyfill from &quot;ember-new-computed&quot;;
+
 /**
   @module ember-data
 */
@@ -169,15 +193,21 @@ Model.reopenClass({
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
+    &#x60;&#x60;&#x60;app/models/person.js
+    import DS from &#x27;ember-data&#x27;;
 
-    App.Person = DS.Model.extend({
+    export default DS.Model.extend({
       firstName: attr(&#x27;string&#x27;),
       lastName: attr(&#x27;string&#x27;),
       birthday: attr(&#x27;date&#x27;)
     });
+    &#x60;&#x60;&#x60;
 
-    var attributes = Ember.get(App.Person, &#x27;attributes&#x27;)
+    &#x60;&#x60;&#x60;javascript
+    import Ember from &#x27;ember&#x27;;
+    import Person from &#x27;app/models/person&#x27;;
+
+    var attributes = Ember.get(Person, &#x27;attributes&#x27;)
 
     attributes.forEach(function(name, meta) {
       console.log(name, meta);
@@ -217,14 +247,21 @@ Model.reopenClass({
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
-    App.Person = DS.Model.extend({
+    &#x60;&#x60;&#x60;app/models/person.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
       firstName: attr(),
       lastName: attr(&#x27;string&#x27;),
       birthday: attr(&#x27;date&#x27;)
     });
+    &#x60;&#x60;&#x60;
 
-    var transformedAttributes = Ember.get(App.Person, &#x27;transformedAttributes&#x27;)
+    &#x60;&#x60;&#x60;javascript
+    import Ember from &#x27;ember&#x27;;
+    import Person from &#x27;app/models/person&#x27;;
+
+    var transformedAttributes = Ember.get(Person, &#x27;transformedAttributes&#x27;)
 
     transformedAttributes.forEach(function(field, type) {
       console.log(field, type);
@@ -272,13 +309,15 @@ Model.reopenClass({
     Example
 
     &#x60;&#x60;&#x60;javascript
-    App.Person = DS.Model.extend({
+    import DS from &#x27;ember-data&#x27;;
+
+    var Person = DS.Model.extend({
       firstName: attr(&#x27;string&#x27;),
       lastName: attr(&#x27;string&#x27;),
       birthday: attr(&#x27;date&#x27;)
     });
 
-    App.Person.eachAttribute(function(name, meta) {
+    Person.eachAttribute(function(name, meta) {
       console.log(name, meta);
     });
 
@@ -290,7 +329,7 @@ Model.reopenClass({
 
     @method eachAttribute
     @param {Function} callback The callback to execute
-    @param {Object} [target] The target object to use
+    @param {Object} [binding] the value to which the callback&#x27;s &#x60;this&#x60; should be bound
     @static
   */
   eachAttribute: function(callback, binding) {
@@ -321,13 +360,15 @@ Model.reopenClass({
     Example
 
     &#x60;&#x60;&#x60;javascript
-    App.Person = DS.Model.extend({
+    import DS from &#x27;ember-data&#x27;;
+
+    var Person = DS.Model.extend({
       firstName: attr(),
       lastName: attr(&#x27;string&#x27;),
       birthday: attr(&#x27;date&#x27;)
     });
 
-    App.Person.eachTransformedAttribute(function(name, type) {
+    Person.eachTransformedAttribute(function(name, type) {
       console.log(name, type);
     });
 
@@ -338,7 +379,7 @@ Model.reopenClass({
 
     @method eachTransformedAttribute
     @param {Function} callback The callback to execute
-    @param {Object} [target] The target object to use
+    @param {Object} [binding] the value to which the callback&#x27;s &#x60;this&#x60; should be bound
     @static
   */
   eachTransformedAttribute: function(callback, binding) {
@@ -366,7 +407,7 @@ function getDefaultValue(record, options, key) {
 function hasValue(record, key) {
   return key in record._attributes ||
          key in record._inFlightAttributes ||
-         record._data.hasOwnProperty(key);
+         key in record._data;
 }
 
 function getValue(record, key) {
@@ -397,13 +438,28 @@ function getValue(record, key) {
 
   Example
 
-  &#x60;&#x60;&#x60;javascript
-  var attr = DS.attr;
+  &#x60;&#x60;&#x60;app/models/user.js
+  import DS from &#x27;ember-data&#x27;;
 
-  App.User = DS.Model.extend({
+  export default DS.Model.extend({
+    username: DS.attr(&#x27;string&#x27;),
+    email: DS.attr(&#x27;string&#x27;),
+    verified: DS.attr(&#x27;boolean&#x27;, { defaultValue: false })
+  });
+  &#x60;&#x60;&#x60;
+
+  Default value can also be a function. This is useful it you want to return
+  a new object for each attribute.
+
+  &#x60;&#x60;&#x60;app/models/user.js
+  import DS from &#x27;ember-data&#x27;;
+
+  export default DS.Model.extend({
     username: attr(&#x27;string&#x27;),
     email: attr(&#x27;string&#x27;),
-    verified: attr(&#x27;boolean&#x27;, {defaultValue: false})
+    settings: attr({defaultValue: function() {
+      return {};
+    }})
   });
   &#x60;&#x60;&#x60;
 
@@ -429,10 +485,19 @@ export default function attr(type, options) {
     options: options
   };
 
-  return Ember.computed(function(key, value) {
-    if (arguments.length &gt; 1) {
+  return computedPolyfill({
+    get: function(key) {
+      var internalModel = this._internalModel;
+      if (hasValue(internalModel, key)) {
+        return getValue(internalModel, key);
+      } else {
+        return getDefaultValue(this, options, key);
+      }
+    },
+    set: function(key, value) {
       Ember.assert(&quot;You may not set &#x60;id&#x60; as an attribute on your model. Please remove any lines that look like: &#x60;id: DS.attr(&#x27;&lt;type&gt;&#x27;)&#x60; from &quot; + this.constructor.toString(), key !== &#x27;id&#x27;);
-      var oldValue = getValue(this, key);
+      var internalModel = this._internalModel;
+      var oldValue = getValue(internalModel, key);
 
       var newVal = value;
       var oldVal = oldValue;
@@ -446,26 +511,18 @@ export default function attr(type, options) {
       if (newVal !== oldVal) {
         // Add the new value to the changed attributes hash; it will get deleted by
         // the &#x27;didSetProperty&#x27; handler if it is no different from the original value
-        this._attributes[key] = value;
+        internalModel._attributes[key] = value;
 
-        this.send(&#x27;didSetProperty&#x27;, {
+        this._internalModel.send(&#x27;didSetProperty&#x27;, {
           name: key,
           oldValue: oldValue,
-          originalValue: this._data[key],
+          originalValue: internalModel._data[key],
           value: value
         });
       }
 
       return value;
-    } else if (hasValue(this, key)) {
-      return getValue(this, key);
-    } else {
-      return getDefaultValue(this, options, key);
     }
-
-  // &#x60;data&#x60; is never set directly. However, it may be
-  // invalidated from the state manager&#x27;s setData
-  // event.
   }).meta(meta);
 }
 

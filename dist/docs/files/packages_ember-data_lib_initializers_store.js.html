@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -146,28 +168,29 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import {JSONSerializer, RESTSerializer} from &quot;ember-data/serializers&quot;;
-import {RESTAdapter} from &quot;ember-data/adapters&quot;;
-import ContainerProxy from &quot;ember-data/system/container_proxy&quot;;
 import Store from &quot;ember-data/system/store&quot;;
+import { JSONAPISerializer, JSONSerializer, RESTSerializer } from &quot;ember-data/serializers&quot;;
+import { JSONAPIAdapter, RESTAdapter } from &quot;ember-data/adapters&quot;;
+import ContainerProxy from &quot;ember-data/system/container-proxy&quot;;
 
 /**
-  Configures a container for use with an Ember-Data
+  Configures a registry for use with an Ember-Data
   store. Accepts an optional namespace argument.
 
   @method initializeStore
-  @param {Ember.Container} container
+  @param {Ember.Registry} registry
   @param {Object} [application] an application namespace
 */
-export default function initializeStore(container, application){
+export default function initializeStore(registry, application) {
   Ember.deprecate(&#x27;Specifying a custom Store for Ember Data on your global namespace as &#x60;App.Store&#x60; &#x27; +
-                  &#x27;has been deprecated. Please use &#x60;App.ApplicationStore&#x60; instead.&#x27;, !(application &amp;&amp; application.Store));
+                  &#x27;has been deprecated. Please use &#x60;App.ApplicationStore&#x60; instead.&#x27;, !(application &amp;&amp; application.Store),
+                   { id: &#x27;ds.initializer.specifying-custom-store-on-global-namespace-deprecated&#x27;, until: &#x27;2.0.0&#x27; });
 
-  container.register(&#x27;store:main&#x27;, container.lookupFactory(&#x27;store:application&#x27;) || (application &amp;&amp; application.Store) || Store);
+  registry.optionsForType(&#x27;serializer&#x27;, { singleton: false });
+  registry.optionsForType(&#x27;adapter&#x27;, { singleton: false });
 
   // allow older names to be looked up
-
-  var proxy = new ContainerProxy(container);
+  var proxy = new ContainerProxy(registry);
   proxy.registerDeprecations([
     { deprecated: &#x27;serializer:_default&#x27;,  valid: &#x27;serializer:-default&#x27; },
     { deprecated: &#x27;serializer:_rest&#x27;,     valid: &#x27;serializer:-rest&#x27; },
@@ -175,13 +198,48 @@ export default function initializeStore(container, application){
   ]);
 
   // new go forward paths
-  container.register(&#x27;serializer:-default&#x27;, JSONSerializer);
-  container.register(&#x27;serializer:-rest&#x27;, RESTSerializer);
-  container.register(&#x27;adapter:-rest&#x27;, RESTAdapter);
+  registry.register(&#x27;serializer:-default&#x27;, JSONSerializer.extend({ isNewSerializerAPI: true }));
+  registry.register(&#x27;serializer:-rest&#x27;, RESTSerializer.extend({ isNewSerializerAPI: true }));
+  registry.register(&#x27;adapter:-rest&#x27;, RESTAdapter);
 
-  // Eagerly generate the store so defaultStore is populated.
-  // TODO: Do this in a finisher hook
-  container.lookup(&#x27;store:main&#x27;);
+  registry.register(&#x27;adapter:-json-api&#x27;, JSONAPIAdapter);
+  registry.register(&#x27;serializer:-json-api&#x27;, JSONAPISerializer);
+
+
+  var store;
+  if (registry.has(&#x27;store:main&#x27;)) {
+    Ember.deprecate(&#x27;Registering a custom store as &#x60;store:main&#x60; or defining a store in app/store.js has been deprecated. Please move you store to &#x60;service:store&#x60; or define your custom store in &#x60;app/services/store.js&#x60;&#x27;, false, {
+      id: &#x27;ds.initializer.custom-store-as-store-main-deprecated&#x27;,
+      until: &#x27;2.0.0&#x27;
+    });
+    store = registry.lookup(&#x27;store:main&#x27;);
+  } else {
+    var storeMainProxy = new ContainerProxy(registry);
+    storeMainProxy.registerDeprecations([
+      { deprecated: &#x27;store:main&#x27;, valid: &#x27;service:store&#x27; }
+    ]);
+  }
+
+  if (registry.has(&#x27;store:application&#x27;)) {
+    Ember.deprecate(&#x27;Registering a custom store as &#x60;store:main&#x60; or defining a store in app/store.js has been deprecated. Please move you store to &#x60;service:store&#x60; or define your custom store in &#x60;app/services/store.js&#x60;&#x27;, false, {
+      id: &#x27;ds.initializer.custom-store-as-store-main-deprecated&#x27;,
+      until: &#x27;2.0.0&#x27;
+    });
+    store = registry.lookup(&#x27;store:application&#x27;);
+  } else {
+    var storeApplicationProxy = new ContainerProxy(registry);
+    storeApplicationProxy.registerDeprecations([
+      { deprecated: &#x27;store:application&#x27;, valid: &#x27;service:store&#x27; }
+    ]);
+  }
+
+  if (store) {
+    registry.unregister(&#x27;service:store&#x27;);
+    registry.register(&#x27;service:store&#x27;, store, { instantiate: false });
+  } else if (!registry.has(&#x27;service:store&#x27;)) {
+    registry.unregister(&#x27;service:store&#x27;);
+    registry.register(&#x27;service:store&#x27;, application &amp;&amp; application.Store || Store);
+  }
 }
 
     </pre>

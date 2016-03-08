@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -148,13 +170,13 @@
 
     
         <div class="extends">
-            Extends Ember.Object
+            Extends Ember.Service
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_system_store.js.html#l107"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:107</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_system_store.js.html#l145"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:145</code></a>
         </div>
     
 
@@ -175,7 +197,10 @@ It is also responsible for creating instances of <code>DS.Model</code> that wrap
 the individual data for a record, so that they can be bound to in your
 Handlebars templates.</p>
 <p>Define your application&#39;s store like this:</p>
-<pre class="code prettyprint"><code class="lang-javascript">MyApp.Store = DS.Store.extend();</code></pre>
+<pre class="code prettyprint"><code class="lang-app/stores/application.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Store.extend({
+});</code></pre>
 <p>Most Ember.js applications will only have a single <code>DS.Store</code> that is
 automatically created by their <code>Ember.Application</code>.</p>
 <p>You can retrieve models from the store in several ways. To retrieve a record
@@ -185,7 +210,10 @@ for a specific id, use <code>DS.Store</code>&#39;s <code>find()</code> method:</
 <p>By default, the store will talk to your backend using a standard
 REST mechanism. You can customize how the store talks to your
 backend by specifying a custom adapter:</p>
-<pre class="code prettyprint"><code class="lang-javascript">MyApp.ApplicationAdapter = MyApp.CustomAdapter</code></pre>
+<pre class="code prettyprint"><code class="lang-app/adapters/application.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Adapter.extend({
+});</code></pre>
 <p>You can learn more about writing a custom adapter by reading the <code>DS.Adapter</code>
 documentation.</p>
 <h3 id="store-createrecord-vs-push-vs-pushpayload-">Store createRecord() vs. push() vs. pushPayload()</h3>
@@ -207,7 +235,7 @@ Sockets</a>).</p>
 Serializer implements a <code>pushPayload</code> method.</p>
 <p>Note: When creating a new record using any of the above methods
 Ember Data will update <code>DS.RecordArray</code>s such as those returned by
-<code>store#all()</code>, <code>store#findAll()</code> or <code>store#filter()</code>. This means any
+<code>store#peekAll()</code>, <code>store#findAll()</code> or <code>store#filter()</code>. This means any
 data bindings or computed properties that depend on the RecordArray
 will automatically be synced to include the new or updated record
 values.</p>
@@ -241,6 +269,20 @@ values.</p>
                     <ul class="index-list methods extends">
                         
                             <li class="index-item method private">
+                                <a href="#method__dematerializeRecord">_dematerializeRecord</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__fetchAll">_fetchAll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method__generateId">_generateId</a>
 
                                 
@@ -255,7 +297,14 @@ values.</p>
                             </li>
                         
                             <li class="index-item method private">
-                                <a href="#method__normalizeTypeKey">_normalizeTypeKey</a>
+                                <a href="#method__metadataFor">_metadataFor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__setMetadataFor">_setMetadataFor</a>
 
                                 
                                 
@@ -303,10 +352,12 @@ values.</p>
                                 
                             </li>
                         
-                            <li class="index-item method private">
+                            <li class="index-item method private deprecated">
                                 <a href="#method_dematerializeRecord">dematerializeRecord</a>
 
                                 
+                                
+                                    <span class="flag deprecated">deprecated</span>
                                 
                             </li>
                         
@@ -317,24 +368,37 @@ values.</p>
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_didUpdateAll">didUpdateAll</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method deprecated">
                                 <a href="#method_fetch">fetch</a>
 
                                 
                                 
+                                    <span class="flag deprecated">deprecated</span>
+                                
                             </li>
                         
-                            <li class="index-item method private">
+                            <li class="index-item method deprecated">
                                 <a href="#method_fetchAll">fetchAll</a>
 
                                 
+                                
+                                    <span class="flag deprecated">deprecated</span>
+                                
+                            </li>
+                        
+                            <li class="index-item method deprecated">
+                                <a href="#method_fetchById">fetchById</a>
+
+                                
+                                
+                                    <span class="flag deprecated">deprecated</span>
                                 
                             </li>
                         
@@ -359,7 +423,7 @@ values.</p>
                                 
                             </li>
                         
-                            <li class="index-item method private">
+                            <li class="index-item method">
                                 <a href="#method_findAll">findAll</a>
 
                                 
@@ -401,8 +465,17 @@ values.</p>
                                 
                             </li>
                         
-                            <li class="index-item method private">
+                            <li class="index-item method deprecated">
                                 <a href="#method_findQuery">findQuery</a>
+
+                                
+                                
+                                    <span class="flag deprecated">deprecated</span>
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_findRecord">findRecord</a>
 
                                 
                                 
@@ -436,10 +509,12 @@ values.</p>
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method deprecated">
                                 <a href="#method_metadataFor">metadataFor</a>
 
                                 
+                                
+                                    <span class="flag deprecated">deprecated</span>
                                 
                             </li>
                         
@@ -467,6 +542,20 @@ values.</p>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_peekAll">peekAll</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_peekRecord">peekRecord</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_push">push</a>
 
                                 
@@ -482,6 +571,20 @@ values.</p>
                         
                             <li class="index-item method">
                                 <a href="#method_pushPayload">pushPayload</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_query">query</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_queryRecord">queryRecord</a>
 
                                 
                                 
@@ -523,6 +626,13 @@ values.</p>
                             </li>
                         
                             <li class="index-item method private">
+                                <a href="#method_retrieveManagedInstance">retrieveManagedInstance</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method_scheduleSave">scheduleSave</a>
 
                                 
@@ -543,10 +653,12 @@ values.</p>
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method deprecated">
                                 <a href="#method_setMetadataFor">setMetadataFor</a>
 
                                 
+                                
+                                    <span class="flag deprecated">deprecated</span>
                                 
                             </li>
                         
@@ -625,6 +737,225 @@ values.</p>
                 <h2 class="off-left">Methods</h2>
 
                 
+                    <div id="method__dematerializeRecord" class="method item private">
+    <h3 class="name"><code>_dematerializeRecord</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>internalModel</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2189"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2189</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>When a record is destroyed, this un-indexes it and
+removes it from any record arrays so it can be GCed.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__fetchAll" class="method item private">
+    <h3 class="name"><code>_fetchAll</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>typeClass</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>array</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1205"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1205</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">typeClass</code>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">array</code>
+                        <span class="type"><a href="../classes/DS.RecordArray.html" class="crosslink">DS.RecordArray</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>promise</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method__generateId" class="method item private">
     <h3 class="name"><code>_generateId</code></h3>
 
@@ -634,7 +965,13 @@ values.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>properties</code>
                     
                 </li>
             
@@ -673,7 +1010,7 @@ values.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l310"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:310</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l364"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:364</code></a>
         
         </p>
 
@@ -697,7 +1034,7 @@ a newly created record.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -705,6 +1042,22 @@ a newly created record.</p>
 
                     <div class="param-description">
                          
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">properties</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>from the new record</p>
+
                     </div>
 
                     
@@ -784,7 +1137,7 @@ a newly created record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1277"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1277</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1708"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1708</code></a>
         
         </p>
 
@@ -808,7 +1161,7 @@ a newly created record.</p>
                 <li class="param">
                     
                         <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <span class="type">(String | DS.Model)</span>
                     
 
                     
@@ -845,8 +1198,8 @@ a newly created record.</p>
 </div>
 
                 
-                    <div id="method__normalizeTypeKey" class="method item private">
-    <h3 class="name"><code>_normalizeTypeKey</code></h3>
+                    <div id="method__metadataFor" class="method item private">
+    <h3 class="name"><code>_metadataFor</code></h3>
 
     
         <div class="args">
@@ -854,7 +1207,7 @@ a newly created record.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -864,7 +1217,7 @@ a newly created record.</p>
 
     
         <span class="returns-inline">
-            <span class="type">String</span>
+            <span class="type">Object</span>
         </span>
     
 
@@ -893,7 +1246,7 @@ a newly created record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1709"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1709</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1480"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1480</code></a>
         
         </p>
 
@@ -904,9 +1257,7 @@ a newly created record.</p>
     </div>
 
     <div class="description">
-        <p>All typeKeys are camelCase internally. Changing this function may
-require changes to other normalization hooks (such as typeForRoot).</p>
-
+        
     </div>
 
     
@@ -917,7 +1268,7 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -941,13 +1292,122 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">String</span>:
+                        <span class="type">Object</span>:
                     
-                    <p>if the adapter can generate one, an ID</p>
-
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method__setMetadataFor" class="method item private">
+    <h3 class="name"><code>_setMetadataFor</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>metadata</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1509"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1509</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">metadata</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>metadata to set</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
     
 
     
@@ -963,7 +1423,7 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -1002,7 +1462,7 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1647"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1647</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2216"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2216</code></a>
         
         </p>
 
@@ -1013,7 +1473,14 @@ require changes to other normalization hooks (such as typeForRoot).</p>
     </div>
 
     <div class="description">
-        <p>Returns the adapter for a given type.</p>
+        <p>Returns an instance of the adapter for a given type. For
+example, <code>adapterFor(&#39;person&#39;)</code> will return an instance of
+<code>App.PersonAdapter</code>.</p>
+<p>If no <code>App.PersonAdapter</code> is found, this method will look
+for an <code>App.ApplicationAdapter</code> (the default adapter for
+your entire application).</p>
+<p>If no <code>App.ApplicationAdapter</code> is found, it will return
+the value of the <code>defaultAdapter</code>.</p>
 
     </div>
 
@@ -1025,8 +1492,8 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -1069,7 +1536,7 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -1106,7 +1573,7 @@ require changes to other normalization hooks (such as typeForRoot).</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l905"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:905</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1244"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1244</code></a>
         
         </p>
 
@@ -1139,8 +1606,8 @@ return the same <code>RecordArray</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -1205,7 +1672,7 @@ return the same <code>RecordArray</code>.</p>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+            <span class="type">InternalModel</span>
         </span>
     
 
@@ -1234,7 +1701,7 @@ return the same <code>RecordArray</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1575"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1575</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2133"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2133</code></a>
         
         </p>
 
@@ -1259,7 +1726,7 @@ initial data.</p>
                 <li class="param">
                     
                         <code class="param-name">type</code>
-                        <span class="type">subclass of DS.Model</span>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -1312,9 +1779,9 @@ initial data.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>:
+                        <span class="type">InternalModel</span>:
                     
-                    <p>record</p>
+                    <p>internal model</p>
 
                 
             </div>
@@ -1334,13 +1801,13 @@ initial data.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>properties</code>
+                        <code>inputProperties</code>
                     
                 </li>
             
@@ -1377,7 +1844,7 @@ initial data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l264"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:264</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l302"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:302</code></a>
         
         </p>
 
@@ -1390,9 +1857,15 @@ initial data.</p>
     <div class="description">
         <p>Create a new record in the current store. The properties passed
 to this method are set on the newly created record.</p>
-<p>To create a new instance of <code>App.Post</code>:</p>
+<p>To create a new instance of a <code>Post</code>:</p>
 <pre class="code prettyprint"><code class="lang-js">store.createRecord(&#39;post&#39;, {
   title: &quot;Rails is omakase&quot;
+});</code></pre>
+<p>To create a new instance of a <code>Post</code> that has a relationship with a <code>User</code> record:</p>
+<pre class="code prettyprint"><code class="lang-js">var user = this.store.peekRecord(&#39;user&#39;, 1);
+store.createRecord(&#39;post&#39;, {
+  title: &quot;Rails is omakase&quot;,
+  user: user
 });</code></pre>
 
     </div>
@@ -1405,7 +1878,7 @@ to this method are set on the newly created record.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -1420,7 +1893,7 @@ to this method are set on the newly created record.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">properties</code>
+                        <code class="param-name">inputProperties</code>
                         <span class="type">Object</span>
                     
 
@@ -1474,7 +1947,7 @@ to this method are set on the newly created record.</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -1509,7 +1982,7 @@ to this method are set on the newly created record.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1103"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1103</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1525"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1525</code></a>
         
         </p>
 
@@ -1520,11 +1993,10 @@ to this method are set on the newly created record.</p>
     </div>
 
     <div class="description">
-        <p>If the adapter updates attributes or acknowledges creation
-or deletion, the record will notify the store to update its
-membership in any filters.
-To avoid thrashing, this method is invoked only once per</p>
-<p>run loop per record.</p>
+        <p>If the adapter updates attributes the record will notify
+the store to update its  membership in any filters.
+To avoid thrashing, this method is invoked only once per
+run loop per record.</p>
 
     </div>
 
@@ -1551,8 +2023,8 @@ To avoid thrashing, this method is invoked only once per</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
@@ -1616,7 +2088,7 @@ To avoid thrashing, this method is invoked only once per</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l333"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:333</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l388"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:388</code></a>
         
         </p>
 
@@ -1668,7 +2140,7 @@ store.deleteRecord(post);</code></pre>
 </div>
 
                 
-                    <div id="method_dematerializeRecord" class="method item private">
+                    <div id="method_dematerializeRecord" class="method item private deprecated">
     <h3 class="name"><code>dematerializeRecord</code></h3>
 
     
@@ -1687,6 +2159,8 @@ store.deleteRecord(post);</code></pre>
 
     
 
+    
+        <span class="flag deprecated" title="Use [unloadRecord](#method_unloadRecord) instead">deprecated</span>
     
 
     
@@ -1712,20 +2186,20 @@ store.deleteRecord(post);</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1620"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1620</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2175"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2175</code></a>
         
         </p>
 
 
+        
+            <p>Deprecated: Use [unloadRecord](#method_unloadRecord) instead</p>
         
 
         
     </div>
 
     <div class="description">
-        <p>When a record is destroyed, this un-indexes it and
-removes it from any record arrays so it can be GCed.</p>
-
+        
     </div>
 
     
@@ -1768,7 +2242,7 @@ removes it from any record arrays so it can be GCed.</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -1809,7 +2283,7 @@ removes it from any record arrays so it can be GCed.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1171"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1171</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1599"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1599</code></a>
         
         </p>
 
@@ -1836,14 +2310,14 @@ update the record and the store&#39;s indexes.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>the in-flight record</p>
+                        <p>the in-flight internal model</p>
 
                     </div>
 
@@ -1876,7 +2350,7 @@ update the record and the store&#39;s indexes.</p>
 </div>
 
                 
-                    <div id="method_didUpdateAll" class="method item">
+                    <div id="method_didUpdateAll" class="method item private">
     <h3 class="name"><code>didUpdateAll</code></h3>
 
     
@@ -1885,7 +2359,7 @@ update the record and the store&#39;s indexes.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
@@ -1897,6 +2371,8 @@ update the record and the store&#39;s indexes.</p>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1918,7 +2394,7 @@ update the record and the store&#39;s indexes.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l896"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:896</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1234"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1234</code></a>
         
         </p>
 
@@ -1940,7 +2416,7 @@ update the record and the store&#39;s indexes.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">typeClass</code>
                         <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
@@ -1963,7 +2439,7 @@ update the record and the store&#39;s indexes.</p>
 </div>
 
                 
-                    <div id="method_fetch" class="method item">
+                    <div id="method_fetch" class="method item deprecated">
     <h3 class="name"><code>fetch</code></h3>
 
     
@@ -1972,7 +2448,7 @@ update the record and the store&#39;s indexes.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -1999,6 +2475,8 @@ update the record and the store&#39;s indexes.</p>
     
 
     
+        <span class="flag deprecated" title="Use [findRecord](#method_findRecord) instead">deprecated</span>
+    
 
     
 
@@ -2021,31 +2499,20 @@ update the record and the store&#39;s indexes.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l468"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:468</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l561"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:561</code></a>
         
         </p>
 
 
+        
+            <p>Deprecated: Use [findRecord](#method_findRecord) instead</p>
         
 
         
     </div>
 
     <div class="description">
-        <p>This method returns a fresh record for a given type and id combination.</p>
-<p>If a record is available for the given type/id combination, then
-it will fetch this record from the store and call <code>reload()</code> on it.
-That will fire a request to server and return a promise that will
-resolve once the record has been reloaded.
-If there&#39;s no record corresponding in the store it will simply call
-<code>store.find</code>.</p>
-<p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.PostRoute = Ember.Route.extend({
-  model: function(params) {
-    return this.store.fetch(&#39;post&#39;, params.post_id);
-  }
-});</code></pre>
-
+        
     </div>
 
     
@@ -2056,8 +2523,8 @@ If there&#39;s no record corresponding in the store it will simply call
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -2072,7 +2539,7 @@ If there&#39;s no record corresponding in the store it will simply call
                 <li class="param">
                     
                         <code class="param-name">id</code>
-                        <span class="type">String | Integer</span>
+                        <span class="type">(String | Integer)</span>
                     
 
                     
@@ -2126,7 +2593,7 @@ If there&#39;s no record corresponding in the store it will simply call
 </div>
 
                 
-                    <div id="method_fetchAll" class="method item private">
+                    <div id="method_fetchAll" class="method item deprecated">
     <h3 class="name"><code>fetchAll</code></h3>
 
     
@@ -2135,13 +2602,7 @@ If there&#39;s no record corresponding in the store it will simply call
             
                 <li class="arg">
                     
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>array</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -2156,9 +2617,9 @@ If there&#39;s no record corresponding in the store it will simply call
     
 
     
-
+        <span class="flag deprecated" title="Use [findAll](#method_findAll) instead">deprecated</span>
     
-        <span class="flag private">private</span>
+
     
 
     
@@ -2180,18 +2641,22 @@ If there&#39;s no record corresponding in the store it will simply call
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l877"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:877</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l544"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:544</code></a>
         
         </p>
 
 
+        
+            <p>Deprecated: Use [findAll](#method_findAll) instead</p>
         
 
         
     </div>
 
     <div class="description">
-        
+        <p>This method returns a fresh collection from the server, regardless of if there is already records
+in the store or not.</p>
+
     </div>
 
     
@@ -2202,8 +2667,130 @@ If there&#39;s no record corresponding in the store it will simply call
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>promise</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_fetchById" class="method item deprecated">
+    <h3 class="name"><code>fetchById</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>options</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+        <span class="flag deprecated" title="Use [findRecord](#method_findRecord) instead">deprecated</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l520"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:520</code></a>
+        
+        </p>
+
+
+        
+            <p>Deprecated: Use [findRecord](#method_findRecord) instead</p>
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This method returns a fresh record for a given type and id combination.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -2217,8 +2804,23 @@ If there&#39;s no record corresponding in the store it will simply call
             
                 <li class="param">
                     
-                        <code class="param-name">array</code>
-                        <span class="type"><a href="../classes/DS.RecordArray.html" class="crosslink">DS.RecordArray</a></span>
+                        <code class="param-name">id</code>
+                        <span class="type">(String | Integer)</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
                     
 
                     
@@ -2263,7 +2865,7 @@ If there&#39;s no record corresponding in the store it will simply call
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -2302,7 +2904,7 @@ If there&#39;s no record corresponding in the store it will simply call
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l555"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:555</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l722"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:722</code></a>
         
         </p>
 
@@ -2313,7 +2915,7 @@ If there&#39;s no record corresponding in the store it will simply call
     </div>
 
     <div class="description">
-        <p>This method is called by <code>findById</code> if it discovers that a particular
+        <p>This method is called by <code>findRecord</code> if it discovers that a particular
 type/id pair hasn&#39;t been loaded yet to kick off a request to the
 adapter.</p>
 
@@ -2327,14 +2929,15 @@ adapter.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
 
                     <div class="param-description">
-                         
+                        <p>model</p>
+
                     </div>
 
                     
@@ -2373,7 +2976,7 @@ adapter.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -2422,7 +3025,7 @@ adapter.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l970"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:970</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1350"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1350</code></a>
         
         </p>
 
@@ -2475,8 +3078,8 @@ function will be applied on the returned results regardless.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -2550,7 +3153,7 @@ function will be applied on the returned results regardless.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -2562,7 +3165,7 @@ function will be applied on the returned results regardless.</p>
             
                 <li class="arg">
                     
-                        <code>preload</code>
+                        <code>options</code>
                     
                 </li>
             
@@ -2599,7 +3202,7 @@ function will be applied on the returned results regardless.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l376"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:376</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l431"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:431</code></a>
         
         </p>
 
@@ -2627,7 +3230,7 @@ by passing them as the third argument to find.</p>
 <p>For example, if your Ember route looks like <code>/posts/1/comments/2</code> and your API route
 for the comment also looks like <code>/posts/1/comments/2</code> if you want to fetch the comment
 without fetching the post you can pass in the post to the <code>find</code> call:</p>
-<pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;comment&#39;, 2, {post: 1});</code></pre>
+<pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;comment&#39;, 2, { preload: { post: 1 } });</code></pre>
 <p>If you have access to the post model you can also pass the model itself:</p>
 <pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;post&#39;, 1).then(function (myPostModel) {
   store.find(&#39;comment&#39;, 2, {post: myPostModel});
@@ -2636,18 +3239,12 @@ without fetching the post you can pass in the post to the <code>find</code> call
 relationship on the record and construct the nested URL without having to first
 fetch the post.</p>
 <hr>
-<p>To find all records for a type, call <code>find</code> with no additional parameters:</p>
-<pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;person&#39;);</code></pre>
+<p>To find all records for a type, call <code>findAll</code>:</p>
+<pre class="code prettyprint"><code class="lang-javascript">store.findAll(&#39;person&#39;);</code></pre>
 <p>This will ask the adapter&#39;s <code>findAll</code> method to find the records for the
 given type, and return a promise that will be resolved once the server
-returns the values.</p>
-<hr>
-<p>To find a record by a query, call <code>find</code> with a hash as the second
-parameter:</p>
-<pre class="code prettyprint"><code class="lang-javascript">store.find(&#39;person&#39;, { page: 1 });</code></pre>
-<p>This will ask the adapter&#39;s <code>findQuery</code> method to find the records for
-the query, and return a promise that will be resolved once the server
-responds.</p>
+returns the values. The promise will resolve into all records of this type
+present in the store, even if the server only returns a subset of them.</p>
 
     </div>
 
@@ -2659,8 +3256,8 @@ responds.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -2675,7 +3272,7 @@ responds.</p>
                 <li class="param">
                     
                         <code class="param-name">id</code>
-                        <span class="type">Object | String | Integer | Null</span>
+                        <span class="type">(Object | String | Integer | Null)</span>
                     
 
                     
@@ -2689,17 +3286,14 @@ responds.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">preload</code>
+                        <code class="param-name">options</code>
                         <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <ul>
-<li>optional set of attributes and relationships passed in either as IDs or as actual models</li>
-</ul>
-
+                         
                     </div>
 
                     
@@ -2729,7 +3323,7 @@ responds.</p>
 </div>
 
                 
-                    <div id="method_findAll" class="method item private">
+                    <div id="method_findAll" class="method item">
     <h3 class="name"><code>findAll</code></h3>
 
     
@@ -2738,7 +3332,13 @@ responds.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>options</code>
                     
                 </li>
             
@@ -2754,8 +3354,6 @@ responds.</p>
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -2777,7 +3375,7 @@ responds.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l861"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:861</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1176"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1176</code></a>
         
         </p>
 
@@ -2788,9 +3386,18 @@ responds.</p>
     </div>
 
     <div class="description">
-        <p>This method returns an array of all records adapter can find.
-It triggers the adapter&#39;s <code>findAll</code> method to give it an opportunity to populate
-the array with records of that type.</p>
+        <p><code>findAll</code> ask the adapter&#39;s <code>findAll</code> method to find the records
+for the given type, and return a promise that will be resolved
+once the server returns the values. The promise will resolve into
+all records of this type present in the store, even if the server
+only returns a subset of them.</p>
+<pre class="code prettyprint"><code class="lang-app/routes/authors.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
+  model: function(params) {
+    return this.store.findAll(&#39;author&#39;);
+  }
+});</code></pre>
 
     </div>
 
@@ -2802,8 +3409,23 @@ the array with records of that type.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
                     
 
                     
@@ -2897,7 +3519,7 @@ the array with records of that type.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l814"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:814</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1042"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1042</code></a>
         
         </p>
 
@@ -2995,7 +3617,7 @@ the array with records of that type.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -3007,7 +3629,7 @@ the array with records of that type.</p>
             
                 <li class="arg">
                     
-                        <code>preload</code>
+                        <code>options</code>
                     
                 </li>
             
@@ -3046,7 +3668,7 @@ the array with records of that type.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l502"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:502</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l578"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:578</code></a>
         
         </p>
 
@@ -3069,8 +3691,8 @@ the array with records of that type.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -3085,7 +3707,7 @@ the array with records of that type.</p>
                 <li class="param">
                     
                         <code class="param-name">id</code>
-                        <span class="type">String | Integer</span>
+                        <span class="type">(String | Integer)</span>
                     
 
                     
@@ -3099,17 +3721,14 @@ the array with records of that type.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">preload</code>
+                        <code class="param-name">options</code>
                         <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <ul>
-<li>optional set of attributes and relationships passed in either as IDs or as actual models</li>
-</ul>
-
+                         
                     </div>
 
                     
@@ -3148,7 +3767,7 @@ the array with records of that type.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -3193,7 +3812,7 @@ the array with records of that type.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l537"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:537</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l703"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:703</code></a>
         
         </p>
 
@@ -3217,7 +3836,7 @@ and returns a promise that resolves once they are all loaded.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -3290,7 +3909,7 @@ and returns a promise that resolves once they are all loaded.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>relationship</code>
                     
                 </li>
             
@@ -3329,7 +3948,7 @@ and returns a promise that resolves once they are all loaded.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l787"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:787</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1015"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1015</code></a>
         
         </p>
 
@@ -3388,8 +4007,8 @@ then use that URL in the future to make a request for the relationship.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">relationship</code>
+                        <span class="type">(Relationship)</span>
                     
 
                     
@@ -3434,183 +4053,7 @@ then use that URL in the future to make a request for the relationship.</p>
             
                 <li class="arg">
                     
-                        <code>owner</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>records</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>resolver</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="../classes/DS.ManyArray.html" class="crosslink">DS.ManyArray</a></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l770"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:770</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">owner</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">records</code>
-                        <span class="type">Array</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">resolver</code>
-                        <span class="type">Resolver</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="../classes/DS.ManyArray.html" class="crosslink">DS.ManyArray</a></span>:
-                    
-                    <p>records</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_findQuery" class="method item private">
-    <h3 class="name"><code>findQuery</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>query</code>
+                        <code>internalModels</code>
                     
                 </li>
             
@@ -3649,11 +4092,126 @@ then use that URL in the future to make a request for the relationship.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l831"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:831</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1001"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1001</code></a>
         
         </p>
 
 
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">internalModels</code>
+                        <span class="type">Array</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>promise</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_findQuery" class="method item deprecated">
+    <h3 class="name"><code>findQuery</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>query</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+        <span class="flag deprecated" title="Use &#x60;store.query instead&#x60;">deprecated</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1151"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1151</code></a>
+        
+        </p>
+
+
+        
+            <p>Deprecated: Use &#x60;store.query instead&#x60;</p>
         
 
         
@@ -3678,8 +4236,8 @@ once the server returns.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -3702,6 +4260,178 @@ once the server returns.</p>
                     <div class="param-description">
                         <p>an opaque query to be used by the adapter</p>
 
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>promise</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_findRecord" class="method item">
+    <h3 class="name"><code>findRecord</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>options</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l597"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:597</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This method returns a record for a given type and id combination.</p>
+<p>The <code>findRecord</code> method will always return a <strong>promise</strong> that will be
+resolved with the record. If the record was already in the store,
+the promise will be resolved immediately. Otherwise, the store
+will ask the adapter&#39;s <code>find</code> method to find the necessary data.</p>
+<p>The <code>findRecord</code> method will always resolve its promise with the same
+object for a given type and <code>id</code>.</p>
+<p>Example</p>
+<pre class="code prettyprint"><code class="lang-app/routes/post.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
+  model: function(params) {
+    return this.store.findRecord(&#39;post&#39;, params.post_id);
+  }
+});</code></pre>
+<p>If you would like to force the record to reload, instead of
+loading it from the cache when present you can set <code>reload: true</code>
+in the options object for <code>findRecord</code>.</p>
+<pre class="code prettyprint"><code class="lang-app/routes/post/edit.js">import Ember from &#39;ember&#39;;
+
+export default Ember.Route.extend({
+  model: function(params) {
+    return this.store.findRecord(&#39;post&#39;, params.post_id, { reload: true });
+  }
+});</code></pre>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">(String | Integer)</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
                     </div>
 
                     
@@ -3765,7 +4495,7 @@ once the server returns.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1141"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1141</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1567"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1567</code></a>
         
         </p>
 
@@ -3798,7 +4528,7 @@ flushes any records passed into <code>scheduleSave</code></p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -3841,7 +4571,7 @@ flushes any records passed into <code>scheduleSave</code></p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l681"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:681</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l874"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:874</code></a>
         
         </p>
 
@@ -3871,8 +4601,8 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -3932,13 +4662,13 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>id</code>
+                        <code>inputId</code>
                     
                 </li>
             
@@ -3975,7 +4705,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l733"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:733</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l955"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:955</code></a>
         
         </p>
 
@@ -3998,8 +4728,8 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">(String | DS.Model)</span>
                     
 
                     
@@ -4013,8 +4743,8 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name">id</code>
-                        <span class="type">String | Integer</span>
+                        <code class="param-name">inputId</code>
+                        <span class="type">(String | Integer)</span>
                     
 
                     
@@ -4082,7 +4812,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l176"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:176</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l220"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:220</code></a>
         
         </p>
 
@@ -4104,7 +4834,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
 </div>
 
                 
-                    <div id="method_metadataFor" class="method item">
+                    <div id="method_metadataFor" class="method item deprecated">
     <h3 class="name"><code>metadataFor</code></h3>
 
     
@@ -4113,7 +4843,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="arg">
                     
-                        <code>typeName</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -4127,6 +4857,8 @@ post.get(&#39;id&#39;); // 1</code></pre>
         </span>
     
 
+    
+        <span class="flag deprecated">deprecated</span>
     
 
     
@@ -4150,7 +4882,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1074"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1074</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1464"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1464</code></a>
         
         </p>
 
@@ -4173,8 +4905,8 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name">typeName</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -4217,7 +4949,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="arg">
                     
-                        <code>typeName</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -4258,7 +4990,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1564"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1564</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2118"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2118</code></a>
         
         </p>
 
@@ -4282,8 +5014,8 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="param">
                     
-                        <code class="param-name">typeName</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -4329,7 +5061,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
                 <li class="arg">
                     
-                        <code>key</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -4339,7 +5071,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
 
     
         <span class="returns-inline">
-            <span class="type">subclass of DS.Model</span>
+            <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
         </span>
     
 
@@ -4366,7 +5098,7 @@ post.get(&#39;id&#39;); // 1</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1295"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1295</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1763"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1763</code></a>
         
         </p>
 
@@ -4391,8 +5123,8 @@ etc.)</p>
             
                 <li class="param">
                     
-                        <code class="param-name">key</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -4415,7 +5147,7 @@ etc.)</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">subclass of DS.Model</span>:
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>:
                     
                 
             </div>
@@ -4435,7 +5167,7 @@ etc.)</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -4478,7 +5210,7 @@ etc.)</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1506"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1506</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2050"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2050</code></a>
         
         </p>
 
@@ -4508,7 +5240,7 @@ etc.)</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -4561,8 +5293,8 @@ etc.)</p>
 </div>
 
                 
-                    <div id="method_push" class="method item">
-    <h3 class="name"><code>push</code></h3>
+                    <div id="method_peekAll" class="method item">
+    <h3 class="name"><code>peekAll</code></h3>
 
     
         <div class="args">
@@ -4570,13 +5302,7 @@ etc.)</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>data</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -4586,7 +5312,7 @@ etc.)</p>
 
     
         <span class="returns-inline">
-            <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+            <span class="type"><a href="../classes/DS.RecordArray.html" class="crosslink">DS.RecordArray</a></span>
         </span>
     
 
@@ -4613,7 +5339,261 @@ etc.)</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1329"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1329</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1275"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1275</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This method returns a filtered array that contains all of the
+known records for a given type in the store.</p>
+<p>Note that because it&#39;s just a filter, the result will contain any
+locally created records of the type, however, it will not make a
+request to the backend to retrieve additional records. If you
+would like to request all the records from the backend please use
+<a href="#method_find">store.find</a>.</p>
+<p>Also note that multiple calls to <code>peekAll</code> for a given type will always
+return the same <code>RecordArray</code>.</p>
+<p>Example</p>
+<pre class="code prettyprint"><code class="lang-javascript">var localPosts = store.peekAll(&#39;post&#39;);</code></pre>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="../classes/DS.RecordArray.html" class="crosslink">DS.RecordArray</a></span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_peekRecord" class="method item">
+    <h3 class="name"><code>peekRecord</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a> | Null</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l902"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:902</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Get a record by a given type and ID without triggering a fetch.</p>
+<p>This method will synchronously return the record if it is available in the store,
+otherwise it will return <code>null</code>. A record is available if it has been fetched earlier, or
+pushed manually into the store.</p>
+<p><em>Note: This is an synchronous method and does not return a promise.</em></p>
+<pre class="code prettyprint"><code class="lang-js">var post = store.peekRecord(&#39;post&#39;, 1);
+
+post.get(&#39;id&#39;); // 1</code></pre>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">String | Integer</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a> | Null</span>:
+                    
+                    <p>record</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_push" class="method item">
+    <h3 class="name"><code>push</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>data</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a> | Array</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1816"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1816</code></a>
         
         </p>
 
@@ -4638,7 +5618,9 @@ your model&#39;s <code>DS.attr</code>s.</li>
 </li>
 </ul>
 <p>For this model:</p>
-<pre class="code prettyprint"><code class="lang-js">App.Person = DS.Model.extend({
+<pre class="code prettyprint"><code class="lang-app/models/person.js">import DS from &#39;ember-data&#39;;
+
+export default DS.Model.extend({
   firstName: DS.attr(),
   lastName: DS.attr(),
 
@@ -4679,8 +5661,8 @@ records, as well as to update existing records.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -4718,9 +5700,9 @@ records, as well as to update existing records.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>:
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a> | Array</span>:
                     
-                    <p>the record that was created or
+                    <p>the record(s) that was created or
   updated.</p>
 
                 
@@ -4741,7 +5723,7 @@ records, as well as to update existing records.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -4784,7 +5766,7 @@ records, as well as to update existing records.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1543"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1543</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2092"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2092</code></a>
         
         </p>
 
@@ -4809,8 +5791,8 @@ call <code>push</code> repeatedly for you.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -4868,13 +5850,13 @@ call <code>push</code> repeatedly for you.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>payload</code>
+                        <code>inputPayload</code>
                     
                 </li>
             
@@ -4907,7 +5889,7 @@ call <code>push</code> repeatedly for you.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1445"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1445</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1974"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1974</code></a>
         
         </p>
 
@@ -4924,14 +5906,15 @@ records, as well as to update existing records. You
 can push in more than one type of object at once.
 All objects should be in the format expected by the
 serializer.</p>
-<pre class="code prettyprint"><code class="lang-js">App.ApplicationSerializer = DS.ActiveModelSerializer;
+<pre class="code prettyprint"><code class="lang-app/serializers/application.js">import DS from &#39;ember-data&#39;;
 
-var pushData = {
+export default DS.ActiveModelSerializer;</code></pre>
+<pre class="code prettyprint"><code class="lang-js">var pushData = {
   posts: [
-    {id: 1, post_title: &quot;Great post&quot;, comment_ids: [2]}
+    { id: 1, post_title: &quot;Great post&quot;, comment_ids: [2] }
   ],
   comments: [
-    {id: 2, comment_body: &quot;Insightful comment&quot;}
+    { id: 2, comment_body: &quot;Insightful comment&quot; }
   ]
 }
 
@@ -4943,10 +5926,14 @@ will determine which serializer will process the payload.
 However, the serializer itself (processing this data via
 <code>normalizePayload</code>) will not know which model it is
 deserializing.</p>
-<pre class="code prettyprint"><code class="lang-js">App.ApplicationSerializer = DS.ActiveModelSerializer;
-App.PostSerializer = DS.JSONSerializer;
-store.pushPayload(&#39;comment&#39;, pushData); // Will use the ApplicationSerializer
-store.pushPayload(&#39;post&#39;, pushData); // Will use the PostSerializer</code></pre>
+<pre class="code prettyprint"><code class="lang-app/serializers/application.js">import DS from &#39;ember-data&#39;;
+
+export default DS.ActiveModelSerializer;</code></pre>
+<pre class="code prettyprint"><code class="lang-app/serializers/post.js">import DS from &#39;ember-data&#39;;
+
+export default DS.JSONSerializer;</code></pre>
+<pre class="code prettyprint"><code class="lang-js">store.pushPayload(&#39;comment&#39;, pushData); // Will use the application serializer
+store.pushPayload(&#39;post&#39;, pushData); // Will use the post serializer</code></pre>
 
     </div>
 
@@ -4958,14 +5945,14 @@ store.pushPayload(&#39;post&#39;, pushData); // Will use the PostSerializer</cod
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Optionally, a model used to determine which serializer will be used</p>
+                        <p>Optionally, a model type used to determine which serializer will be used</p>
 
                     </div>
 
@@ -4974,7 +5961,7 @@ store.pushPayload(&#39;post&#39;, pushData); // Will use the PostSerializer</cod
             
                 <li class="param">
                     
-                        <code class="param-name">payload</code>
+                        <code class="param-name">inputPayload</code>
                         <span class="type">Object</span>
                     
 
@@ -4997,6 +5984,288 @@ store.pushPayload(&#39;post&#39;, pushData); // Will use the PostSerializer</cod
 </div>
 
                 
+                    <div id="method_query" class="method item">
+    <h3 class="name"><code>query</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>query</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1059"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1059</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This method delegates a query to the adapter. This is the one place where
+adapter-level semantics are exposed to the application.</p>
+<p>Exposing queries this way seems preferable to creating an abstract query
+language for all server-side queries, and then require all adapters to
+implement them.</p>
+<hr>
+<p>If you do something like this:</p>
+<pre class="code prettyprint"><code class="lang-javascript">store.query(&#39;person&#39;, { page: 1 });</code></pre>
+<p>The call made to the server, using a Rails backend, will look something like this:</p>
+<pre class="code prettyprint"><code>Started GET &quot;/api/v1/person?page=1&quot;
+Processing by Api::V1::PersonsController#index as HTML
+Parameters: { &quot;page&quot;=&gt;&quot;1&quot; }</code></pre>
+<hr>
+<p>If you do something like this:</p>
+<pre class="code prettyprint"><code class="lang-javascript">store.query(&#39;person&#39;, { ids: [1, 2, 3] });</code></pre>
+<p>The call to the server, using a Rails backend, will look something like this:</p>
+<pre class="code prettyprint"><code>Started GET &quot;/api/v1/person?ids%5B%5D=1&amp;ids%5B%5D=2&amp;ids%5B%5D=3&quot;
+Processing by Api::V1::PersonsController#index as HTML
+Parameters: { &quot;ids&quot; =&gt; [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;] }</code></pre>
+<p>This method returns a promise, which is resolved with a <code>RecordArray</code>
+once the server returns.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">query</code>
+                        <span class="type">Any</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>an opaque query to be used by the adapter</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>promise</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_queryRecord" class="method item">
+    <h3 class="name"><code>queryRecord</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>query</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1121"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1121</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This method delegates a query to the adapter. This is the one place where
+adapter-level semantics are exposed to the application.</p>
+<p>Exposing queries this way seems preferable to creating an abstract query
+language for all server-side queries, and then require all adapters to
+implement them.</p>
+<p>This method returns a promise, which is resolved with a <code>RecordObject</code>
+once the server returns.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">String or subclass of DS.Model</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">query</code>
+                        <span class="type">Any</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>an opaque query to be used by the adapter</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>promise</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_recordForId" class="method item private">
     <h3 class="name"><code>recordForId</code></h3>
 
@@ -5006,7 +6275,7 @@ store.pushPayload(&#39;post&#39;, pushData); // Will use the PostSerializer</cod
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -5051,7 +6320,7 @@ store.pushPayload(&#39;post&#39;, pushData); // Will use the PostSerializer</cod
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l747"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:747</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l971"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:971</code></a>
         
         </p>
 
@@ -5075,8 +6344,8 @@ it builds a new record and leaves it in the <code>empty</code> state.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -5091,7 +6360,7 @@ it builds a new record and leaves it in the <code>empty</code> state.</p>
                 <li class="param">
                     
                         <code class="param-name">id</code>
-                        <span class="type">String | Integer</span>
+                        <span class="type">(String | Integer)</span>
                     
 
                     
@@ -5136,7 +6405,7 @@ it builds a new record and leaves it in the <code>empty</code> state.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -5179,7 +6448,7 @@ it builds a new record and leaves it in the <code>empty</code> state.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1050"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1050</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1440"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1440</code></a>
         
         </p>
 
@@ -5209,8 +6478,8 @@ store.find(&#39;post&#39;, 1).then(function() {
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -5268,7 +6537,13 @@ store.find(&#39;post&#39;, 1).then(function() {
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>error</code>
                     
                 </li>
             
@@ -5303,7 +6578,7 @@ store.find(&#39;post&#39;, 1).then(function() {
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1210"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1210</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1642"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1642</code></a>
         
         </p>
 
@@ -5328,8 +6603,23 @@ is rejected (with anything other than a <code>DS.InvalidError</code>).</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">error</code>
+                        <span class="type">Error</span>
                     
 
                     
@@ -5360,7 +6650,7 @@ is rejected (with anything other than a <code>DS.InvalidError</code>).</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -5401,7 +6691,7 @@ is rejected (with anything other than a <code>DS.InvalidError</code>).</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1196"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1196</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1628"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1628</code></a>
         
         </p>
 
@@ -5426,8 +6716,8 @@ is rejected with a <code>DS.InvalidError</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
@@ -5473,7 +6763,7 @@ is rejected with a <code>DS.InvalidError</code>.</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -5512,7 +6802,7 @@ is rejected with a <code>DS.InvalidError</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l709"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:709</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l931"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:931</code></a>
         
         </p>
 
@@ -5538,7 +6828,7 @@ by the record&#39;s <code>reload</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
+                        <code class="param-name">internalModel</code>
                         <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
@@ -5575,6 +6865,161 @@ by the record&#39;s <code>reload</code>.</p>
 </div>
 
                 
+                    <div id="method_retrieveManagedInstance" class="method item private">
+    <h3 class="name"><code>retrieveManagedInstance</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>modelName</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>fallbacks</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Ember.Object</span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2295"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2295</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Retrieve a particular instance from the
+container cache. If not found, creates it and
+placing it in the cache.</p>
+<p>Enabled a store to manage local instances of
+adapters and serializers.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the object modelName</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the object name</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">fallbacks</code>
+                        <span class="type">Array</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the fallback objects to lookup if the lookup for modelName or &#39;application&#39; fails</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Ember.Object</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_scheduleSave" class="method item private">
     <h3 class="name"><code>scheduleSave</code></h3>
 
@@ -5584,13 +7029,19 @@ by the record&#39;s <code>reload</code>.</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
                 <li class="arg">
                     
                         <code>resolver</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>options</code>
                     
                 </li>
             
@@ -5625,7 +7076,7 @@ by the record&#39;s <code>reload</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1124"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1124</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1544"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1544</code></a>
         
         </p>
 
@@ -5650,8 +7101,8 @@ resolver for the promise that <code>record.save</code> returns.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
@@ -5667,6 +7118,21 @@ resolver for the promise that <code>record.save</code> returns.</p>
                     
                         <code class="param-name">resolver</code>
                         <span class="type">Resolver</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
                     
 
                     
@@ -5738,7 +7204,7 @@ resolver for the promise that <code>record.save</code> returns.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l209"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:209</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l254"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:254</code></a>
         
         </p>
 
@@ -5816,7 +7282,7 @@ the JSON representation</li>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -5826,7 +7292,7 @@ the JSON representation</li>
 
     
         <span class="returns-inline">
-            <span class="type">DS.Serializer</span>
+            <span class="type"><a href="../classes/DS.Serializer.html" class="crosslink">DS.Serializer</a></span>
         </span>
     
 
@@ -5855,7 +7321,7 @@ the JSON representation</li>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1669"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1669</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2254"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2254</code></a>
         
         </p>
 
@@ -5872,7 +7338,10 @@ example, <code>serializerFor(&#39;person&#39;)</code> will return an instance of
 <p>If no <code>App.PersonSerializer</code> is found, this method will look
 for an <code>App.ApplicationSerializer</code> (the default serializer for
 your entire application).</p>
-<p>If no <code>App.ApplicationSerializer</code> is found, it will fall back
+<p>if no <code>App.ApplicationSerializer</code> is found, it will attempt
+to get the <code>defaultSerializer</code> from the <code>PersonAdapter</code>
+(<code>adapterFor(&#39;person&#39;)</code>).</p>
+<p>If a serializer cannot be found on the adapter, it will fall back
 to an instance of <code>DS.JSONSerializer</code>.</p>
 
     </div>
@@ -5885,7 +7354,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -5910,7 +7379,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">DS.Serializer</span>:
+                        <span class="type"><a href="../classes/DS.Serializer.html" class="crosslink">DS.Serializer</a></span>:
                     
                 
             </div>
@@ -5921,7 +7390,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
 </div>
 
                 
-                    <div id="method_setMetadataFor" class="method item">
+                    <div id="method_setMetadataFor" class="method item deprecated">
     <h3 class="name"><code>setMetadataFor</code></h3>
 
     
@@ -5930,7 +7399,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
                 <li class="arg">
                     
-                        <code>typeName</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -5950,6 +7419,8 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
         </span>
     
 
+    
+        <span class="flag deprecated">deprecated</span>
     
 
     
@@ -5973,7 +7444,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1086"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1086</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1492"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1492</code></a>
         
         </p>
 
@@ -5996,8 +7467,8 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">typeName</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String</span>
                     
 
                     
@@ -6056,7 +7527,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
@@ -6095,7 +7566,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1244"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1244</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1677"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1677</code></a>
         
         </p>
 
@@ -6118,8 +7589,8 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">subclass of DS.Model</span>
+                        <code class="param-name">typeClass</code>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -6164,7 +7635,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -6197,7 +7668,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l945"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:945</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1308"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1308</code></a>
         
         </p>
 
@@ -6208,8 +7679,10 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
     </div>
 
     <div class="description">
-        <p>This method unloads all of the known records for a given type.</p>
-<pre class="code prettyprint"><code class="lang-javascript">store.unloadAll(&#39;post&#39;);</code></pre>
+        <p>This method unloads all records in the store.</p>
+<p>Optionally you can pass a type which unload all records for a given type.</p>
+<pre class="code prettyprint"><code class="lang-javascript">store.unloadAll();
+store.unloadAll(&#39;post&#39;);</code></pre>
 
     </div>
 
@@ -6221,8 +7694,8 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">String or subclass of DS.Model</span>
+                        <code class="param-name">modelName</code>
+                        <span class="type">String=</span>
                     
 
                     
@@ -6286,7 +7759,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l353"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:353</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l408"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:408</code></a>
         
         </p>
 
@@ -6346,7 +7819,7 @@ non-dirty records can be unloaded.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -6391,7 +7864,7 @@ non-dirty records can be unloaded.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1531"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1531</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l2076"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:2076</code></a>
         
         </p>
 
@@ -6415,7 +7888,7 @@ non-dirty records can be unloaded.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -6476,7 +7949,7 @@ non-dirty records can be unloaded.</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -6517,7 +7990,7 @@ non-dirty records can be unloaded.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l1223"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1223</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l1656"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:1656</code></a>
         
         </p>
 
@@ -6542,8 +8015,8 @@ data.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
@@ -6590,7 +8063,7 @@ data.</p>
                 
                     <div id="property_adapter" class="property item">
     <h3 class="name"><code>adapter</code></h3>
-    <span class="type"><a href="../classes/DS.Adapter.html" class="crosslink">DS.Adapter</a> | String</span>
+    <span class="type">(DS.Adapter | String)</span>
 
     
 
@@ -6611,7 +8084,7 @@ data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l192"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:192</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l237"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:237</code></a>
         
         </p>
 
@@ -6623,7 +8096,7 @@ data.</p>
     <div class="description">
         <p>The adapter to use to communicate to a backend server or other persistence layer.</p>
 <p>This can be specified as an instance, class, or string.</p>
-<p>If you want to specify <code>App.CustomAdapter</code> as a string, do:</p>
+<p>If you want to specify <code>app/adapters/custom.js</code> as a string, do:</p>
 <pre class="code prettyprint"><code class="lang-js">adapter: &#39;custom&#39;</code></pre>
 
     </div>
@@ -6663,7 +8136,7 @@ data.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_store.js.html#l227"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:227</code></a>
+        <a href="../files/packages_ember-data_lib_system_store.js.html#l273"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;store.js:273</code></a>
         
         </p>
 

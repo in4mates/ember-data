@@ -29,13 +29,12 @@ The latest passing build from the "master" branch is available on
 Similarly, the latest passing build from the "beta" branch can be found
 on [http://emberjs.com/builds/#/beta](http://emberjs.com/builds/#/beta)
 
-Or build ember-data.js yourself. Clone the repository and run `npm run dist`
+Or build ember-data.js yourself. Clone the repository and run `npm run build:production`
 after [setup](#setup). You'll find ember-data.js in the `dist` directory.
 
 #### Internet Explorer 8
 
-If you need to support Internet Explorer, you will need to use es5-shim.js and
-es5-sham.js from [es5-shim](https://github.com/es-shims/es5-shim).
+Internet Explorer 8 support requires Ember 1.8.1 (which provides a polyfill for `Object.create`).
 
 ### Instantiating the Store
 
@@ -53,53 +52,52 @@ controllers in your app.
 
 First thing's first: tell Ember Data about the models in your
 application. For example, imagine we're writing a blog reader app.
+
 Here's what your model definition would look like if you're using
-globals (that is, not something like Ember App Kit or ember-cli):
+ES6 modules (via ember-cli):
 
 ```js
-var attr = DS.attr,
-    hasMany = DS.hasMany,
-    belongsTo = DS.belongsTo;
+// app/models/blog-post.js
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  title: DS.attr('string'),
+  createdAt: DS.attr('date'),
+
+  comments: DS.hasMany('comment')
+});
+
+// app/models/comment.js
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  body: DS.attr('string'),
+  username: DS.attr('string'),
+
+  post: DS.belongsTo('blog-post')
+});
+```
+
+If you're using globals (that is, not something like ember-cli), your
+models would look like this:
+
+```js
+var attr = DS.attr;
+var hasMany = DS.hasMany;
+var belongsTo = DS.belongsTo;
 
 App.BlogPost = DS.Model.extend({
-  title: attr(),
+  title: attr('string'),
   createdAt: attr('date'),
 
   comments: hasMany('comment')
 });
 
 App.Comment = DS.Model.extend({
-  body: attr(),
-  username: attr(),
+  body: attr('string'),
+  username: attr('string'),
 
-  post: belongsTo('blogPost')
-});
-```
-
-If you're using ES6 modules (via Ember App Kit or ember-cli), your
-models would look like this:
-
-```js
-// app/models/blog-post.js
-var attr = DS.attr,
-    hasMany = DS.hasMany;
-
-export default DS.Model.extend({
-  title: attr(),
-  createdAt: attr('date'),
-
-  comments: hasMany('comment')
-});
-
-// app/models/comment.js
-var attr = DS.attr,
-    belongsTo = DS.belongsTo;
-
-export default DS.Model.extend({
-  body: attr(),
-  username: attr(),
-
-  post: belongsTo('blogPost')
+  post: belongsTo('blog-post')
 });
 ```
 
@@ -118,12 +116,6 @@ adapter translates that into an XHR request to (for example)
 By default, Ember Data will use the `RESTAdapter`, which adheres to a
 set of RESTful JSON conventions.
 
-Ember Data also ships with the `FixtureAdapter`, useful for testing and
-prototyping before you have a server, and the `ActiveModelAdapter`,
-which is designed to work out-of-the-box with the
-[`ActiveModel::Serializers`](https://github.com/rails-api/active_model_serializers)
-gem for Rails.
-
 To learn more about adapters, including what conventions the
 `RESTAdapter` follows and how to build your own, see the Ember.js
 Guides: [Connecting to an HTTP
@@ -134,7 +126,7 @@ Server](http://emberjs.com/guides/models/connecting-to-an-http-server/).
 From your route or controller:
 
 ```js
-this.store.find('blogPost');
+this.store.findAll('blog-post');
 ```
 
 This returns a promise that resolves to the collection of records.
@@ -142,7 +134,7 @@ This returns a promise that resolves to the collection of records.
 ### Fetching a Single Model
 
 ```js
-this.store.find('blogPost', 123);
+this.store.findRecord('blog-post', 123);
 ```
 
 This returns a promise that resolves to the requested record. If the
@@ -168,7 +160,7 @@ post [The Road to Ember Data
 
 1. Ensure that [Node.js](http://nodejs.org/) is installed.
 2. Run `npm install` to ensure the required dependencies are installed.
-3. Run `npm run dist` to build Ember Data. The builds will be placed in the `dist/` directory.
+3. Run `npm run build:production` to build Ember Data. The builds will be placed in the `dist/` directory.
 
 # Contribution
 

@@ -1,42 +1,51 @@
-import RootState from "ember-data/system/model/states";
+import { PromiseObject } from "ember-data/system/promise-proxies";
 import Errors from "ember-data/system/model/errors";
-import { PromiseObject } from "ember-data/system/promise_proxies";
-import merge from "ember-data/system/merge";
-import JSONSerializer from "ember-data/serializers/json_serializer";
-import createRelationshipFor from "ember-data/system/relationships/state/create";
+import EmptyObject from "ember-data/system/empty-object";
+import ArrayPolyfills from 'ember-data/ext/ember/array';
+
+import {
+  keysFunc
+} from 'ember-data/system/object-polyfills';
+
+import computedPolyfill from "ember-new-computed";
+var errorDeprecationShown = false;
 
 /**
   @module ember-data
 */
 
 var get = Ember.get;
-var set = Ember.set;
-var Promise = Ember.RSVP.Promise;
-var forEach = Ember.ArrayPolyfills.forEach;
-var map = Ember.ArrayPolyfills.map;
+var merge = Ember.merge;
+var copy = Ember.copy;
+var forEach = ArrayPolyfills.forEach;
+var indexOf = ArrayPolyfills.indexOf;
 
-var retrieveFromCurrentState = Ember.computed('currentState', function(key, value) {
-  return get(get(this, 'currentState'), key);
+function intersection (array1, array2) {
+  var result = [];
+  forEach.call(array1, (element) => {
+    if (indexOf.call(array2, element) >= 0) {
+      result.push(element);
+    }
+  });
+
+  return result;
+}
+
+var RESERVED_MODEL_PROPS = [
+  'currentState', 'data', 'store'
+];
+
+var retrieveFromCurrentState = Ember.computed('currentState', function(key) {
+  return get(this._internalModel.currentState, key);
 }).readOnly();
-
-var _extractPivotNameCache = Ember.create(null);
-var _splitOnDotCache = Ember.create(null);
-
-function splitOnDot(name) {
-  return _splitOnDotCache[name] || (
-    _splitOnDotCache[name] = name.split('.')
-  );
-}
-
-function extractPivotName(name) {
-  return _extractPivotNameCache[name] || (
-    _extractPivotNameCache[name] = splitOnDot(name)[0]
-  );
-}
 
 /**
 
   The model class that all Ember Data records descend from.
+  This is the public API of Ember Data models. If you are using Ember Data
+  in your application, this is the class you should use.
+  If you are working on Ember Data internals, you most likely want to be dealing
+  with `InternalModel`
 
   @class Model
   @namespace DS
@@ -46,7 +55,10 @@ function extractPivotName(name) {
 var Model = Ember.Object.extend(Ember.Evented, {
   _recordArrays: undefined,
   _relationships: undefined,
-  _loadingRecordArrays: undefined,
+  _internalModel: null,
+
+  store: null,
+
   /**
     If this property is `true` the record is in the `empty`
     state. Empty is the first state all records enter after they have
@@ -116,8 +128,57 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @property isDirty
     @type {Boolean}
     @readOnly
+    @deprecated
   */
-  isDirty: retrieveFromCurrentState,
+  isDirty: Ember.computed('currentState.isDirty', function() {
+    Ember.deprecate('DS.Model#isDirty has been deprecated please use hasDirtyAttributes instead', false, {
+      id: 'ds.model.is-dirty-deprecated',
+      until: '2.0.0'
+    });
+    return this.get('currentState.isDirty');
+  }),
+
+  /**
+    @property error
+    @type {Boolean}
+    @deprecated
+  */
+  error: computedPolyfill('adapterError', {
+    get() {
+      if (!errorDeprecationShown) {
+        Ember.deprecate('DS.Model#error has been deprecated please use adapterError instead');
+        errorDeprecationShown = true;
+      }
+      return Ember.get(this, 'adapterError');
+    }
+  }),
+
+  /**
+    If this property is `true` the record is in the `dirty` state. The
+    record has local changes that have not yet been saved by the
+    adapter. This includes records that have been created (but not yet
+    saved) or deleted.
+
+    Example
+
+    ```javascript
+    var record = store.createRecord('model');
+    record.get('hasDirtyAttributes'); // true
+
+    store.find('model', 1).then(function(model) {
+      model.get('hasDirtyAttributes'); // false
+      model.set('foo', 'some value');
+      model.get('hasDirtyAttributes'); // true
+    });
+    ```
+
+    @property hasDirtyAttributes
+    @type {Boolean}
+    @readOnly
+  */
+  hasDirtyAttributes: Ember.computed('currentState.isDirty', function() {
+    return this.get('currentState.isDirty');
+  }),
   /**
     If this property is `true` the record is in the `saving` state. A
     record enters the saving state when `save` is called, but the
@@ -254,6 +315,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @readOnly
   */
   isError: false,
+
   /**
     If `true` the store is attempting to reload the record form the adapter.
 
@@ -271,17 +333,6 @@ var Model = Ember.Object.extend(Ember.Evented, {
   */
   isReloading: false,
 
-  /**
-    The `clientId` property is a transient numerical identifier
-    generated at runtime by the data store. It is important
-    primarily because newly created objects may not yet have an
-    externally generated id.
-
-    @property clientId
-    @private
-    @type {Number|String}
-  */
-  clientId: null,
   /**
     All ember models have an id property. This is an identifier
     managed by an external source. These are always coerced to be
@@ -308,36 +359,80 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @private
     @type {Object}
   */
-  currentState: RootState.empty,
 
   /**
     When the record is in the `invalid` state this object will contain
     any errors returned by the adapter. When present the errors hash
-    typically contains keys corresponding to the invalid property names
-    and values which are an array of error messages.
+    contains keys corresponding to the invalid property names
+    and values which are arrays of Javascript objects with two keys:
+
+    - `message` A string containing the error message from the backend
+    - `attribute` The name of the property associated with this error message
 
     ```javascript
     record.get('errors.length'); // 0
     record.set('foo', 'invalid value');
-    record.save().then(null, function() {
-      record.get('errors').get('foo'); // ['foo should be a number.']
+    record.save().catch(function() {
+      record.get('errors').get('foo');
+      // [{message: 'foo should be a number.', attribute: 'foo'}]
     });
+    ```
+
+    The `errors` property us useful for displaying error messages to
+    the user.
+
+    ```handlebars
+    <label>Username: {{input value=username}} </label>
+    {{#each model.errors.username as |error|}}
+      <div class="error">
+        {{error.message}}
+      </div>
+    {{/each}}
+    <label>Email: {{input value=email}} </label>
+    {{#each model.errors.email as |error|}}
+      <div class="error">
+        {{error.message}}
+      </div>
+    {{/each}}
+    ```
+
+
+    You can also access the special `messages` property on the error
+    object to get an array of all the error strings.
+
+    ```handlebars
+    {{#each model.errors.messages as |message|}}
+      <div class="error">
+        {{message}}
+      </div>
+    {{/each}}
     ```
 
     @property errors
     @type {DS.Errors}
   */
   errors: Ember.computed(function() {
-    var errors = Errors.create();
+    let errors = Errors.create();
 
-    errors.registerHandlers(this, function() {
-      this.send('becameInvalid');
-    }, function() {
-      this.send('becameValid');
-    });
+    errors.registerHandlers(this._internalModel,
+      function() {
+        this.send('becameInvalid');
+      },
+      function() {
+        this.send('becameValid');
+      });
 
     return errors;
   }).readOnly(),
+
+  /**
+    This property holds the `DS.AdapterError` object with which
+    last adapter operation was rejected.
+
+    @property adapterError
+    @type {DS.AdapterError}
+  */
+  adapterError: null,
 
   /**
     Create a JSON representation of the record, using the serialization
@@ -354,8 +449,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @return {Object} an object whose values are primitive JSON values only
   */
   serialize: function(options) {
-    var store = get(this, 'store');
-    return store.serialize(this, options);
+    return this.store.serialize(this, options);
   },
 
   /**
@@ -374,9 +468,19 @@ var Model = Ember.Object.extend(Ember.Evented, {
   */
   toJSON: function(options) {
     // container is for lazy transform lookups
-    var serializer = JSONSerializer.create({ container: this.container });
-    return serializer.serialize(this, options);
+    var serializer = this.store.serializerFor('-default');
+    var snapshot = this._internalModel.createSnapshot();
+
+    return serializer.serialize(snapshot, options);
   },
+
+  /**
+    Fired when the record is ready to be interacted with,
+    that is either loaded from the server or created locally.
+
+    @event ready
+  */
+  ready: Ember.K,
 
   /**
     Fired when the record is loaded from the server.
@@ -393,7 +497,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
   didUpdate: Ember.K,
 
   /**
-    Fired when the record is created.
+    Fired when a new record is commited to the server.
 
     @event didCreate
   */
@@ -421,58 +525,20 @@ var Model = Ember.Object.extend(Ember.Evented, {
   becameError: Ember.K,
 
   /**
+    Fired when the record is rolled back.
+
+    @event rolledBack
+  */
+  rolledBack: Ember.K,
+
+  /**
     @property data
     @private
     @type {Object}
   */
-  data: Ember.computed(function() {
-    this._data = this._data || {};
-    return this._data;
-  }).readOnly(),
+  data: Ember.computed.readOnly('_internalModel._data'),
 
-  _data: null,
-
-  init: function() {
-    this._super();
-    this._setup();
-  },
-
-  _setup: function() {
-    this._changesToSync = {};
-    this._deferredTriggers = [];
-    this._data = {};
-    this._attributes = Ember.create(null);
-    this._inFlightAttributes = Ember.create(null);
-    this._relationships = {};
-    /*
-      implicit relationships are relationship which have not been declared but the inverse side exists on
-      another record somewhere
-      For example if there was
-      ```
-        App.Comment = DS.Model.extend({
-          name: DS.attr()
-        })
-      ```
-      but there is also
-      ```
-        App.Post = DS.Model.extend({
-          name: DS.attr(),
-          comments: DS.hasMany('comment')
-        })
-      ```
-
-      would have a implicit post relationship in order to be do things like remove ourselves from the post
-      when we are deleted
-    */
-    this._implicitRelationships = Ember.create(null);
-    var model = this;
-    //TODO Move into a getter for better perf
-    this.constructor.eachRelationship(function(key, descriptor) {
-        model._relationships[key] = createRelationshipFor(model, descriptor, model.store);
-    });
-
-  },
-
+  //TODO Do we want to deprecate these?
   /**
     @method send
     @private
@@ -480,13 +546,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @param {Object} context
   */
   send: function(name, context) {
-    var currentState = get(this, 'currentState');
-
-    if (!currentState[name]) {
-      this._unhandledEvent(currentState, name, context);
-    }
-
-    return currentState[name](this, context);
+    return this._internalModel.send(name, context);
   },
 
   /**
@@ -495,101 +555,22 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @param {String} name
   */
   transitionTo: function(name) {
-    // POSSIBLE TODO: Remove this code and replace with
-    // always having direct references to state objects
-
-    var pivotName = extractPivotName(name);
-    var currentState = get(this, 'currentState');
-    var state = currentState;
-
-    do {
-      if (state.exit) { state.exit(this); }
-      state = state.parentState;
-    } while (!state.hasOwnProperty(pivotName));
-
-    var path = splitOnDot(name);
-    var setups = [], enters = [], i, l;
-
-    for (i=0, l=path.length; i<l; i++) {
-      state = state[path[i]];
-
-      if (state.enter) { enters.push(state); }
-      if (state.setup) { setups.push(state); }
-    }
-
-    for (i=0, l=enters.length; i<l; i++) {
-      enters[i].enter(this);
-    }
-
-    set(this, 'currentState', state);
-
-    for (i=0, l=setups.length; i<l; i++) {
-      setups[i].setup(this);
-    }
-
-    this.updateRecordArraysLater();
+    return this._internalModel.transitionTo(name);
   },
 
-  _unhandledEvent: function(state, name, context) {
-    var errorMessage = "Attempted to handle event `" + name + "` ";
-    errorMessage    += "on " + String(this) + " while in state ";
-    errorMessage    += state.stateName + ". ";
-
-    if (context !== undefined) {
-      errorMessage  += "Called with " + Ember.inspect(context) + ".";
-    }
-
-    throw new Ember.Error(errorMessage);
-  },
-
-  withTransaction: function(fn) {
-    var transaction = get(this, 'transaction');
-    if (transaction) { fn(transaction); }
-  },
-
-  /**
-    @method loadingData
-    @private
-    @param {Promise} promise
-  */
-  loadingData: function(promise) {
-    this.send('loadingData', promise);
-  },
-
-  /**
-    @method loadedData
-    @private
-  */
-  loadedData: function() {
-    this.send('loadedData');
-  },
-
-  /**
-    @method notFound
-    @private
-  */
-  notFound: function() {
-    this.send('notFound');
-  },
-
-  /**
-    @method pushedData
-    @private
-  */
-  pushedData: function() {
-    this.send('pushedData');
-  },
 
   /**
     Marks the record as deleted but does not save it. You must call
     `save` afterwards if you want to persist it. You might use this
-    method if you want to allow the user to still `rollback()` a
-    delete after it was made.
+    method if you want to allow the user to still `rollbackAttributes()`
+    after a delete it was made.
 
     Example
 
-    ```javascript
-    App.ModelDeleteRoute = Ember.Route.extend({
+    ```app/routes/model/delete.js
+    import Ember from 'ember';
+
+    export default Ember.Route.extend({
       actions: {
         softDelete: function() {
           this.controller.get('model').deleteRecord();
@@ -598,7 +579,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
           this.controller.get('model').save();
         },
         undo: function() {
-          this.controller.get('model').rollback();
+          this.controller.get('model').rollbackAttributes();
         }
       }
     });
@@ -607,7 +588,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @method deleteRecord
   */
   deleteRecord: function() {
-    this.send('deleteRecord');
+    this._internalModel.deleteRecord();
   },
 
   /**
@@ -615,8 +596,10 @@ var Model = Ember.Object.extend(Ember.Evented, {
 
     Example
 
-    ```javascript
-    App.ModelDeleteRoute = Ember.Route.extend({
+    ```app/routes/model/delete.js
+    import Ember from 'ember';
+
+    export default Ember.Route.extend({
       actions: {
         delete: function() {
           var controller = this.controller;
@@ -629,12 +612,13 @@ var Model = Ember.Object.extend(Ember.Evented, {
     ```
 
     @method destroyRecord
+    @param {Object} options
     @return {Promise} a promise that will be resolved when the adapter returns
     successfully or rejected if the adapter returns with an error.
   */
-  destroyRecord: function() {
+  destroyRecord: function(options) {
     this.deleteRecord();
-    return this.save();
+    return this.save(options);
   },
 
   /**
@@ -643,119 +627,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
   */
   unloadRecord: function() {
     if (this.isDestroyed) { return; }
-
-    this.send('unloadRecord');
-  },
-
-  /**
-    @method clearRelationships
-    @private
-  */
-  clearRelationships: function() {
-    this.eachRelationship(function(name, relationship) {
-      var rel = this._relationships[name];
-      if (rel){
-        //TODO(Igor) figure out whether we want to clear or disconnect
-        rel.clear();
-        rel.destroy();
-      }
-    }, this);
-  },
-
-  disconnectRelationships: function() {
-    this.eachRelationship(function(name, relationship) {
-      this._relationships[name].disconnect();
-    }, this);
-    var model = this;
-    forEach.call(Ember.keys(this._implicitRelationships), function(key) {
-      model._implicitRelationships[key].disconnect();
-    });
-  },
-
-  reconnectRelationships: function() {
-    this.eachRelationship(function(name, relationship) {
-      this._relationships[name].reconnect();
-    }, this);
-    var model = this;
-    forEach.call(Ember.keys(this._implicitRelationships), function(key) {
-      model._implicitRelationships[key].reconnect();
-    });
-  },
-
-
-  /**
-    @method updateRecordArrays
-    @private
-  */
-  updateRecordArrays: function() {
-    this._updatingRecordArraysLater = false;
-    get(this, 'store').dataWasUpdated(this.constructor, this);
-  },
-
-  /**
-    When a find request is triggered on the store, the user can optionally pass in
-    attributes and relationships to be preloaded. These are meant to behave as if they
-    came back from the server, except the user obtained them out of band and is informing
-    the store of their existence. The most common use case is for supporting client side
-    nested URLs, such as `/posts/1/comments/2` so the user can do
-    `store.find('comment', 2, {post:1})` without having to fetch the post.
-
-    Preloaded data can be attributes and relationships passed in either as IDs or as actual
-    models.
-
-    @method _preloadData
-    @private
-    @param {Object} preload
-  */
-  _preloadData: function(preload) {
-    var record = this;
-    //TODO(Igor) consider the polymorphic case
-    forEach.call(Ember.keys(preload), function(key) {
-      var preloadValue = get(preload, key);
-      var relationshipMeta = record.constructor.metaForProperty(key);
-      if (relationshipMeta.isRelationship) {
-        record._preloadRelationship(key, preloadValue);
-      } else {
-        get(record, '_data')[key] = preloadValue;
-      }
-    });
-  },
-
-  _preloadRelationship: function(key, preloadValue) {
-    var relationshipMeta = this.constructor.metaForProperty(key);
-    var type = relationshipMeta.type;
-    if (relationshipMeta.kind === 'hasMany'){
-      this._preloadHasMany(key, preloadValue, type);
-    } else {
-      this._preloadBelongsTo(key, preloadValue, type);
-    }
-  },
-
-  _preloadHasMany: function(key, preloadValue, type) {
-    Ember.assert("You need to pass in an array to set a hasMany property on a record", Ember.isArray(preloadValue));
-    var record = this;
-
-    var recordsToSet = map.call(preloadValue, function(recordToPush) {
-      return record._convertStringOrNumberIntoRecord(recordToPush, type);
-    });
-    //We use the pathway of setting the hasMany as if it came from the adapter
-    //because the user told us that they know this relationships exists already
-    this._relationships[key].updateRecordsFromAdapter(recordsToSet);
-  },
-
-  _preloadBelongsTo: function(key, preloadValue, type){
-    var recordToSet = this._convertStringOrNumberIntoRecord(preloadValue, type);
-
-    //We use the pathway of setting the hasMany as if it came from the adapter
-    //because the user told us that they know this relationships exists already
-    this._relationships[key].setRecord(recordToSet);
-  },
-
-  _convertStringOrNumberIntoRecord: function(value, type) {
-    if (Ember.typeOf(value) === 'string' || Ember.typeOf(value) === 'number'){
-      return this.store.recordForId(type, value);
-    }
-    return value;
+    this._internalModel.unloadRecord();
   },
 
   /**
@@ -765,7 +637,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
   _notifyProperties: function(keys) {
     Ember.beginPropertyChanges();
     var key;
-    for (var i = 0, length = keys.length; i < length; i++){
+    for (var i = 0, length = keys.length; i < length; i++) {
       key = keys[i];
       this.notifyPropertyChange(key);
     }
@@ -778,15 +650,19 @@ var Model = Ember.Object.extend(Ember.Evented, {
 
     Example
 
-    ```javascript
-    App.Mascot = DS.Model.extend({
+    ```app/models/mascot.js
+    import DS from 'ember-data';
+
+    export default DS.Model.extend({
       name: attr('string')
     });
+    ```
 
-    var person = store.createRecord('person');
-    person.changedAttributes(); // {}
-    person.set('name', 'Tomster');
-    person.changedAttributes(); // {name: [undefined, 'Tomster']}
+    ```javascript
+    var mascot = store.createRecord('mascot');
+    mascot.changedAttributes(); // {}
+    mascot.set('name', 'Tomster');
+    mascot.changedAttributes(); // {name: [undefined, 'Tomster']}
     ```
 
     @method changedAttributes
@@ -794,105 +670,43 @@ var Model = Ember.Object.extend(Ember.Evented, {
       and value is an [oldProp, newProp] array.
   */
   changedAttributes: function() {
-    var oldData = get(this, '_data');
-    var newData = get(this, '_attributes');
-    var diffData = {};
-    var prop;
+    var oldData = get(this._internalModel, '_data');
+    var currentData = get(this._internalModel, '_attributes');
+    var inFlightData = get(this._internalModel, '_inFlightAttributes');
+    var newData = merge(copy(inFlightData), currentData);
+    var diffData = new EmptyObject();
 
-    for (prop in newData) {
-      diffData[prop] = [oldData[prop], newData[prop]];
+    var newDataKeys = keysFunc(newData);
+
+    for (let i = 0, length = newDataKeys.length; i < length; i++) {
+      let key = newDataKeys[i];
+      diffData[key] = [oldData[key], newData[key]];
     }
 
     return diffData;
   },
 
+  //TODO discuss with tomhuda about events/hooks
+  //Bring back as hooks?
   /**
     @method adapterWillCommit
     @private
-  */
   adapterWillCommit: function() {
     this.send('willCommit');
   },
 
   /**
-    If the adapter did not return a hash in response to a commit,
-    merge the changed attributes and relationships into the existing
-    saved data.
-
-    @method adapterDidCommit
-  */
-  adapterDidCommit: function(data) {
-    set(this, 'isError', false);
-
-    if (data) {
-      this._data = data;
-    } else {
-      merge(this._data, this._inFlightAttributes);
-    }
-
-    this._inFlightAttributes = Ember.create(null);
-
-    this.send('didCommit');
-    this.updateRecordArraysLater();
-
-    if (!data) { return; }
-
-    this._notifyProperties(Ember.keys(data));
-  },
-
-  /**
     @method adapterDidDirty
     @private
-  */
   adapterDidDirty: function() {
     this.send('becomeDirty');
     this.updateRecordArraysLater();
   },
-
-
-  /**
-    @method updateRecordArraysLater
-    @private
   */
-  updateRecordArraysLater: function() {
-    // quick hack (something like this could be pushed into run.once
-    if (this._updatingRecordArraysLater) { return; }
-    this._updatingRecordArraysLater = true;
-
-    Ember.run.schedule('actions', this, this.updateRecordArrays);
-  },
-
-  /**
-    @method setupData
-    @private
-    @param {Object} data
-  */
-  setupData: function(data) {
-    Ember.assert("Expected an object as `data` in `setupData`", Ember.typeOf(data) === 'object');
-
-    Ember.merge(this._data, data);
-
-    this.pushedData();
-
-    this._notifyProperties(Ember.keys(data));
-  },
-
-  materializeId: function(id) {
-    set(this, 'id', id);
-  },
-
-  materializeAttributes: function(attributes) {
-    Ember.assert("Must pass a hash of attributes to materializeAttributes", !!attributes);
-    merge(this._data, attributes);
-  },
-
-  materializeAttribute: function(name, value) {
-    this._data[name] = value;
-  },
 
   /**
     If the model `isDirty` this function will discard any unsaved
-    changes
+    changes. If the model `isNew` it will be removed from the store.
 
     Example
 
@@ -905,35 +719,42 @@ var Model = Ember.Object.extend(Ember.Evented, {
     ```
 
     @method rollback
+    @deprecated Use `rollbackAttributes()` instead
   */
   rollback: function() {
-    var dirtyKeys = Ember.keys(this._attributes);
+    Ember.deprecate('Using model.rollback() has been deprecated. Use model.rollbackAttributes() to discard any unsaved changes to a model.', false, {
+      id: 'ds.model.rollback-deprecated',
+      until: '2.0.0'
+    });
+    this.rollbackAttributes();
+  },
 
-    this._attributes = Ember.create(null);
+  /**
+    If the model `isDirty` this function will discard any unsaved
+    changes. If the model `isNew` it will be removed from the store.
 
-    if (get(this, 'isError')) {
-      this._inFlightAttributes = Ember.create(null);
-      set(this, 'isError', false);
-    }
+    Example
 
-    //Eventually rollback will always work for relationships
-    //For now we support it only out of deleted state, because we
-    //have an explicit way of knowing when the server acked the relationship change
-    if (get(this, 'isDeleted')) {
-      this.reconnectRelationships();
-    }
+    ```javascript
+    record.get('name'); // 'Untitled Document'
+    record.set('name', 'Doc 1');
+    record.get('name'); // 'Doc 1'
+    record.rollbackAttributes();
+    record.get('name'); // 'Untitled Document'
+    ```
 
-    if (get(this, 'isNew')) {
-      this.clearRelationships();
-    }
+    @method rollbackAttributes
+  */
+  rollbackAttributes: function() {
+    this._internalModel.rollbackAttributes();
+  },
 
-    if (!get(this, 'isValid')) {
-      this._inFlightAttributes = Ember.create(null);
-    }
-
-    this.send('rolledBack');
-
-    this._notifyProperties(dirtyKeys);
+  /*
+    @method _createSnapshot
+    @private
+  */
+  _createSnapshot: function() {
+    return this._internalModel.createSnapshot();
   },
 
   toStringExtension: function() {
@@ -948,26 +769,23 @@ var Model = Ember.Object.extend(Ember.Evented, {
 
     ```javascript
     record.set('name', 'Tomster');
-    record.save().then(function(){
+    record.save().then(function() {
       // Success callback
     }, function() {
       // Error callback
     });
     ```
     @method save
+    @param {Object} options
     @return {Promise} a promise that will be resolved when the adapter returns
     successfully or rejected if the adapter returns with an error.
   */
-  save: function() {
-    var promiseLabel = "DS: Model#save " + this;
-    var resolver = Ember.RSVP.defer(promiseLabel);
-
-    this.get('store').scheduleSave(this, resolver);
-    this._inFlightAttributes = this._attributes;
-    this._attributes = Ember.create(null);
-
+  save: function(options) {
+    var model = this;
     return PromiseObject.create({
-      promise: resolver.promise
+      promise: this._internalModel.save(options).then(function() {
+        return model;
+      })
     });
   },
 
@@ -980,8 +798,10 @@ var Model = Ember.Object.extend(Ember.Evented, {
 
     Example
 
-    ```javascript
-    App.ModelViewRoute = Ember.Route.extend({
+    ```app/routes/model/view.js
+    import Ember from 'ember';
+
+    export default Ember.Route.extend({
       actions: {
         reload: function() {
           this.controller.get('model').reload().then(function(model) {
@@ -998,66 +818,14 @@ var Model = Ember.Object.extend(Ember.Evented, {
     with an error.
   */
   reload: function() {
-    set(this, 'isReloading', true);
-
-    var record = this;
-    var promiseLabel = "DS: Model#reload of " + this;
-    var promise = new Promise(function(resolve){
-       record.send('reloadRecord', resolve);
-    }, promiseLabel).then(function() {
-      record.set('isReloading', false);
-      record.set('isError', false);
-      return record;
-    }, function(reason) {
-      record.set('isError', true);
-      throw reason;
-    }, "DS: Model#reload complete, update flags")['finally'](function () {
-      record.updateRecordArrays();
-    });
-
+    var model = this;
     return PromiseObject.create({
-      promise: promise
+      promise: this._internalModel.reload().then(function() {
+        return model;
+      })
     });
   },
 
-  // FOR USE DURING COMMIT PROCESS
-
-  /**
-    @method adapterDidInvalidate
-    @private
-  */
-  adapterDidInvalidate: function(errors) {
-    var recordErrors = get(this, 'errors');
-    function addError(name) {
-      if (errors[name]) {
-        recordErrors.add(name, errors[name]);
-      }
-    }
-
-    this.eachAttribute(addError);
-    this.eachRelationship(addError);
-    this._saveWasRejected();
-  },
-
-  /**
-    @method adapterDidError
-    @private
-  */
-  adapterDidError: function() {
-    this.send('becameError');
-    set(this, 'isError', true);
-    this._saveWasRejected();
-  },
-
-  _saveWasRejected: function() {
-    var keys = Ember.keys(this._inFlightAttributes);
-    for (var i=0; i < keys.length; i++) {
-      if (this._attributes[keys[i]] === undefined) {
-        this._attributes[keys[i]] = this._inFlightAttributes[keys[i]];
-      }
-    }
-    this._inFlightAttributes = Ember.create(null);
-  },
 
   /**
     Override the default event firing from Ember.Evented to
@@ -1067,12 +835,11 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @private
     @param {String} name
   */
-  trigger: function() {
+  trigger: function(name) {
     var length = arguments.length;
     var args = new Array(length - 1);
-    var name = arguments[0];
 
-    for (var i = 1; i < length; i++ ){
+    for (var i = 1; i < length; i++) {
       args[i - 1] = arguments[i];
     }
 
@@ -1080,37 +847,31 @@ var Model = Ember.Object.extend(Ember.Evented, {
     this._super.apply(this, arguments);
   },
 
-  triggerLater: function() {
-    var length = arguments.length;
-    var args = new Array(length);
-
-    for (var i = 0; i < length; i++ ){
-      args[i] = arguments[i];
-    }
-
-    if (this._deferredTriggers.push(args) !== 1) {
-      return;
-    }
-    Ember.run.schedule('actions', this, '_triggerDeferredTriggers');
-  },
-
-  _triggerDeferredTriggers: function() {
-    for (var i=0, l= this._deferredTriggers.length; i<l; i++) {
-      this.trigger.apply(this, this._deferredTriggers[i]);
-    }
-
-    this._deferredTriggers.length = 0;
-  },
-
   willDestroy: function() {
-    this._super();
-    this.clearRelationships();
+    //TODO Move!
+    this._internalModel.clearRelationships();
+    this._internalModel.recordObjectWillDestroy();
+    this._super.apply(this, arguments);
+    //TODO should we set internalModel to null here?
   },
 
   // This is a temporary solution until we refactor DS.Model to not
   // rely on the data property.
   willMergeMixin: function(props) {
-    Ember.assert('`data` is a reserved property name on DS.Model objects. Please choose a different property name for ' + this.constructor.toString(), !props.data);
+    var constructor = this.constructor;
+    Ember.assert('`' + intersection(keysFunc(props), RESERVED_MODEL_PROPS)[0] + '` is a reserved property name on DS.Model objects. Please choose a different property name for ' + constructor.toString(), !intersection(keysFunc(props), RESERVED_MODEL_PROPS)[0]);
+  },
+
+  attr: function() {
+    Ember.assert("The `attr` method is not available on DS.Model, a DS.Snapshot was probably expected. Are you passing a DS.Model instead of a DS.Snapshot to your serializer?", false);
+  },
+
+  belongsTo: function() {
+    Ember.assert("The `belongsTo` method is not available on DS.Model, a DS.Snapshot was probably expected. Are you passing a DS.Model instead of a DS.Snapshot to your serializer?", false);
+  },
+
+  hasMany: function() {
+    Ember.assert("The `hasMany` method is not available on DS.Model, a DS.Snapshot was probably expected. Are you passing a DS.Model instead of a DS.Snapshot to your serializer?", false);
   }
 });
 
@@ -1139,7 +900,35 @@ Model.reopenClass({
   */
   create: function() {
     throw new Ember.Error("You should not call `create` on a model. Instead, call `store.createRecord` with the attributes you would like to set.");
-  }
+  },
+
+  /**
+   Represents the model's class name as a string. This can be used to look up the model through
+   DS.Store's modelFor method.
+
+   `modelName` is generated for you by Ember Data. It will be a lowercased, dasherized string.
+   For example:
+
+   ```javascript
+   store.modelFor('post').modelName; // 'post'
+   store.modelFor('blog-post').modelName; // 'blog-post'
+   ```
+
+   The most common place you'll want to access `modelName` is in your serializer's `payloadKeyFromModelName` method. For example, to change payload
+   keys to underscore (instead of dasherized), you might use the following code:
+
+   ```javascript
+   export default var PostSerializer = DS.RESTSerializer.extend({
+     payloadKeyFromModelName: function(modelName) {
+       return Ember.String.underscore(modelName);
+     }
+   });
+   ```
+   @property modelName
+   @type String
+   @readonly
+  */
+  modelName: null
 });
 
 export default Model;

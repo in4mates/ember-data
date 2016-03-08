@@ -1,51 +1,78 @@
 /**
   Ember Data
-
   @module ember-data
   @main ember-data
 */
 
+if (Ember.VERSION.match(/^1\.[0-7]\./)) {
+  throw new Ember.Error("Ember Data requires at least Ember 1.8.0, but you have " +
+                        Ember.VERSION +
+                        ". Please upgrade your version of Ember, then upgrade Ember Data");
+}
+
+if (Ember.VERSION.match(/^1\.12\.0/)) {
+  throw new Ember.Error("Ember Data does not work with Ember 1.12.0. Please upgrade to Ember 1.12.1 or higher.");
+}
+
 // support RSVP 2.x via resolve,  but prefer RSVP 3.x's Promise.cast
 Ember.RSVP.Promise.cast = Ember.RSVP.Promise.cast || Ember.RSVP.resolve;
 
-import "ember-data/system/create";
+
 import DS from "ember-data/core";
 import "ember-data/ext/date";
+
+import normalizeModelName from "ember-data/system/normalize-model-name";
+
+import InternalModel from "ember-data/system/model/internal-model";
 
 import {
   PromiseArray,
   PromiseObject,
   PromiseManyArray
-} from "ember-data/system/promise_proxies";
+} from "ember-data/system/promise-proxies";
 import {
   Store
 } from "ember-data/system/store";
 import {
-  Model,
   Errors,
   RootState,
   attr
 } from "ember-data/system/model";
-import {
-  InvalidError,
-  Adapter
-} from "ember-data/system/adapter";
+import Model from "ember-data/system/model";
+import Snapshot from "ember-data/system/snapshot";
+import Adapter from "ember-data/system/adapter";
+import Serializer from "ember-data/system/serializer";
 import DebugAdapter from "ember-data/system/debug";
+
+import {
+  AdapterError,
+  InvalidError,
+  TimeoutError,
+  AbortError,
+  errorsHashToArray,
+  errorsArrayToHash
+} from "ember-data/adapters/errors";
+
 import {
   RecordArray,
   FilteredRecordArray,
-  AdapterPopulatedRecordArray,
-  ManyArray
-} from "ember-data/system/record_arrays";
-import RecordArrayManager from "ember-data/system/record_array_manager";
+  AdapterPopulatedRecordArray
+} from "ember-data/system/record-arrays";
+import ManyArray from "ember-data/system/many-array";
+import RecordArrayManager from "ember-data/system/record-array-manager";
 import {
-  RESTAdapter,
-  FixtureAdapter
+  FixtureAdapter,
+  JSONAPIAdapter,
+  RESTAdapter
 } from "ember-data/adapters";
-import JSONSerializer from "ember-data/serializers/json_serializer";
-import RESTSerializer from "ember-data/serializers/rest_serializer";
+import BuildURLMixin from "ember-data/adapters/build-url-mixin";
+import {
+  JSONAPISerializer,
+  JSONSerializer,
+  RESTSerializer
+} from "ember-data/serializers";
 import "ember-inflector";
-import EmbeddedRecordsMixin from "ember-data/serializers/embedded_records_mixin";
+import EmbeddedRecordsMixin from "ember-data/serializers/embedded-records-mixin";
 import EmbeddedModelMixin from "ember-data/system/model/embedded_model_mixin";
 import {
   ActiveModelAdapter,
@@ -64,7 +91,7 @@ import {hasMany, belongsTo} from "ember-data/system/relationships";
 import "ember-data/ember-initializer";
 import setupContainer from "ember-data/setup-container";
 
-import ContainerProxy from "ember-data/system/container_proxy";
+import ContainerProxy from "ember-data/system/container-proxy";
 import Relationship from "ember-data/system/relationships/state/relationship";
 
 DS.Store         = Store;
@@ -78,8 +105,20 @@ DS.RootState = RootState;
 DS.attr      = attr;
 DS.Errors    = Errors;
 
+DS.InternalModel = InternalModel;
+DS.Snapshot = Snapshot;
+
 DS.Adapter      = Adapter;
+
+DS.AdapterError = AdapterError;
 DS.InvalidError = InvalidError;
+DS.TimeoutError = TimeoutError;
+DS.AbortError   = AbortError;
+
+DS.errorsHashToArray = errorsHashToArray;
+DS.errorsArrayToHash = errorsArrayToHash;
+
+DS.Serializer = Serializer;
 
 DS.DebugAdapter = DebugAdapter;
 
@@ -91,10 +130,13 @@ DS.ManyArray                   = ManyArray;
 DS.RecordArrayManager = RecordArrayManager;
 
 DS.RESTAdapter    = RESTAdapter;
-DS.FixtureAdapter = FixtureAdapter;
+DS.BuildURLMixin  = BuildURLMixin;
 
 DS.RESTSerializer = RESTSerializer;
 DS.JSONSerializer = JSONSerializer;
+
+DS.JSONAPIAdapter = JSONAPIAdapter;
+DS.JSONAPISerializer = JSONAPISerializer;
 
 DS.Transform       = Transform;
 DS.DateTransform   = DateTransform;
@@ -102,8 +144,44 @@ DS.StringTransform = StringTransform;
 DS.NumberTransform = NumberTransform;
 DS.BooleanTransform = BooleanTransform;
 
-DS.ActiveModelAdapter    = ActiveModelAdapter;
-DS.ActiveModelSerializer = ActiveModelSerializer;
+var _ActiveModelAdapter = ActiveModelAdapter;
+var _ActiveModelSerializer = ActiveModelSerializer;
+
+if (Ember.platform.hasPropertyAccessors) {
+  Ember.defineProperty(DS, 'ActiveModelAdapter', {
+    get: function() {
+      if (_ActiveModelSerializer === ActiveModelAdapter) {
+        Ember.deprecate('The ActiveModelAdapter has been moved into a plugin. It will not be bundled with Ember Data in 2.0', false, {
+          url: 'https://github.com/ember-data/active-model-adapter',
+          id: 'ds.adapter.active-model-adapter-deprecated',
+          until: '2.0.0'
+        });
+      }
+      return _ActiveModelAdapter;
+    },
+    set: function(ActiveModelAdapter) {
+      _ActiveModelAdapter = ActiveModelAdapter;
+    }
+  });
+  Ember.defineProperty(DS, 'ActiveModelSerializer', {
+    get: function() {
+      if (_ActiveModelSerializer === ActiveModelSerializer) {
+        Ember.deprecate('The ActiveModelSerializer has been moved into a plugin. It will not be bundled with Ember Data in 2.0', false, {
+          url: 'https://github.com/ember-data/active-model-adapter',
+          id: 'ds.serializer.active-model-serializer-deprecated',
+          until: '2.0.0'
+        });
+      }
+      return _ActiveModelSerializer;
+    },
+    set: function(ActiveModelSerializer) {
+      _ActiveModelSerializer = ActiveModelSerializer;
+    }
+  });
+} else {
+  DS.ActiveModelAdapter    = ActiveModelAdapter;
+  DS.ActiveModelSerializer = ActiveModelSerializer;
+}
 DS.EmbeddedRecordsMixin  = EmbeddedRecordsMixin;
 DS.EmbeddedModelMixin = EmbeddedModelMixin;
 
@@ -115,6 +193,34 @@ DS.Relationship  = Relationship;
 DS.ContainerProxy = ContainerProxy;
 
 DS._setupContainer = setupContainer;
+
+Ember.defineProperty(DS, 'normalizeModelName', {
+  enumerable: true,
+  writable: false,
+  configurable: false,
+  value: normalizeModelName
+});
+
+var _FixtureAdapter = FixtureAdapter;
+
+if (Ember.platform.hasPropertyAccessors) {
+  Ember.defineProperty(DS, 'FixtureAdapter', {
+    get: function() {
+      if (_FixtureAdapter === FixtureAdapter) {
+        Ember.deprecate('DS.FixtureAdapter has been deprecated and moved into an unsupported addon: https://github.com/emberjs/ember-data-fixture-adapter/tree/master', false, {
+          id: 'ds.adapter.fixture-adapter-deprecated',
+          until: '2.0.0'
+        });
+      }
+      return _FixtureAdapter;
+    },
+    set:  function(FixtureAdapter) {
+      _FixtureAdapter = FixtureAdapter;
+    }
+  });
+} else {
+  DS.FixtureAdapter = FixtureAdapter;
+}
 
 Ember.lookup.DS = DS;
 

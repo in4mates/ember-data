@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>packages/ember-data/lib/system/store/serializer-response.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
+                <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
+            
+                <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
+            
+                <li><a href="../classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a></li>
+            
+                <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
+            
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
+                <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
+            
+                <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
+            
+                <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
+            
+                <li><a href="../classes/DS.DateTransform.html">DS.DateTransform</a></li>
+            
+                <li><a href="../classes/DS.DebugAdapter.html">DS.DebugAdapter</a></li>
+            
+                <li><a href="../classes/DS.EmbeddedRecordsMixin.html">DS.EmbeddedRecordsMixin</a></li>
+            
+                <li><a href="../classes/DS.Errors.html">DS.Errors</a></li>
+            
+                <li><a href="../classes/DS.FilteredRecordArray.html">DS.FilteredRecordArray</a></li>
+            
+                <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
+            
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
+                <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
+            
+                <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
+            
+                <li><a href="../classes/DS.ManyArray.html">DS.ManyArray</a></li>
+            
+                <li><a href="../classes/DS.Model.html">DS.Model</a></li>
+            
+                <li><a href="../classes/DS.NumberTransform.html">DS.NumberTransform</a></li>
+            
+                <li><a href="../classes/DS.PromiseArray.html">DS.PromiseArray</a></li>
+            
+                <li><a href="../classes/DS.PromiseManyArray.html">DS.PromiseManyArray</a></li>
+            
+                <li><a href="../classes/DS.PromiseObject.html">DS.PromiseObject</a></li>
+            
+                <li><a href="../classes/DS.RecordArray.html">DS.RecordArray</a></li>
+            
+                <li><a href="../classes/DS.RecordArrayManager.html">DS.RecordArrayManager</a></li>
+            
+                <li><a href="../classes/DS.RESTAdapter.html">DS.RESTAdapter</a></li>
+            
+                <li><a href="../classes/DS.RESTSerializer.html">DS.RESTSerializer</a></li>
+            
+                <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
+            
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
+                <li><a href="../classes/DS.Store.html">DS.Store</a></li>
+            
+                <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
+            
+                <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
+            
+                <li><a href="../classes/Ember.Date.html">Ember.Date</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/ember-data.html">ember-data</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: packages/ember-data/lib/system/store/serializer-response.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+import Model from &#x27;ember-data/system/model/model&#x27;;
+import ArrayPolyfills from &#x27;ember-data/ext/ember/array&#x27;;
+
+import {
+  keysFunc
+} from &#x27;ember-data/system/object-polyfills&#x27;;
+
+var forEach = ArrayPolyfills.forEach;
+var map = ArrayPolyfills.map;
+var get = Ember.get;
+
+/**
+  This is a helper method that validates a JSON API top-level document
+
+  The format of a document is described here:
+  http://jsonapi.org/format/#document-top-level
+
+  @method validateDocumentStructure
+  @param {Object} doc JSON API document
+  @return {array} An array of errors found in the document structure
+*/
+export function validateDocumentStructure(doc) {
+  let errors = [];
+  if (!doc || typeof doc !== &#x27;object&#x27;) {
+    errors.push(&#x27;Top level of a JSON API document must be an object&#x27;);
+  } else {
+    if (!(&#x27;data&#x27; in doc) &amp;&amp;
+        !(&#x27;errors&#x27; in doc) &amp;&amp;
+        !(&#x27;meta&#x27; in doc)) {
+      errors.push(&#x27;One or more of the following keys must be present: &quot;data&quot;, &quot;errors&quot;, &quot;meta&quot;.&#x27;);
+    } else {
+      if ((&#x27;data&#x27; in doc) &amp;&amp; (&#x27;errors&#x27; in doc)) {
+        errors.push(&#x27;Top level keys &quot;errors&quot; and &quot;data&quot; cannot both be present in a JSON API document&#x27;);
+      }
+    }
+    if (&#x27;data&#x27; in doc) {
+      if (!(doc.data === null || Ember.isArray(doc.data) || typeof doc.data === &#x27;object&#x27;)) {
+        errors.push(&#x27;data must be null, an object, or an array&#x27;);
+      }
+    }
+    if (&#x27;meta&#x27; in doc) {
+      if (typeof doc.meta !== &#x27;object&#x27;) {
+        errors.push(&#x27;meta must be an object&#x27;);
+      }
+    }
+    if (&#x27;errors&#x27; in doc) {
+      if (!Ember.isArray(doc.errors)) {
+        errors.push(&#x27;errors must be an array&#x27;);
+      }
+    }
+    if (&#x27;links&#x27; in doc) {
+      if (typeof doc.links !== &#x27;object&#x27;) {
+        errors.push(&#x27;links must be an object&#x27;);
+      }
+    }
+    if (&#x27;jsonapi&#x27; in doc) {
+      if (typeof doc.jsonapi !== &#x27;object&#x27;) {
+        errors.push(&#x27;jsonapi must be an object&#x27;);
+      }
+    }
+    if (&#x27;included&#x27; in doc) {
+      if (typeof doc.included !== &#x27;object&#x27;) {
+        errors.push(&#x27;included must be an array&#x27;);
+      }
+    }
+  }
+
+  return errors;
+}
+
+/**
+  This is a helper method that always returns a JSON-API Document.
+
+  If the current serializer has &#x60;isNewSerializerAPI&#x60; set to &#x60;true&#x60;
+  this helper calls &#x60;normalizeResponse&#x60; instead of &#x60;extract&#x60;.
+
+  All the built-in serializers get &#x60;isNewSerializerAPI&#x60; set to &#x60;true&#x60; automatically
+  if the feature flag is enabled.
+
+  @method normalizeResponseHelper
+  @param {DS.Serializer} serializer
+  @param {DS.Store} store
+  @param {subclass of DS.Model} modelClass
+  @param {Object} payload
+  @param {String|Number} id
+  @param {String} requestType
+  @return {Object} JSON-API Document
+*/
+export function normalizeResponseHelper(serializer, store, modelClass, payload, id, requestType) {
+  if (get(serializer, &#x27;isNewSerializerAPI&#x27;)) {
+    let normalizedResponse = serializer.normalizeResponse(store, modelClass, payload, id, requestType);
+    let validationErrors = [];
+    Ember.runInDebug(() =&gt; {
+      validationErrors = validateDocumentStructure(normalizedResponse);
+    });
+    Ember.assert(&#x60;normalizeResponse must return a valid JSON API document:\n\t* ${validationErrors.join(&#x27;\n\t* &#x27;)}&#x60;, Ember.isEmpty(validationErrors));
+    // TODO: Remove after metadata refactor
+    if (normalizedResponse.meta) {
+      store._setMetadataFor(modelClass.modelName, normalizedResponse.meta);
+    }
+    return normalizedResponse;
+  } else {
+    Ember.deprecate(&#x27;Your custom serializer uses the old version of the Serializer API, with &#x60;extract&#x60; hooks. Please upgrade your serializers to the new Serializer API using &#x60;normalizeResponse&#x60; hooks instead.&#x27;, false, {
+      id: &#x27;ds.serializer.extract-hooks-deprecated&#x27;,
+      until: &#x27;2.0.0&#x27;
+    });
+    let serializerPayload = serializer.extract(store, modelClass, payload, id, requestType);
+    return _normalizeSerializerPayload(modelClass, serializerPayload);
+  }
+}
+
+/**
+  Convert the payload from &#x60;serializer.extract&#x60; to a JSON-API Document.
+
+  @method _normalizeSerializerPayload
+  @private
+  @param {subclass of DS.Model} modelClass
+  @param {Object} payload
+  @return {Object} JSON-API Document
+*/
+export function _normalizeSerializerPayload(modelClass, payload) {
+  let data = null;
+
+  if (payload) {
+    if (Ember.typeOf(payload) === &#x27;array&#x27;) {
+      data = map.call(payload, (payload) =&gt; {
+        return _normalizeSerializerPayloadItem(modelClass, payload);
+      });
+    } else {
+      data = _normalizeSerializerPayloadItem(modelClass, payload);
+    }
+  }
+
+  return { data };
+}
+
+/**
+  Convert the payload representing a single record from &#x60;serializer.extract&#x60; to
+  a JSON-API Resource Object.
+
+  @method _normalizeSerializerPayloadItem
+  @private
+  @param {subclass of DS.Model} modelClass
+  @param {Object} payload
+  @return {Object} JSON-API Resource Object
+*/
+export function _normalizeSerializerPayloadItem(modelClass, itemPayload) {
+  var item = {};
+
+  item.id = &#x27;&#x27; + itemPayload.id;
+  item.type = modelClass.modelName;
+  item.attributes = {};
+  item.relationships = {};
+
+  modelClass.eachAttribute(function(name) {
+    if (itemPayload.hasOwnProperty(name)) {
+      item.attributes[name] = itemPayload[name];
+    }
+  });
+
+  modelClass.eachRelationship(function(key, relationshipMeta) {
+    var relationship, value;
+
+    if (itemPayload.hasOwnProperty(key)) {
+      relationship = {};
+      value = itemPayload[key];
+      let normalizeRelationshipData = function(value, relationshipMeta) {
+        if (Ember.isNone(value)) {
+          return null;
+        }
+        //Temporary support for https://github.com/emberjs/data/issues/3271
+        if (value instanceof Model) {
+          value = { id: value.id, type: value.constructor.modelName };
+        }
+        if (Ember.typeOf(value) === &#x27;object&#x27;) {
+          Ember.assert(&#x27;Ember Data expected a number or string to represent the record(s) in the &#x60;&#x27; + key + &#x27;&#x60; relationship instead it found an object. If this is a polymorphic relationship please specify a &#x60;type&#x60; key. If this is an embedded relationship please include the &#x60;DS.EmbeddedRecordsMixin&#x60; and specify the &#x60;&#x27; + key +&#x27;&#x60; property in your serializer\&#x27;s attrs object.&#x27;, value.type);
+          if (value.id) {
+            value.id = &#x60;${value.id}&#x60;;
+          }
+          return value;
+        }
+
+        Ember.assert(&quot;A &quot; + relationshipMeta.parentType + &quot; record was pushed into the store with the value of &quot; + key + &quot; being &quot; + Ember.inspect(value) + &quot;, but &quot; + key + &quot; is a belongsTo relationship so the value must not be an array. You should probably check your data payload or serializer.&quot;, !Ember.isArray(value));
+        return { id: &#x60;${value}&#x60;, type: relationshipMeta.type };
+      };
+
+      if (relationshipMeta.kind === &#x27;belongsTo&#x27;) {
+        relationship.data = normalizeRelationshipData(value, relationshipMeta);
+        //handle the belongsTo polymorphic case, where { post:1, postType: &#x27;video&#x27; }
+        if (relationshipMeta.options &amp;&amp; relationshipMeta.options.polymorphic &amp;&amp; itemPayload[key + &#x27;Type&#x27;]) {
+          relationship.data.type = itemPayload[key + &#x27;Type&#x27;];
+        }
+      } else if (relationshipMeta.kind === &#x27;hasMany&#x27;) {
+        //|| [] because the hasMany could be === null
+        Ember.assert(&quot;A &quot; + relationshipMeta.parentType + &quot; record was pushed into the store with the value of &quot; + key + &quot; being &#x27;&quot; + Ember.inspect(value) + &quot;&#x27;, but &quot; + key + &quot; is a hasMany relationship so the value must be an array. You should probably check your data payload or serializer.&quot;, Ember.isArray(value) || value === null);
+
+        var relationshipData = Ember.A(value || []);
+        relationship.data = map.call(relationshipData, function(item) {
+          return normalizeRelationshipData(item, relationshipMeta);
+        });
+      }
+    }
+
+    if (itemPayload.links &amp;&amp; itemPayload.links.hasOwnProperty(key)) {
+      relationship = relationship || {};
+      value = itemPayload.links[key];
+
+      relationship.links = {
+        related: value
+      };
+    }
+
+    if (relationship) {
+      relationship.meta = get(itemPayload, &#x60;meta.${key}&#x60;);
+      item.relationships[key] = relationship;
+    }
+  });
+
+  return item;
+}
+
+/**
+  Push a JSON-API Document to the store.
+
+  This will push both primary data located in &#x60;data&#x60; and secondary data located
+  in &#x60;included&#x60; (if present).
+
+  @method pushPayload
+  @param {DS.Store} store
+  @param {Object} payload
+  @return {DS.Model|Array} one or multiple records from &#x60;data&#x60;
+*/
+export function pushPayload(store, payload) {
+  var result = pushPayloadData(store, payload);
+  pushPayloadIncluded(store, payload);
+  return result;
+}
+
+/**
+  Push the primary data of a JSON-API Document to the store.
+
+  This method only pushes the primary data located in &#x60;data&#x60;.
+
+  @method pushPayloadData
+  @param {DS.Store} store
+  @param {Object} payload
+  @return {DS.Model|Array} one or multiple records from &#x60;data&#x60;
+*/
+export function pushPayloadData(store, payload) {
+  var result;
+  if (payload &amp;&amp; payload.data) {
+    if (Ember.isArray(payload.data)) {
+      result = map.call(payload.data, (item) =&gt; {
+        return _pushResourceObject(store, item);
+      });
+    } else {
+      result = _pushResourceObject(store, payload.data);
+    }
+  }
+  return result;
+}
+
+/**
+  Push the secondary data of a JSON-API Document to the store.
+
+  This method only pushes the secondary data located in &#x60;included&#x60;.
+
+  @method pushPayloadIncluded
+  @param {DS.Store} store
+  @param {Object} payload
+  @return {Array} an array containing zero or more records from &#x60;included&#x60;
+*/
+export function pushPayloadIncluded(store, payload) {
+  var result;
+  if (payload &amp;&amp; payload.included &amp;&amp; Ember.isArray(payload.included)) {
+    result = map.call(payload.included, (item) =&gt; {
+      return _pushResourceObject(store, item);
+    });
+  }
+  return result;
+}
+
+/**
+  Push a single JSON-API Resource Object to the store.
+
+  @method _pushResourceObject
+  @private
+  @param {Object} resourceObject
+  @return {DS.Model} a record
+*/
+export function _pushResourceObject(store, resourceObject) {
+  return store.push({ data: resourceObject });
+}
+
+/**
+  This method converts a JSON-API Resource Object to a format that DS.Store
+  understands.
+
+  TODO: This method works as an interim until DS.Store understands JSON-API.
+
+  @method convertResourceObject
+  @param {Object} payload
+  @return {Object} an object formatted the way DS.Store understands
+*/
+export function convertResourceObject(payload) {
+  if (!payload) {
+    return payload;
+  }
+
+  var data = {
+    id: payload.id,
+    type: payload.type,
+    links: {}
+  };
+
+  if (payload.attributes) {
+    var attributeKeys = keysFunc(payload.attributes);
+    forEach.call(attributeKeys, function(key) {
+      var attribute = payload.attributes[key];
+      data[key] = attribute;
+    });
+  }
+  if (payload.relationships) {
+    var relationshipKeys = keysFunc(payload.relationships);
+    forEach.call(relationshipKeys, function(key) {
+      var relationship = payload.relationships[key];
+      if (relationship.hasOwnProperty(&#x27;data&#x27;)) {
+        data[key] = relationship.data;
+      } else if (relationship.links &amp;&amp; relationship.links.related) {
+        data.links[key] = relationship.links.related;
+      }
+    });
+  }
+  return data;
+}
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

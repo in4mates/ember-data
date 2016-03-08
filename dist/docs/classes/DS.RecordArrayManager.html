@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -154,7 +176,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l18"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:18</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l20"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:20</code></a>
         </div>
     
 
@@ -219,6 +241,13 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_liveRecordArrayFor">liveRecordArrayFor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_registerFilteredRecordArray">registerFilteredRecordArray</a>
 
                                 
@@ -226,7 +255,7 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_unregisterFilteredRecordArray">unregisterFilteredRecordArray</a>
+                                <a href="#method_unregisterRecordArray">unregisterRecordArray</a>
 
                                 
                                 
@@ -240,7 +269,7 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_updateRecordArray">updateRecordArray</a>
+                                <a href="#method_updateFilterRecordArray">updateFilterRecordArray</a>
 
                                 
                                 
@@ -278,7 +307,7 @@
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
@@ -321,7 +350,7 @@
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l205"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:205</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l237"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:237</code></a>
         
         </p>
 
@@ -344,8 +373,8 @@
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">Class</span>
+                        <code class="param-name">typeClass</code>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -403,7 +432,7 @@
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
@@ -452,7 +481,7 @@
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l181"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:181</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l213"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:213</code></a>
         
         </p>
 
@@ -475,8 +504,8 @@
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">Class</span>
+                        <code class="param-name">typeClass</code>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -550,7 +579,7 @@
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
@@ -587,7 +616,7 @@
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l160"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:160</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l194"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:194</code></a>
         
         </p>
 
@@ -598,7 +627,7 @@
     </div>
 
     <div class="description">
-        <p>Create a <code>DS.RecordArray</code> for a type and register it for updates.</p>
+        <p>Create a <code>DS.RecordArray</code> for a type.</p>
 
     </div>
 
@@ -610,7 +639,112 @@
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">typeClass</code>
+                        <span class="type">Class</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="../classes/DS.RecordArray.html" class="crosslink">DS.RecordArray</a></span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_liveRecordArrayFor" class="method item">
+    <h3 class="name"><code>liveRecordArrayFor</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>typeClass</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="../classes/DS.RecordArray.html" class="crosslink">DS.RecordArray</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l182"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:182</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Get the <code>DS.RecordArray</code> for a type, which contains all loaded records of
+given type.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">typeClass</code>
                         <span class="type">Class</span>
                     
 
@@ -660,7 +794,7 @@
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
@@ -699,7 +833,7 @@
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l227"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:227</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l259"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:259</code></a>
         
         </p>
 
@@ -740,8 +874,8 @@ values or states.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">Class</span>
+                        <code class="param-name">typeClass</code>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -778,8 +912,8 @@ values or states.</p>
 </div>
 
                 
-                    <div id="method_unregisterFilteredRecordArray" class="method item">
-    <h3 class="name"><code>unregisterFilteredRecordArray</code></h3>
+                    <div id="method_unregisterRecordArray" class="method item">
+    <h3 class="name"><code>unregisterRecordArray</code></h3>
 
     
         <div class="args">
@@ -820,7 +954,7 @@ values or states.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l245"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:245</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l277"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:277</code></a>
         
         </p>
 
@@ -831,7 +965,7 @@ values or states.</p>
     </div>
 
     <div class="description">
-        <p>Unregister a FilteredRecordArray.
+        <p>Unregister a RecordArray.
 So manager will not update this array.</p>
 
     </div>
@@ -882,7 +1016,7 @@ So manager will not update this array.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>modelName</code>
                     
                 </li>
             
@@ -921,7 +1055,7 @@ So manager will not update this array.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l135"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:135</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l156"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:156</code></a>
         
         </p>
 
@@ -962,7 +1096,7 @@ method is invoked when the filter is created in th first place.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
+                        <code class="param-name">modelName</code>
                         <span class="type">String</span>
                     
 
@@ -1000,8 +1134,8 @@ method is invoked when the filter is created in th first place.</p>
 </div>
 
                 
-                    <div id="method_updateRecordArray" class="method item">
-    <h3 class="name"><code>updateRecordArray</code></h3>
+                    <div id="method_updateFilterRecordArray" class="method item">
+    <h3 class="name"><code>updateFilterRecordArray</code></h3>
 
     
         <div class="args">
@@ -1021,13 +1155,13 @@ method is invoked when the filter is created in th first place.</p>
             
                 <li class="arg">
                     
-                        <code>type</code>
+                        <code>typeClass</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>clientId</code>
+                        <code>record</code>
                     
                 </li>
             
@@ -1060,7 +1194,7 @@ method is invoked when the filter is created in th first place.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l104"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:104</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l114"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:114</code></a>
         
         </p>
 
@@ -1113,8 +1247,8 @@ method is invoked when the filter is created in th first place.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">type</code>
-                        <span class="type">Class</span>
+                        <code class="param-name">typeClass</code>
+                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
                     
 
                     
@@ -1128,8 +1262,8 @@ method is invoked when the filter is created in th first place.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">clientId</code>
-                        <span class="type">Number | String</span>
+                        <code class="param-name">record</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
@@ -1155,23 +1289,7 @@ method is invoked when the filter is created in th first place.</p>
     <h3 class="name"><code>updateRecordArrays</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>clientId</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -1199,7 +1317,7 @@ method is invoked when the filter is created in th first place.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_array_manager.js.html#l45"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_array_manager.js:45</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-array-manager.js.html#l53"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-array-manager.js:53</code></a>
         
         </p>
 
@@ -1217,44 +1335,6 @@ adapter or updated by the adapter, or when a record has changed.</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">type</code>
-                        <span class="type">Class</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">clientId</code>
-                        <span class="type">Number | String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     

@@ -4,12 +4,13 @@
   when `date` is passed as the type parameter to the
   [DS.attr](../../data#method_attr) function.
 
-  ```javascript
-  var attr = DS.attr;
-  App.Score = DS.Model.extend({
-    value: attr('number'),
+  ```app/models/score.js
+  import DS from 'ember-data';
+
+  export default DS.Model.extend({
+    value: DS.attr('number'),
     player: DS.belongsTo('player'),
-    date: attr('date')
+    date: DS.attr('date')
   });
   ```
 
@@ -30,11 +31,11 @@ var toISOString = Date.prototype.toISOString || function() {
   }
 
   return this.getUTCFullYear() +
-    '-' + pad( this.getUTCMonth() + 1 ) +
-    '-' + pad( this.getUTCDate() ) +
-    'T' + pad( this.getUTCHours() ) +
-    ':' + pad( this.getUTCMinutes() ) +
-    ':' + pad( this.getUTCSeconds() ) +
+    '-' + pad(this.getUTCMonth() + 1) +
+    '-' + pad(this.getUTCDate()) +
+    'T' + pad(this.getUTCHours()) +
+    ':' + pad(this.getUTCMinutes()) +
+    ':' + pad(this.getUTCSeconds()) +
     '.' + (this.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
     'Z';
 };
@@ -54,8 +55,8 @@ export default Transform.extend({
     } else if (type === "number") {
       return new Date(serialized);
     } else if (serialized === null || serialized === undefined) {
-      // if the value is not present in the data,
-      // return undefined, not null.
+      // if the value is null return null
+      // if the value is not present in the data return undefined
       return serialized;
     } else {
       return null;

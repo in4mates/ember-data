@@ -3,6 +3,7 @@
         "console",
         "requireModule",
         "-Promise",
+        "-Map",
         "Ember",
         "DS",
         "Handlebars",
@@ -36,7 +37,8 @@
         "expectDeprecation",
         "warns",
         "noWarns",
-        "throws"
+        "throws",
+        "-Comment"
     ],
     "node" : false,
     "browser" : true,
@@ -52,6 +54,7 @@
     "newcap": true,
     "noarg": true,
     "noempty": false,
+    "nonbsp": true,
     "nonew": false,
     "nomen": false,
     "onevar": false,

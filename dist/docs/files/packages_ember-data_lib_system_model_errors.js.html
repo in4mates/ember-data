@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -147,8 +169,11 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 var get = Ember.get;
+var set = Ember.set;
 var isEmpty = Ember.isEmpty;
-var map = Ember.EnumerableUtils.map;
+var makeArray = Ember.makeArray;
+import ArrayPolyfills from &#x27;ember-data/ext/ember/array&#x27;;
+var map = ArrayPolyfills.map;
 
 import {
   MapWithDefault
@@ -170,8 +195,10 @@ import {
 
   For Example, if you had an &#x60;User&#x60; model that looked like this:
 
-  &#x60;&#x60;&#x60;javascript
-  App.User = DS.Model.extend({
+  &#x60;&#x60;&#x60;app/models/user.js
+  import DS from &#x27;ember-data&#x27;;
+
+  export default DS.Model.extend({
     username: attr(&#x27;string&#x27;),
     email: attr(&#x27;string&#x27;)
   });
@@ -199,26 +226,35 @@ import {
   &#x60;&#x60;&#x60;
 
   Errors can be displayed to the user by accessing their property name
-  or using the &#x60;messages&#x60; property to get an array of all errors.
+  to get an array of all the error objects for that property. Each
+  error object is a JavaScript object with two keys:
+
+  - &#x60;message&#x60; A string containing the error message from the backend
+  - &#x60;attribute&#x60; The name of the property associated with this error message
 
   &#x60;&#x60;&#x60;handlebars
-  {{#each message in errors.messages}}
-    &lt;div class=&quot;error&quot;&gt;
-      {{message}}
-    &lt;/div&gt;
-  {{/each}}
-
   &lt;label&gt;Username: {{input value=username}} &lt;/label&gt;
-  {{#each error in errors.username}}
+  {{#each model.errors.username as |error|}}
     &lt;div class=&quot;error&quot;&gt;
       {{error.message}}
     &lt;/div&gt;
   {{/each}}
 
   &lt;label&gt;Email: {{input value=email}} &lt;/label&gt;
-  {{#each error in errors.email}}
+  {{#each model.errors.email as |error|}}
     &lt;div class=&quot;error&quot;&gt;
       {{error.message}}
+    &lt;/div&gt;
+  {{/each}}
+  &#x60;&#x60;&#x60;
+
+  You can also access the special &#x60;messages&#x60; property on the error
+  object to get an array of all the error strings.
+
+  &#x60;&#x60;&#x60;handlebars
+  {{#each model.errors.messages as |message|}}
+    &lt;div class=&quot;error&quot;&gt;
+      {{message}}
     &lt;/div&gt;
   {{/each}}
   &#x60;&#x60;&#x60;
@@ -229,7 +265,7 @@ import {
   @uses Ember.Enumerable
   @uses Ember.Evented
  */
-export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
+export default Ember.ArrayProxy.extend(Ember.Evented, {
   /**
     Register with target handler
 
@@ -248,26 +284,12 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
     @type {Ember.MapWithDefault}
     @private
   */
-  errorsByAttributeName: Ember.reduceComputed(&quot;content&quot;, {
-    initialValue: function() {
-      return MapWithDefault.create({
-        defaultValue: function() {
-          return Ember.A();
-        }
-      });
-    },
-
-    addedItem: function(errors, error) {
-      errors.get(error.attribute).pushObject(error);
-
-      return errors;
-    },
-
-    removedItem: function(errors, error) {
-      errors.get(error.attribute).removeObject(error);
-
-      return errors;
-    }
+  errorsByAttributeName: Ember.computed(function() {
+    return MapWithDefault.create({
+      defaultValue: function() {
+        return Ember.A();
+      }
+    });
   }),
 
   /**
@@ -297,7 +319,7 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
     record. This is useful for displaying all errors to the user.
 
     &#x60;&#x60;&#x60;handlebars
-    {{#each message in errors.messages}}
+    {{#each model.errors.messages as |message|}}
       &lt;div class=&quot;error&quot;&gt;
         {{message}}
       &lt;/div&gt;
@@ -329,21 +351,12 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
   },
 
   /**
-    @method nextObject
-    @private
-  */
-  nextObject: function(index, previousObject, context) {
-    return get(this, &#x27;content&#x27;).objectAt(index);
-  },
-
-  /**
     Total number of errors.
 
     @property length
     @type {Number}
     @readOnly
   */
-  length: Ember.computed.oneWay(&#x27;content.length&#x27;).readOnly(),
 
   /**
     @property isEmpty
@@ -366,16 +379,16 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
 
     @method add
     @param {String} attribute
-    @param {Array|String} messages
+    @param {(Array|String)} messages
   */
   add: function(attribute, messages) {
     var wasEmpty = get(this, &#x27;isEmpty&#x27;);
 
     messages = this._findOrCreateMessages(attribute, messages);
-    get(this, &#x27;content&#x27;).addObjects(messages);
+    this.addObjects(messages);
+    get(this, &#x27;errorsByAttributeName&#x27;).get(attribute).addObjects(messages);
 
     this.notifyPropertyChange(attribute);
-    this.enumerableContentDidChange();
 
     if (wasEmpty &amp;&amp; !get(this, &#x27;isEmpty&#x27;)) {
       this.trigger(&#x27;becameInvalid&#x27;);
@@ -389,7 +402,7 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
   _findOrCreateMessages: function(attribute, messages) {
     var errors = this.errorsFor(attribute);
 
-    return map(Ember.makeArray(messages), function(message) {
+    return map.call(makeArray(messages), function(message) {
       return errors.findBy(&#x27;message&#x27;, message) || {
         attribute: attribute,
         message: message
@@ -403,14 +416,20 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
 
     Example:
 
-    &#x60;&#x60;&#x60;javascript
-    App.User = DS.Model.extend({
+    &#x60;&#x60;&#x60;app/models/user.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
       email: DS.attr(&#x27;string&#x27;),
       twoFactorAuth: DS.attr(&#x27;boolean&#x27;),
       phone: DS.attr(&#x27;string&#x27;)
     });
+    &#x60;&#x60;&#x60;
 
-    App.UserEditRoute = Ember.Route.extend({
+    &#x60;&#x60;&#x60;app/routes/user/edit.js
+    import Ember from &#x27;ember&#x27;;
+
+    export default Ember.Route.extend({
       actions: {
         save: function(user) {
            if (!user.get(&#x27;twoFactorAuth&#x27;)) {
@@ -428,11 +447,11 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
   remove: function(attribute) {
     if (get(this, &#x27;isEmpty&#x27;)) { return; }
 
-    var content = get(this, &#x27;content&#x27;).rejectBy(&#x27;attribute&#x27;, attribute);
-    get(this, &#x27;content&#x27;).setObjects(content);
+    let content = this.rejectBy(&#x27;attribute&#x27;, attribute);
+    set(this, &#x27;content&#x27;, content);
+    get(this, &#x27;errorsByAttributeName&#x27;).delete(attribute);
 
     this.notifyPropertyChange(attribute);
-    this.enumerableContentDidChange();
 
     if (get(this, &#x27;isEmpty&#x27;)) {
       this.trigger(&#x27;becameValid&#x27;);
@@ -445,8 +464,10 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
 
     Example:
 
-    &#x60;&#x60;&#x60;javascript
-    App.UserEditRoute = Ember.Route.extend({
+    &#x60;&#x60;&#x60;app/routes/user/edit.js
+    import Ember from &#x27;ember&#x27;;
+
+    export default Ember.Route.extend({
       actions: {
         retrySave: function(user) {
            user.get(&#x27;errors&#x27;).clear();
@@ -461,8 +482,19 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
   clear: function() {
     if (get(this, &#x27;isEmpty&#x27;)) { return; }
 
-    get(this, &#x27;content&#x27;).clear();
-    this.enumerableContentDidChange();
+    let errorsByAttributeName = get(this, &#x27;errorsByAttributeName&#x27;);
+    let attributes = Ember.A();
+
+    errorsByAttributeName.forEach(function(_, attribute) {
+      attributes.push(attribute);
+    });
+
+    errorsByAttributeName.clear();
+    attributes.forEach(function(attribute) {
+      this.notifyPropertyChange(attribute);
+    }, this);
+
+    this._super();
 
     this.trigger(&#x27;becameValid&#x27;);
   },
@@ -470,8 +502,10 @@ export default Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
   /**
     Checks if there is error messages for the given attribute.
 
-    &#x60;&#x60;&#x60;javascript
-    App.UserEditRoute = Ember.Route.extend({
+    &#x60;&#x60;&#x60;app/routes/user/edit.js
+    import Ember from &#x27;ember&#x27;;
+
+    export default Ember.Route.extend({
       actions: {
         save: function(user) {
            if (user.get(&#x27;errors&#x27;).has(&#x27;email&#x27;)) {

@@ -1,4 +1,6 @@
-import setupContainer from 'ember-data/setup-container';
+import { initializeInjects } from 'ember-data/setup-container';
+import initializeStoreService from 'ember-data/instance-initializers/initialize-store-service';
+
 
 var K = Ember.K;
 
@@ -11,7 +13,7 @@ var K = Ember.K;
   This code initializes Ember-Data onto an Ember application.
 
   If an Ember.js developer defines a subclass of DS.Store on their application,
-  as `App.ApplicationStore` (or via a module system that resolves to `store:application`)
+  as `App.StoreService` (or via a module system that resolves to `service:store`)
   this code will automatically instantiate it and make it available on the
   router.
 
@@ -20,7 +22,7 @@ var K = Ember.K;
 
   For example, imagine an Ember.js application with the following classes:
 
-  App.ApplicationStore = DS.Store.extend({
+  App.StoreService = DS.Store.extend({
     adapter: 'custom'
   });
 
@@ -42,11 +44,23 @@ Ember.onLoad('Ember.Application', function(Application) {
 
   Application.initializer({
     name:       "ember-data",
-    initialize: setupContainer
+    initialize: initializeInjects
   });
 
-  // Deprecated initializers to satisfy old code that depended on them
+  if (Application.instanceInitializer) {
+    Application.instanceInitializer({
+      name:       "ember-data",
+      initialize: initializeStoreService
+    });
+  } else {
+    Application.initializer({
+      name:       "ember-data-store-service",
+      after:       "ember-data",
+      initialize: initializeStoreService
+    });
+  }
 
+  // Deprecated initializers to satisfy old code that depended on them
   Application.initializer({
     name:       "store",
     after:      "ember-data",

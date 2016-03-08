@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -152,71 +174,6 @@
 
 var get = Ember.get;
 
-var errorProps = [
-  &#x27;description&#x27;,
-  &#x27;fileName&#x27;,
-  &#x27;lineNumber&#x27;,
-  &#x27;message&#x27;,
-  &#x27;name&#x27;,
-  &#x27;number&#x27;,
-  &#x27;stack&#x27;
-];
-
-/**
-  A &#x60;DS.InvalidError&#x60; is used by an adapter to signal the external API
-  was unable to process a request because the content was not
-  semantically correct or meaningful per the API. Usually this means a
-  record failed some form of server side validation. When a promise
-  from an adapter is rejected with a &#x60;DS.InvalidError&#x60; the record will
-  transition to the &#x60;invalid&#x60; state and the errors will be set to the
-  &#x60;errors&#x60; property on the record.
-
-  This function should return the entire payload as received from the
-  server.  Error object extraction and normalization of model errors
-  should be performed by &#x60;extractErrors&#x60; on the serializer.
-
-  Example
-
-  &#x60;&#x60;&#x60;javascript
-  App.ApplicationAdapter = DS.RESTAdapter.extend({
-    ajaxError: function(jqXHR) {
-      var error = this._super(jqXHR);
-
-      if (jqXHR &amp;&amp; jqXHR.status === 422) {
-        var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
-        return new DS.InvalidError(jsonErrors);
-      } else {
-        return error;
-      }
-    }
-  });
-  &#x60;&#x60;&#x60;
-
-  The &#x60;DS.InvalidError&#x60; must be constructed with a single object whose
-  keys are the invalid model properties, and whose values are the
-  corresponding error messages. For example:
-
-  &#x60;&#x60;&#x60;javascript
-  return new DS.InvalidError({
-    length: &#x27;Must be less than 15&#x27;,
-    name: &#x27;Must not be blank&#x27;
-  });
-  &#x60;&#x60;&#x60;
-
-  @class InvalidError
-  @namespace DS
-*/
-function InvalidError(errors) {
-  var tmp = Error.prototype.constructor.call(this, &quot;The backend rejected the commit because it was invalid: &quot; + Ember.inspect(errors));
-  this.errors = errors;
-
-  for (var i=0, l=errorProps.length; i&lt;l; i++) {
-    this[errorProps[i]] = tmp[errorProps[i]];
-  }
-}
-
-InvalidError.prototype = Ember.create(Error.prototype);
-
 /**
   An adapter is an object that receives requests from a store and
   translates them into the appropriate action to take against your
@@ -227,38 +184,37 @@ InvalidError.prototype = Ember.create(Error.prototype);
 
   ### Creating an Adapter
 
-  Create a new subclass of &#x60;DS.Adapter&#x60;, then assign
-  it to the &#x60;ApplicationAdapter&#x60; property of the application.
+  Create a new subclass of &#x60;DS.Adapter&#x60; in the &#x60;app/adapters&#x60; folder:
 
-  &#x60;&#x60;&#x60;javascript
-  var MyAdapter = DS.Adapter.extend({
+  &#x60;&#x60;&#x60;app/adapters/application.js
+  import DS from &#x27;ember-data&#x27;;
+
+  export default DS.Adapter.extend({
     // ...your code here
   });
-
-  App.ApplicationAdapter = MyAdapter;
   &#x60;&#x60;&#x60;
 
-  Model-specific adapters can be created by assigning your adapter
-  class to the &#x60;ModelName&#x60; + &#x60;Adapter&#x60; property of the application.
+  Model-specific adapters can be created by putting your adapter
+  class in an &#x60;app/adapters/&#x60; + &#x60;model-name&#x60; + &#x60;.js&#x60; file of the application.
 
-  &#x60;&#x60;&#x60;javascript
-  var MyPostAdapter = DS.Adapter.extend({
+  &#x60;&#x60;&#x60;app/adapters/post.js
+  import DS from &#x27;ember-data&#x27;;
+
+  export default DS.Adapter.extend({
     // ...Post-specific adapter code goes here
   });
-
-  App.PostAdapter = MyPostAdapter;
   &#x60;&#x60;&#x60;
 
   &#x60;DS.Adapter&#x60; is an abstract base class that you should override in your
   application to customize it for your backend. The minimum set of methods
   that you should implement is:
 
-    * &#x60;find()&#x60;
+    * &#x60;findRecord()&#x60;
     * &#x60;createRecord()&#x60;
     * &#x60;updateRecord()&#x60;
     * &#x60;deleteRecord()&#x60;
     * &#x60;findAll()&#x60;
-    * &#x60;findQuery()&#x60;
+    * &#x60;query()&#x60;
 
   To improve the network performance of your application, you can optimize
   your adapter by overriding these lower-level methods:
@@ -285,8 +241,10 @@ var Adapter = Ember.Object.extend({
     a model specific serializer (i.e. &#x60;PostSerializer&#x60;) or the
     &#x60;application&#x60; serializer.
 
-    &#x60;&#x60;&#x60;javascript
-    var DjangoAdapter = DS.Adapter.extend({
+    &#x60;&#x60;&#x60;app/adapters/django.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
       defaultSerializer: &#x27;django&#x27;
     });
     &#x60;&#x60;&#x60;
@@ -294,20 +252,23 @@ var Adapter = Ember.Object.extend({
     @property defaultSerializer
     @type {String}
   */
+  defaultSerializer: &#x27;-default&#x27;,
 
   /**
-    The &#x60;find()&#x60; method is invoked when the store is asked for a record that
-    has not previously been loaded. In response to &#x60;find()&#x60; being called, you
+    The &#x60;findRecord()&#x60; method is invoked when the store is asked for a record that
+    has not previously been loaded. In response to &#x60;findRecord()&#x60; being called, you
     should query your persistence layer for a record with the given ID. Once
     found, you can asynchronously call the store&#x27;s &#x60;push()&#x60; method to push
     the record into the store.
 
-    Here is an example &#x60;find&#x60; implementation:
+    Here is an example &#x60;findRecord&#x60; implementation:
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = DS.Adapter.extend({
-      find: function(store, type, id) {
-        var url = [type.typeKey, id].join(&#x27;/&#x27;);
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
+      findRecord: function(store, type, id, snapshot) {
+        var url = [type.modelName, id].join(&#x27;/&#x27;);
 
         return new Ember.RSVP.Promise(function(resolve, reject) {
           jQuery.getJSON(url).then(function(data) {
@@ -321,22 +282,24 @@ var Adapter = Ember.Object.extend({
     });
     &#x60;&#x60;&#x60;
 
-    @method find
+    @method findRecord
     @param {DS.Store} store
-    @param {subclass of DS.Model} type
+    @param {DS.Model} type
     @param {String} id
+    @param {DS.Snapshot} snapshot
     @return {Promise} promise
   */
-  find: Ember.required(Function),
+  findRecord: null,
 
   /**
-    The &#x60;findAll()&#x60; method is called when you call &#x60;find&#x60; on the store
-    without an ID (i.e. &#x60;store.find(&#x27;post&#x27;)&#x60;).
+    The &#x60;findAll()&#x60; method is used to retrieve all records for a given type.
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = DS.Adapter.extend({
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
       findAll: function(store, type, sinceToken) {
         var url = type;
         var query = { since: sinceToken };
@@ -352,25 +315,25 @@ var Adapter = Ember.Object.extend({
     });
     &#x60;&#x60;&#x60;
 
-    @private
     @method findAll
     @param {DS.Store} store
-    @param {subclass of DS.Model} type
+    @param {DS.Model} type
     @param {String} sinceToken
+    @param {DS.SnapshotRecordArray} snapshotRecordArray
     @return {Promise} promise
   */
   findAll: null,
 
   /**
-    This method is called when you call &#x60;find&#x60; on the store with a
-    query object as the second parameter (i.e. &#x60;store.find(&#x27;person&#x27;, {
-    page: 1 })&#x60;).
+    This method is called when you call &#x60;query&#x60; on the store.
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = DS.Adapter.extend({
-      findQuery: function(store, type, query) {
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
+      query: function(store, type, query) {
         var url = type;
         return new Ember.RSVP.Promise(function(resolve, reject) {
           jQuery.getJSON(url, query).then(function(data) {
@@ -385,14 +348,54 @@ var Adapter = Ember.Object.extend({
     &#x60;&#x60;&#x60;
 
     @private
-    @method findQuery
+    @method query
     @param {DS.Store} store
-    @param {subclass of DS.Model} type
+    @param {DS.Model} type
     @param {Object} query
     @param {DS.AdapterPopulatedRecordArray} recordArray
     @return {Promise} promise
   */
-  findQuery: null,
+  query: null,
+
+  /**
+    The &#x60;queryRecord()&#x60; method is invoked when the store is asked for a single
+    record through a query object.
+
+    In response to &#x60;queryRecord()&#x60; being called, you should always fetch fresh
+    data. Once found, you can asynchronously call the store&#x27;s &#x60;push()&#x60; method
+    to push the record into the store.
+
+    Here is an example &#x60;queryRecord&#x60; implementation:
+
+    Example
+
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+    import Ember from &#x27;ember&#x27;;
+
+    export default DS.Adapter.extend(DS.BuildURLMixin, {
+      queryRecord: function(store, type, query) {
+        var urlForQueryRecord = this.buildURL(type.modelName, null, null, &#x27;queryRecord&#x27;, query);
+
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+          Ember.$.getJSON(urlForQueryRecord, query).then(function(data) {
+            Ember.run(null, resolve, data);
+          }, function(jqXHR) {
+            jqXHR.then = null; // tame jQuery&#x27;s ill mannered promises
+            Ember.run(null, reject, jqXHR);
+          });
+        });
+      }
+    });
+    &#x60;&#x60;&#x60;
+
+    @method queryRecord
+    @param {DS.Store} store
+    @param {subclass of DS.Model} type
+    @param {Object} query
+    @return {Promise} promise
+  */
+  queryRecord: null,
 
   /**
     If the globally unique IDs for your records should be generated on the client,
@@ -409,7 +412,7 @@ var Adapter = Ember.Object.extend({
     the first parameter and the newly created record as the second parameter:
 
     &#x60;&#x60;&#x60;javascript
-    generateIdForRecord: function(store, record) {
+    generateIdForRecord: function(store, inputProperties) {
       var uuid = App.generateUUIDWithStatisticallyLowOddsOfCollision();
       return uuid;
     }
@@ -417,8 +420,10 @@ var Adapter = Ember.Object.extend({
 
     @method generateIdForRecord
     @param {DS.Store} store
-    @param {DS.Model} record
-    @return {String|Number} id
+    @param {DS.Model} type   the DS.Model class of the record
+    @param {Object} inputProperties a hash of properties to set on the
+      newly created record.
+    @return {(String|Number)} id
   */
   generateIdForRecord: null,
 
@@ -427,10 +432,12 @@ var Adapter = Ember.Object.extend({
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = DS.Adapter.extend({
-      createRecord: function(store, type, record) {
-        var data = this.serialize(record, { includeId: true });
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
+      createRecord: function(store, type, snapshot) {
+        var data = this.serialize(snapshot, { includeId: true });
         var url = type;
 
         // ...
@@ -439,26 +446,28 @@ var Adapter = Ember.Object.extend({
     &#x60;&#x60;&#x60;
 
     @method serialize
-    @param {DS.Model} record
+    @param {DS.Snapshot} snapshot
     @param {Object}   options
-    @return {Object} serialized record
+    @return {Object} serialized snapshot
   */
-  serialize: function(record, options) {
-    return get(record, &#x27;store&#x27;).serializerFor(record.constructor.typeKey).serialize(record, options);
+  serialize: function(snapshot, options) {
+    return get(snapshot.record, &#x27;store&#x27;).serializerFor(snapshot.modelName).serialize(snapshot, options);
   },
 
   /**
     Implement this method in a subclass to handle the creation of
     new records.
 
-    Serializes the record and send it to the server.
+    Serializes the record and sends it to the server.
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = DS.Adapter.extend({
-      createRecord: function(store, type, record) {
-        var data = this.serialize(record, { includeId: true });
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
+      createRecord: function(store, type, snapshot) {
+        var data = this.serialize(snapshot, { includeId: true });
         var url = type;
 
         return new Ember.RSVP.Promise(function(resolve, reject) {
@@ -480,25 +489,27 @@ var Adapter = Ember.Object.extend({
 
     @method createRecord
     @param {DS.Store} store
-    @param {subclass of DS.Model} type   the DS.Model class of the record
-    @param {DS.Model} record
+    @param {DS.Model} type   the DS.Model class of the record
+    @param {DS.Snapshot} snapshot
     @return {Promise} promise
   */
-  createRecord: Ember.required(Function),
+  createRecord: null,
 
   /**
     Implement this method in a subclass to handle the updating of
     a record.
 
-    Serializes the record update and send it to the server.
+    Serializes the record update and sends it to the server.
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = DS.Adapter.extend({
-      updateRecord: function(store, type, record) {
-        var data = this.serialize(record, { includeId: true });
-        var id = record.get(&#x27;id&#x27;);
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
+      updateRecord: function(store, type, snapshot) {
+        var data = this.serialize(snapshot, { includeId: true });
+        var id = snapshot.id;
         var url = [type, id].join(&#x27;/&#x27;);
 
         return new Ember.RSVP.Promise(function(resolve, reject) {
@@ -520,11 +531,11 @@ var Adapter = Ember.Object.extend({
 
     @method updateRecord
     @param {DS.Store} store
-    @param {subclass of DS.Model} type   the DS.Model class of the record
-    @param {DS.Model} record
+    @param {DS.Model} type   the DS.Model class of the record
+    @param {DS.Snapshot} snapshot
     @return {Promise} promise
   */
-  updateRecord: Ember.required(Function),
+  updateRecord: null,
 
   /**
     Implement this method in a subclass to handle the deletion of
@@ -534,11 +545,13 @@ var Adapter = Ember.Object.extend({
 
     Example
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = DS.Adapter.extend({
-      deleteRecord: function(store, type, record) {
-        var data = this.serialize(record, { includeId: true });
-        var id = record.get(&#x27;id&#x27;);
+    &#x60;&#x60;&#x60;app/adapters/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Adapter.extend({
+      deleteRecord: function(store, type, snapshot) {
+        var data = this.serialize(snapshot, { includeId: true });
+        var id = snapshot.id;
         var url = [type, id].join(&#x27;/&#x27;);
 
         return new Ember.RSVP.Promise(function(resolve, reject) {
@@ -560,17 +573,17 @@ var Adapter = Ember.Object.extend({
 
     @method deleteRecord
     @param {DS.Store} store
-    @param {subclass of DS.Model} type   the DS.Model class of the record
-    @param {DS.Model} record
+    @param {DS.Model} type   the DS.Model class of the record
+    @param {DS.Snapshot} snapshot
     @return {Promise} promise
   */
-  deleteRecord: Ember.required(Function),
+  deleteRecord: null,
 
   /**
     By default the store will try to coalesce all &#x60;fetchRecord&#x60; calls within the same runloop
     into as few requests as possible by calling groupRecordsForFindMany and passing it into a findMany call.
     You can opt out of this behaviour by either not implementing the findMany hook or by setting
-    coalesceFindRequests to false
+    coalesceFindRequests to false.
 
     @property coalesceFindRequests
     @type {boolean}
@@ -578,13 +591,13 @@ var Adapter = Ember.Object.extend({
   coalesceFindRequests: true,
 
   /**
-    Find multiple records at once if coalesceFindRequests is true
+    Find multiple records at once if coalesceFindRequests is true.
 
     @method findMany
     @param {DS.Store} store
-    @param {subclass of DS.Model} type   the DS.Model class of the records
+    @param {DS.Model} type   the DS.Model class of the records
     @param {Array}    ids
-    @param {Array} records
+    @param {Array} snapshots
     @return {Promise} promise
   */
 
@@ -599,19 +612,95 @@ var Adapter = Ember.Object.extend({
 
     @method groupRecordsForFindMany
     @param {DS.Store} store
-    @param {Array} records
+    @param {Array} snapshots
     @return {Array}  an array of arrays of records, each of which is to be
                       loaded separately by &#x60;findMany&#x60;.
   */
-  groupRecordsForFindMany: function (store, records) {
-    return [records];
+  groupRecordsForFindMany: function(store, snapshots) {
+    return [snapshots];
+  },
+
+
+  /**
+    This method is used by the store to determine if the store should
+    reload a record from the adapter when a record is requested by
+    &#x60;store.findRecord&#x60;.
+
+    If this method returns true, the store will re-fetch a record from
+    the adapter. If this method returns false, the store will resolve
+    immediately using the cached record.
+
+    @method shouldReloadRecord
+    @param {DS.Store} store
+    @param {DS.Snapshot} snapshot
+    @return {Boolean}
+  */
+  shouldReloadRecord: function(store, snapshot) {
+    return false;
+  },
+
+  /**
+    This method is used by the store to determine if the store should
+    reload all records from the adapter when records are requested by
+    &#x60;store.findAll&#x60;.
+
+    If this method returns true, the store will re-fetch all records from
+    the adapter. If this method returns false, the store will resolve
+    immediately using the cached record.
+
+    @method shouldReloadAll
+    @param {DS.Store} store
+    @param {DS.SnapshotRecordArray} snapshotRecordArray
+    @return {Boolean}
+  */
+  shouldReloadAll: function(store, snapshotRecordArray) {
+    var modelName = snapshotRecordArray.type.modelName;
+    Ember.deprecate(&#x60;The default behavior of shouldReloadAll will change in Ember Data 2.0 to always return false when there is at least one &quot;${modelName}&quot; record in the store. If you would like to preserve the current behavior please override shouldReloadAll in your adapter:application and return true.&#x60;, false, { id: &#x27;ds.adapter.should-reload-all-default-behavior&#x27;, until: &#x27;2.0.0&#x27; });
+    return true;
+  },
+
+  /**
+    This method is used by the store to determine if the store should
+    reload a record after the &#x60;store.findRecord&#x60; method resolves a
+    cached record.
+
+    This method is *only* checked by the store when the store is
+    returning a cached record.
+
+    If this method returns true the store will re-fetch a record from
+    the adapter.
+
+    @method shouldBackgroundReloadRecord
+    @param {DS.Store} store
+    @param {DS.Snapshot} snapshot
+    @return {Boolean}
+  */
+  shouldBackgroundReloadRecord: function(store, snapshot) {
+    Ember.deprecate(&#x27;The default behavior of &#x60;shouldBackgroundReloadRecord&#x60; will change in Ember Data 2.0 to always return true. If you would like to preserve the current behavior please override &#x60;shouldBackgroundReloadRecord&#x60; in your adapter:application and return false.&#x27;, false, { id: &#x27;ds.adapter.should-background-reload-record-default-behavior&#x27;, until: &#x27;2.0.0&#x27; });
+    return false;
+  },
+
+  /**
+    This method is used by the store to determine if the store should
+    reload a record array after the &#x60;store.findAll&#x60; method resolves
+    with a cached record array.
+
+    This method is *only* checked by the store when the store is
+    returning a cached record array.
+
+    If this method returns true the store will re-fetch all records
+    from the adapter.
+
+    @method shouldBackgroundReloadAll
+    @param {DS.Store} store
+    @param {DS.SnapshotRecordArray} snapshotRecordArray
+    @return {Boolean}
+  */
+  shouldBackgroundReloadAll: function(store, snapshotRecordArray) {
+    return true;
   }
 });
 
-export {
-  InvalidError,
-  Adapter
-};
 export default Adapter;
 
     </pre>

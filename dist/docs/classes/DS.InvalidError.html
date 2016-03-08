@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -150,7 +172,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_system_adapter.js.html#l17"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;adapter.js:17</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_adapters_errors.js.html#l31"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;adapters&#x2F;errors.js:31</code></a>
         </div>
     
 
@@ -173,29 +195,43 @@ record failed some form of server side validation. When a promise
 from an adapter is rejected with a <code>DS.InvalidError</code> the record will
 transition to the <code>invalid</code> state and the errors will be set to the
 <code>errors</code> property on the record.</p>
-<p>This function should return the entire payload as received from the
-server.  Error object extraction and normalization of model errors
-should be performed by <code>extractErrors</code> on the serializer.</p>
-<p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">App.ApplicationAdapter = DS.RESTAdapter.extend({
-  ajaxError: function(jqXHR) {
-    var error = this._super(jqXHR);
+<p>For Ember Data to correctly map errors to their corresponding
+properties on the model, Ember Data expects each error to be
+a valid json-api error object with a <code>source/pointer</code> that matches
+the property name. For example if you had a Post model that
+looked like this.</p>
+<pre class="code prettyprint"><code class="lang-app/models/post.js">import DS from &#39;ember-data&#39;;
 
-    if (jqXHR &amp;&amp; jqXHR.status === 422) {
-      var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);
-      return new DS.InvalidError(jsonErrors);
-    } else {
-      return error;
-    }
+export default DS.Model.extend({
+  title: DS.attr(&#39;string&#39;),
+  content: DS.attr(&#39;string&#39;)
+});</code></pre>
+<p>To show an error from the server related to the <code>title</code> and
+<code>content</code> properties your adapter could return a promise that
+rejects with a <code>DS.InvalidError</code> object that looks like this:</p>
+<pre class="code prettyprint"><code class="lang-app/adapters/post.js">import Ember from &#39;ember&#39;;
+import DS from &#39;ember-data&#39;;
+
+export default DS.RESTAdapter.extend({
+  updateRecord: function() {
+    // Fictional adapter that always rejects
+    return Ember.RSVP.reject(new DS.InvalidError([
+      {
+        detail: &#39;Must be unique&#39;,
+        source: { pointer: &#39;data/attributes/title&#39; }
+      },
+      {
+        detail: &#39;Must not be blank&#39;,
+        source: { pointer: &#39;data/attributes/content&#39;}
+      }
+    ]));
   }
 });</code></pre>
-<p>The <code>DS.InvalidError</code> must be constructed with a single object whose
-keys are the invalid model properties, and whose values are the
-corresponding error messages. For example:</p>
-<pre class="code prettyprint"><code class="lang-javascript">return new DS.InvalidError({
-  length: &#39;Must be less than 15&#39;,
-  name: &#39;Must not be blank&#39;
-});</code></pre>
+<p>Your backend may use different property names for your records the
+store will attempt extract and normalize the errors using the
+serializer&#39;s <code>extractErrors</code> method before the errors get added to
+the the model. As a result, it is safe for the <code>InvalidError</code> to
+wrap the error payload unaltered.</p>
 
 </div>
 

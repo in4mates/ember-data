@@ -7,9 +7,11 @@
 
   Example
 
-  ```javascript
+  ```app/transforms/temperature.js
+  import DS from 'ember-data';
+
   // Converts centigrade in the JSON to fahrenheit in the app
-  App.TemperatureTransform = DS.Transform.extend({
+  export default DS.Transform.extend({
     deserialize: function(serialized) {
       return (serialized *  1.8) + 32;
     },
@@ -21,11 +23,12 @@
 
   Usage
 
-  ```javascript
-  var attr = DS.attr;
-  App.Requirement = DS.Model.extend({
-    name: attr('string'),
-    temperature: attr('temperature')
+  ```app/models/requirement.js
+  import DS from 'ember-data';
+
+  export default DS.Model.extend({
+    name: DS.attr('string'),
+    temperature: DS.attr('temperature')
   });
   ```
 
@@ -46,10 +49,10 @@ export default Ember.Object.extend({
     ```
 
     @method serialize
-    @param {mixed} deserialized The deserialized value
-    @return {mixed} The serialized value
+    @param deserialized The deserialized value
+    @return The serialized value
   */
-  serialize: Ember.required(),
+  serialize: null,
 
   /**
     When given a serialize value from a JSON object this method must
@@ -64,8 +67,8 @@ export default Ember.Object.extend({
     ```
 
     @method deserialize
-    @param {mixed} serialized The serialized value
-    @return {mixed} The deserialized value
+    @param serialized The serialized value
+    @return The deserialized value
   */
-  deserialize: Ember.required()
+  deserialize: null
 });

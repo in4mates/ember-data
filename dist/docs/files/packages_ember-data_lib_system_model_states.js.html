@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -146,12 +168,15 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import {
+  create,
+  keysFunc
+} from &#x27;ember-data/system/object-polyfills&#x27;;
+
 /**
   @module ember-data
 */
-
 var get = Ember.get;
-var set = Ember.set;
 /*
   This file encapsulates the various states that a record can transition
   through during its lifecycle.
@@ -321,7 +346,7 @@ var set = Ember.set;
   @class RootState
 */
 
-function didSetProperty(record, context) {
+function didSetProperty(internalModel, context) {
   var newVal = context.value;
   var oldVal = context.originalValue;
   if (newVal !== null &amp;&amp; newVal !== undefined &amp;&amp; (typeof newVal.valueOf) === &#x27;function&#x27;) {
@@ -331,13 +356,13 @@ function didSetProperty(record, context) {
     oldVal = oldVal.valueOf();
   }
   if (newVal === oldVal) {
-    delete record._attributes[context.name];
-    record.send(&#x27;propertyWasReset&#x27;, context.name);
+    delete internalModel._attributes[context.name];
+    internalModel.send(&#x27;propertyWasReset&#x27;, context.name);
   } else if (newVal !== oldVal) {
-    record.send(&#x27;becomeDirty&#x27;);
+    internalModel.send(&#x27;becomeDirty&#x27;);
   }
 
-  record.updateRecordArraysLater();
+  internalModel.updateRecordArraysLater();
 }
 
 // Implementation notes:
@@ -402,35 +427,36 @@ var DirtyState = {
     //loadingData event, though it seems fine?
     loadingData: Ember.K,
 
-    propertyWasReset: function(record, name) {
-      var length = Ember.keys(record._attributes).length;
+    propertyWasReset: function(internalModel, name) {
+      var length = keysFunc(internalModel._attributes).length;
       var stillDirty = length &gt; 0;
 
-      if (!stillDirty) { record.send(&#x27;rolledBack&#x27;); }
+      if (!stillDirty) { internalModel.send(&#x27;rolledBack&#x27;); }
     },
 
     pushedData: Ember.K,
 
     becomeDirty: Ember.K,
 
-    willCommit: function(record) {
-      record.transitionTo(&#x27;inFlight&#x27;);
+    willCommit: function(internalModel) {
+      internalModel.transitionTo(&#x27;inFlight&#x27;);
     },
 
-    reloadRecord: function(record, resolve) {
-      resolve(get(record, &#x27;store&#x27;).reloadRecord(record));
+    reloadRecord: function(internalModel, resolve) {
+      resolve(internalModel.store.reloadRecord(internalModel));
     },
 
-    rolledBack: function(record) {
-      record.transitionTo(&#x27;loaded.saved&#x27;);
+    rolledBack: function(internalModel) {
+      internalModel.transitionTo(&#x27;loaded.saved&#x27;);
     },
 
-    becameInvalid: function(record) {
-      record.transitionTo(&#x27;invalid&#x27;);
+    becameInvalid: function(internalModel) {
+      internalModel.transitionTo(&#x27;invalid&#x27;);
     },
 
-    rollback: function(record) {
-      record.rollback();
+    rollback: function(internalModel) {
+      internalModel.rollbackAttributes();
+      internalModel.triggerLater(&#x27;ready&#x27;);
     }
   },
 
@@ -446,28 +472,26 @@ var DirtyState = {
     becomeDirty: Ember.K,
     pushedData: Ember.K,
 
-    unloadRecord: function(record) {
-      Ember.assert(&quot;You can only unload a record which is not inFlight. &#x60;&quot; + Ember.inspect(record) + &quot; &#x60;&quot;, false);
-    },
+    unloadRecord: assertAgainstUnloadRecord,
 
     // TODO: More robust semantics around save-while-in-flight
     willCommit: Ember.K,
 
-    didCommit: function(record) {
+    didCommit: function(internalModel) {
       var dirtyType = get(this, &#x27;dirtyType&#x27;);
 
-      record.transitionTo(&#x27;saved&#x27;);
-      record.send(&#x27;invokeLifecycleCallbacks&#x27;, dirtyType);
+      internalModel.transitionTo(&#x27;saved&#x27;);
+      internalModel.send(&#x27;invokeLifecycleCallbacks&#x27;, dirtyType);
     },
 
-    becameInvalid: function(record) {
-      record.transitionTo(&#x27;invalid&#x27;);
-      record.send(&#x27;invokeLifecycleCallbacks&#x27;);
+    becameInvalid: function(internalModel) {
+      internalModel.transitionTo(&#x27;invalid&#x27;);
+      internalModel.send(&#x27;invokeLifecycleCallbacks&#x27;);
     },
 
-    becameError: function(record) {
-      record.transitionTo(&#x27;uncommitted&#x27;);
-      record.triggerLater(&#x27;becameError&#x27;, record);
+    becameError: function(internalModel) {
+      internalModel.transitionTo(&#x27;uncommitted&#x27;);
+      internalModel.triggerLater(&#x27;becameError&#x27;, internalModel);
     }
   },
 
@@ -478,38 +502,38 @@ var DirtyState = {
     isValid: false,
 
     // EVENTS
-    deleteRecord: function(record) {
-      record.transitionTo(&#x27;deleted.uncommitted&#x27;);
-      record.disconnectRelationships();
+    deleteRecord: function(internalModel) {
+      internalModel.transitionTo(&#x27;deleted.uncommitted&#x27;);
+      internalModel.disconnectRelationships();
     },
 
-    didSetProperty: function(record, context) {
-      get(record, &#x27;errors&#x27;).remove(context.name);
+    didSetProperty: function(internalModel, context) {
+      internalModel.removeErrorMessageFromAttribute(context.name);
 
-      didSetProperty(record, context);
+      didSetProperty(internalModel, context);
     },
 
+    becameInvalid: Ember.K,
     becomeDirty: Ember.K,
+    pushedData: Ember.K,
 
-    willCommit: function(record) {
-      get(record, &#x27;errors&#x27;).clear();
-      record.transitionTo(&#x27;inFlight&#x27;);
+    willCommit: function(internalModel) {
+      internalModel.clearErrorMessages();
+      internalModel.transitionTo(&#x27;inFlight&#x27;);
     },
 
-    rolledBack: function(record) {
-      get(record, &#x27;errors&#x27;).clear();
+    rolledBack: function(internalModel) {
+      internalModel.clearErrorMessages();
+      internalModel.transitionTo(&#x27;loaded.saved&#x27;);
+      internalModel.triggerLater(&#x27;ready&#x27;);
     },
 
-    becameValid: function(record) {
-      record.transitionTo(&#x27;uncommitted&#x27;);
+    becameValid: function(internalModel) {
+      internalModel.transitionTo(&#x27;uncommitted&#x27;);
     },
 
-    invokeLifecycleCallbacks: function(record) {
-      record.triggerLater(&#x27;becameInvalid&#x27;, record);
-    },
-
-    exit: function(record) {
-      record._inFlightAttributes = {};
+    invokeLifecycleCallbacks: function(internalModel) {
+      internalModel.triggerLater(&#x27;becameInvalid&#x27;, internalModel);
     }
   }
 };
@@ -519,7 +543,8 @@ var DirtyState = {
 // necessary.
 
 function deepClone(object) {
-  var clone = {}, value;
+  var clone = {};
+  var value;
 
   for (var prop in object) {
     value = object[prop];
@@ -552,35 +577,44 @@ var createdState = dirtyState({
   isNew: true
 });
 
-createdState.uncommitted.rolledBack = function(record) {
-  record.transitionTo(&#x27;deleted.saved&#x27;);
+createdState.invalid.rolledBack = function(internalModel) {
+  internalModel.transitionTo(&#x27;deleted.saved&#x27;);
+};
+createdState.uncommitted.rolledBack = function(internalModel) {
+  internalModel.transitionTo(&#x27;deleted.saved&#x27;);
 };
 
 var updatedState = dirtyState({
   dirtyType: &#x27;updated&#x27;
 });
 
-createdState.uncommitted.deleteRecord = function(record) {
-  record.disconnectRelationships();
-  record.transitionTo(&#x27;deleted.saved&#x27;);
+createdState.uncommitted.deleteRecord = function(internalModel) {
+  internalModel.disconnectRelationships();
+  internalModel.transitionTo(&#x27;deleted.saved&#x27;);
+  internalModel.send(&#x27;invokeLifecycleCallbacks&#x27;);
 };
 
-createdState.uncommitted.rollback = function(record) {
+createdState.uncommitted.rollback = function(internalModel) {
   DirtyState.uncommitted.rollback.apply(this, arguments);
-  record.transitionTo(&#x27;deleted.saved&#x27;);
+  internalModel.transitionTo(&#x27;deleted.saved&#x27;);
+};
+
+createdState.uncommitted.pushedData = function(internalModel) {
+  internalModel.transitionTo(&#x27;loaded.updated.uncommitted&#x27;);
+  internalModel.triggerLater(&#x27;didLoad&#x27;);
 };
 
 createdState.uncommitted.propertyWasReset = Ember.K;
 
-function assertAgainstUnloadRecord(record) {
-  Ember.assert(&quot;You can only unload a record which is not inFlight. &#x60;&quot; + Ember.inspect(record) + &quot;&#x60;&quot;, false);
+function assertAgainstUnloadRecord(internalModel) {
+  Ember.assert(&quot;You can only unload a record which is not inFlight. &#x60;&quot; + internalModel + &quot;&#x60;&quot;, false);
 }
 
 updatedState.inFlight.unloadRecord = assertAgainstUnloadRecord;
 
-updatedState.uncommitted.deleteRecord = function(record) {
-  record.transitionTo(&#x27;deleted.uncommitted&#x27;);
-  record.disconnectRelationships();
+updatedState.uncommitted.deleteRecord = function(internalModel) {
+  internalModel.transitionTo(&#x27;deleted.uncommitted&#x27;);
+  internalModel.disconnectRelationships();
 };
 
 var RootState = {
@@ -601,11 +635,11 @@ var RootState = {
   // in-flight state, rolling back the record doesn&#x27;t move
   // you out of the in-flight state.
   rolledBack: Ember.K,
-  unloadRecord: function(record) {
+  unloadRecord: function(internalModel) {
     // clear relationships before moving to deleted state
     // otherwise it fails
-    record.clearRelationships();
-    record.transitionTo(&#x27;deleted.saved&#x27;);
+    internalModel.clearRelationships();
+    internalModel.transitionTo(&#x27;deleted.saved&#x27;);
   },
 
 
@@ -622,18 +656,20 @@ var RootState = {
     isEmpty: true,
 
     // EVENTS
-    loadingData: function(record, promise) {
-      record._loadingPromise = promise;
-      record.transitionTo(&#x27;loading&#x27;);
+    loadingData: function(internalModel, promise) {
+      internalModel._loadingPromise = promise;
+      internalModel.transitionTo(&#x27;loading&#x27;);
     },
 
-    loadedData: function(record) {
-      record.transitionTo(&#x27;loaded.created.uncommitted&#x27;);
+    loadedData: function(internalModel) {
+      internalModel.transitionTo(&#x27;loaded.created.uncommitted&#x27;);
+      internalModel.triggerLater(&#x27;ready&#x27;);
     },
 
-    pushedData: function(record) {
-      record.transitionTo(&#x27;loaded.saved&#x27;);
-      record.triggerLater(&#x27;didLoad&#x27;);
+    pushedData: function(internalModel) {
+      internalModel.transitionTo(&#x27;loaded.saved&#x27;);
+      internalModel.triggerLater(&#x27;didLoad&#x27;);
+      internalModel.triggerLater(&#x27;ready&#x27;);
     }
   },
 
@@ -647,23 +683,25 @@ var RootState = {
     // FLAGS
     isLoading: true,
 
-    exit: function(record) {
-      record._loadingPromise = null;
+    exit: function(internalModel) {
+      internalModel._loadingPromise = null;
     },
 
     // EVENTS
-    pushedData: function(record) {
-      record.transitionTo(&#x27;loaded.saved&#x27;);
-      record.triggerLater(&#x27;didLoad&#x27;);
-      set(record, &#x27;isError&#x27;, false);
+    pushedData: function(internalModel) {
+      internalModel.transitionTo(&#x27;loaded.saved&#x27;);
+      internalModel.triggerLater(&#x27;didLoad&#x27;);
+      internalModel.triggerLater(&#x27;ready&#x27;);
+      //TODO this seems out of place here
+      internalModel.didCleanError();
     },
 
-    becameError: function(record) {
-      record.triggerLater(&#x27;becameError&#x27;, record);
+    becameError: function(internalModel) {
+      internalModel.triggerLater(&#x27;becameError&#x27;, internalModel);
     },
 
-    notFound: function(record) {
-      record.transitionTo(&#x27;empty&#x27;);
+    notFound: function(internalModel) {
+      internalModel.transitionTo(&#x27;empty&#x27;);
     }
   },
 
@@ -685,12 +723,12 @@ var RootState = {
     // If there are no local changes to a record, it remains
     // in the &#x60;saved&#x60; state.
     saved: {
-      setup: function(record) {
-        var attrs = record._attributes;
-        var isDirty = Ember.keys(attrs).length &gt; 0;
+      setup: function(internalModel) {
+        var attrs = internalModel._attributes;
+        var isDirty = keysFunc(attrs).length &gt; 0;
 
         if (isDirty) {
-          record.adapterDidDirty();
+          internalModel.adapterDidDirty();
         }
       },
 
@@ -699,32 +737,32 @@ var RootState = {
 
       pushedData: Ember.K,
 
-      becomeDirty: function(record) {
-        record.transitionTo(&#x27;updated.uncommitted&#x27;);
+      becomeDirty: function(internalModel) {
+        internalModel.transitionTo(&#x27;updated.uncommitted&#x27;);
       },
 
-      willCommit: function(record) {
-        record.transitionTo(&#x27;updated.inFlight&#x27;);
+      willCommit: function(internalModel) {
+        internalModel.transitionTo(&#x27;updated.inFlight&#x27;);
       },
 
-      reloadRecord: function(record, resolve) {
-        resolve(get(record, &#x27;store&#x27;).reloadRecord(record));
+      reloadRecord: function(internalModel, resolve) {
+        resolve(internalModel.store.reloadRecord(internalModel));
       },
 
-      deleteRecord: function(record) {
-        record.transitionTo(&#x27;deleted.uncommitted&#x27;);
-        record.disconnectRelationships();
+      deleteRecord: function(internalModel) {
+        internalModel.transitionTo(&#x27;deleted.uncommitted&#x27;);
+        internalModel.disconnectRelationships();
       },
 
-      unloadRecord: function(record) {
+      unloadRecord: function(internalModel) {
         // clear relationships before moving to deleted state
         // otherwise it fails
-        record.clearRelationships();
-        record.transitionTo(&#x27;deleted.saved&#x27;);
+        internalModel.clearRelationships();
+        internalModel.transitionTo(&#x27;deleted.saved&#x27;);
       },
 
-      didCommit: function(record) {
-        record.send(&#x27;invokeLifecycleCallbacks&#x27;, get(record, &#x27;lastDirtyType&#x27;));
+      didCommit: function(internalModel) {
+        internalModel.send(&#x27;invokeLifecycleCallbacks&#x27;, get(internalModel, &#x27;lastDirtyType&#x27;));
       },
 
       // loaded.saved.notFound would be triggered by a failed
@@ -755,8 +793,8 @@ var RootState = {
     isDirty: true,
 
     // TRANSITIONS
-    setup: function(record) {
-      record.updateRecordArrays();
+    setup: function(internalModel) {
+      internalModel.updateRecordArrays();
     },
 
     // SUBSTATES
@@ -768,19 +806,22 @@ var RootState = {
 
       // EVENTS
 
-      willCommit: function(record) {
-        record.transitionTo(&#x27;inFlight&#x27;);
+      willCommit: function(internalModel) {
+        internalModel.transitionTo(&#x27;inFlight&#x27;);
       },
 
-      rollback: function(record) {
-        record.rollback();
+      rollback: function(internalModel) {
+        internalModel.rollbackAttributes();
+        internalModel.triggerLater(&#x27;ready&#x27;);
       },
 
+      pushedData: Ember.K,
       becomeDirty: Ember.K,
       deleteRecord: Ember.K,
 
-      rolledBack: function(record) {
-        record.transitionTo(&#x27;loaded.saved&#x27;);
+      rolledBack: function(internalModel) {
+        internalModel.transitionTo(&#x27;loaded.saved&#x27;);
+        internalModel.triggerLater(&#x27;ready&#x27;);
       }
     },
 
@@ -798,15 +839,20 @@ var RootState = {
 
       // TODO: More robust semantics around save-while-in-flight
       willCommit: Ember.K,
-      didCommit: function(record) {
-        record.transitionTo(&#x27;saved&#x27;);
+      didCommit: function(internalModel) {
+        internalModel.transitionTo(&#x27;saved&#x27;);
 
-        record.send(&#x27;invokeLifecycleCallbacks&#x27;);
+        internalModel.send(&#x27;invokeLifecycleCallbacks&#x27;);
       },
 
-      becameError: function(record) {
-        record.transitionTo(&#x27;uncommitted&#x27;);
-        record.triggerLater(&#x27;becameError&#x27;, record);
+      becameError: function(internalModel) {
+        internalModel.transitionTo(&#x27;uncommitted&#x27;);
+        internalModel.triggerLater(&#x27;becameError&#x27;, internalModel);
+      },
+
+      becameInvalid: function(internalModel) {
+        internalModel.transitionTo(&#x27;invalid&#x27;);
+        internalModel.triggerLater(&#x27;becameInvalid&#x27;, internalModel);
       }
     },
 
@@ -817,37 +863,64 @@ var RootState = {
       // FLAGS
       isDirty: false,
 
-      setup: function(record) {
-        var store = get(record, &#x27;store&#x27;);
-        store.dematerializeRecord(record);
+      setup: function(internalModel) {
+        var store = internalModel.store;
+        store._dematerializeRecord(internalModel);
       },
 
-      invokeLifecycleCallbacks: function(record) {
-        record.triggerLater(&#x27;didDelete&#x27;, record);
-        record.triggerLater(&#x27;didCommit&#x27;, record);
+      invokeLifecycleCallbacks: function(internalModel) {
+        internalModel.triggerLater(&#x27;didDelete&#x27;, internalModel);
+        internalModel.triggerLater(&#x27;didCommit&#x27;, internalModel);
       },
 
       willCommit: Ember.K,
 
       didCommit: Ember.K
+    },
+
+    invalid: {
+      isValid: false,
+
+      didSetProperty: function(internalModel, context) {
+        internalModel.removeErrorMessageFromAttribute(context.name);
+
+        didSetProperty(internalModel, context);
+      },
+
+      becameInvalid: Ember.K,
+      becomeDirty: Ember.K,
+      deleteRecord: Ember.K,
+      willCommit: Ember.K,
+
+
+      rolledBack: function(internalModel) {
+        internalModel.clearErrorMessages();
+        internalModel.transitionTo(&#x27;loaded.saved&#x27;);
+        internalModel.triggerLater(&#x27;ready&#x27;);
+      },
+
+      becameValid: function(internalModel) {
+        internalModel.transitionTo(&#x27;uncommitted&#x27;);
+      }
+
     }
   },
 
-  invokeLifecycleCallbacks: function(record, dirtyType) {
+  invokeLifecycleCallbacks: function(internalModel, dirtyType) {
     if (dirtyType === &#x27;created&#x27;) {
-      record.triggerLater(&#x27;didCreate&#x27;, record);
+      internalModel.triggerLater(&#x27;didCreate&#x27;, internalModel);
     } else {
-      record.triggerLater(&#x27;didUpdate&#x27;, record);
+      internalModel.triggerLater(&#x27;didUpdate&#x27;, internalModel);
     }
 
-    record.triggerLater(&#x27;didCommit&#x27;, record);
+    internalModel.triggerLater(&#x27;didCommit&#x27;, internalModel);
   }
 };
 
 function wireState(object, parent, name) {
   /*jshint proto:true*/
   // TODO: Use Object.create and copy instead
-  object = mixin(parent ? Ember.create(parent) : {}, object);
+  object = mixin(parent ? create(parent) : {}, object);
   object.parentState = parent;
   object.stateName = name;
 

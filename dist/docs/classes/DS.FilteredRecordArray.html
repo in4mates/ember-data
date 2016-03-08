@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -154,7 +176,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/packages_ember-data_lib_system_record_arrays_filtered_record_array.js.html#l9"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;filtered_record_array.js:9</code></a>
+            Defined in: <a href="../files/packages_ember-data_lib_system_record-arrays_filtered-record-array.js.html#l9"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;filtered-record-array.js:9</code></a>
         </div>
     
 
@@ -211,7 +233,7 @@ array.</p>
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_addRecord">addRecord</a>
+                                <a href="#method_addInternalModel">addInternalModel</a>
 
                                 
                                 
@@ -232,14 +254,7 @@ array.</p>
                             </li>
                         
                             <li class="index-item method private inherited">
-                                <a href="#method_pushRecord">pushRecord</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private inherited">
-                                <a href="#method_removeRecord">removeRecord</a>
+                                <a href="#method_removeInternalModel">removeInternalModel</a>
 
                                 
                                 
@@ -356,7 +371,7 @@ array.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l198"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:198</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l189"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:189</code></a>
         
         </p>
 
@@ -378,8 +393,8 @@ array.</p>
 </div>
 
                 
-                    <div id="method_addRecord" class="method item private inherited">
-    <h3 class="name"><code>addRecord</code></h3>
+                    <div id="method_addInternalModel" class="method item private inherited">
+    <h3 class="name"><code>addInternalModel</code></h3>
 
     
         <div class="args">
@@ -387,7 +402,7 @@ array.</p>
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -421,11 +436,11 @@ array.</p>
         
             
                 <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_addRecord">DS.RecordArray</a>:
+                <a href="../classes/DS.RecordArray.html#method_addInternalModel">DS.RecordArray</a>:
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l121"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:121</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l123"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:123</code></a>
         
         </p>
 
@@ -436,7 +451,7 @@ array.</p>
     </div>
 
     <div class="description">
-        <p>Adds a record to the <code>RecordArray</code> without duplicates</p>
+        <p>Adds an internal model to the <code>RecordArray</code> without duplicates</p>
 
     </div>
 
@@ -448,8 +463,8 @@ array.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
@@ -464,7 +479,7 @@ array.</p>
                 <li class="param">
                     
                         <code class="param-name">an</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <span class="type">Number</span>
                     
 
                     
@@ -533,7 +548,7 @@ array.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_filtered_record_array.js.html#l20"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;filtered_record_array.js:20</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_filtered-record-array.js.html#l20"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;filtered-record-array.js:20</code></a>
         
         </p>
 
@@ -547,7 +562,7 @@ array.</p>
         <p>The filterFunction is a function used to test records from the store to
 determine if they should be part of the record array.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var allPeople = store.all(&#39;person&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">var allPeople = store.peekAll(&#39;person&#39;);
 allPeople.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Yehuda Katz&quot;, &quot;Trek Glowacki&quot;]
 
 var people = store.filter(&#39;person&#39;, function(person) {
@@ -653,7 +668,7 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l83"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:83</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l85"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:85</code></a>
         
         </p>
 
@@ -713,8 +728,8 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
 </div>
 
                 
-                    <div id="method_pushRecord" class="method item private inherited">
-    <h3 class="name"><code>pushRecord</code></h3>
+                    <div id="method_removeInternalModel" class="method item private inherited">
+    <h3 class="name"><code>removeInternalModel</code></h3>
 
     
         <div class="args">
@@ -722,7 +737,7 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
             
                 <li class="arg">
                     
-                        <code>record</code>
+                        <code>internalModel</code>
                     
                 </li>
             
@@ -750,11 +765,11 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
         
             
                 <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_pushRecord">DS.RecordArray</a>:
+                <a href="../classes/DS.RecordArray.html#method_removeInternalModel">DS.RecordArray</a>:
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l140"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:140</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l140"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:140</code></a>
         
         </p>
 
@@ -765,7 +780,7 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
     </div>
 
     <div class="description">
-        <p>Adds a record to the <code>RecordArray</code>, but allows duplicates</p>
+        <p>Removes an internalModel to the <code>RecordArray</code>.</p>
 
     </div>
 
@@ -777,95 +792,8 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
             
                 <li class="param">
                     
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_removeRecord" class="method item private inherited">
-    <h3 class="name"><code>removeRecord</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>record</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/DS.RecordArray.html#method_removeRecord">DS.RecordArray</a>:
-            
-        
-        
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l150"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:150</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Removes a record to the <code>RecordArray</code>.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">record</code>
-                        <span class="type"><a href="../classes/DS.Model.html" class="crosslink">DS.Model</a></span>
+                        <code class="param-name">internalModel</code>
+                        <span class="type">InternalModel</span>
                     
 
                     
@@ -920,7 +848,7 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l161"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:161</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l151"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:151</code></a>
         
         </p>
 
@@ -933,7 +861,7 @@ people.mapBy(&#39;name&#39;); // [&quot;Tom Dale&quot;, &quot;Trek Glowacki&quot
     <div class="description">
         <p>Saves all of the records in the <code>RecordArray</code>.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var messages = store.all(&#39;message&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">var messages = store.peekAll(&#39;message&#39;);
 messages.forEach(function(message) {
   message.set(&#39;hasBeenSeen&#39;, true);
 });
@@ -992,7 +920,7 @@ messages.save();</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l97"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:97</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l99"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:99</code></a>
         
         </p>
 
@@ -1006,7 +934,7 @@ messages.save();</code></pre>
         <p>Used to get the latest version of all of the records in this array
 from the adapter.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var people = store.all(&#39;person&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">var people = store.peekAll(&#39;person&#39;);
 people.get(&#39;isUpdating&#39;); // false
 people.update();
 people.get(&#39;isUpdating&#39;); // true</code></pre>
@@ -1055,7 +983,7 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_filtered_record_array.js.html#l54"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;filtered_record_array.js:54</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_filtered-record-array.js.html#l54"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;filtered-record-array.js:54</code></a>
         
         </p>
 
@@ -1107,7 +1035,7 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l31"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:31</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l33"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:33</code></a>
         
         </p>
 
@@ -1152,7 +1080,7 @@ necessary, by the store.</p>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l43"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:43</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l45"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:45</code></a>
         
         </p>
 
@@ -1162,9 +1090,9 @@ necessary, by the store.</p>
     </div>
 
     <div class="description">
-        <p>The flag to signal a <code>RecordArray</code> is currently loading data.</p>
+        <p>The flag to signal a <code>RecordArray</code> is finished loading data.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var people = store.all(&#39;person&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">var people = store.peekAll(&#39;person&#39;);
 people.get(&#39;isLoaded&#39;); // true</code></pre>
 
     </div>
@@ -1197,7 +1125,7 @@ people.get(&#39;isLoaded&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l57"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:57</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l59"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:59</code></a>
         
         </p>
 
@@ -1209,7 +1137,7 @@ people.get(&#39;isLoaded&#39;); // true</code></pre>
     <div class="description">
         <p>The flag to signal a <code>RecordArray</code> is currently loading data.</p>
 <p>Example</p>
-<pre class="code prettyprint"><code class="lang-javascript">var people = store.all(&#39;person&#39;);
+<pre class="code prettyprint"><code class="lang-javascript">var people = store.peekAll(&#39;person&#39;);
 people.get(&#39;isUpdating&#39;); // false
 people.update();
 people.get(&#39;isUpdating&#39;); // true</code></pre>
@@ -1246,7 +1174,7 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l74"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:74</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l76"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:76</code></a>
         
         </p>
 
@@ -1288,7 +1216,7 @@ people.get(&#39;isUpdating&#39;); // true</code></pre>
             
         
         
-        <a href="../files/packages_ember-data_lib_system_record_arrays_record_array.js.html#l23"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record_arrays&#x2F;record_array.js:23</code></a>
+        <a href="../files/packages_ember-data_lib_system_record-arrays_record-array.js.html#l25"><code>packages&#x2F;ember-data&#x2F;lib&#x2F;system&#x2F;record-arrays&#x2F;record-array.js:25</code></a>
         
         </p>
 

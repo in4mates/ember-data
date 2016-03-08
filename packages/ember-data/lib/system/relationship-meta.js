@@ -1,26 +1,21 @@
-import { singularize } from "ember-inflector/system";
+import {singularize} from 'ember-inflector';
+import normalizeModelName from 'ember-data/system/normalize-model-name';
 
-export function typeForRelationshipMeta(store, meta) {
-  var typeKey, type;
+export function typeForRelationshipMeta(meta) {
+  var modelName;
 
-  typeKey = meta.type || meta.key;
-  if (typeof typeKey === 'string') {
-    if (meta.kind === 'hasMany') {
-      typeKey = singularize(typeKey);
-    }
-    type = store.modelFor(typeKey);
-  } else {
-    type = meta.type;
+  modelName = meta.type || meta.key;
+  if (meta.kind === 'hasMany') {
+    modelName = singularize(normalizeModelName(modelName));
   }
-
-  return type;
+  return modelName;
 }
 
-export function relationshipFromMeta(store, meta) {
+export function relationshipFromMeta(meta) {
   return {
     key:  meta.key,
     kind: meta.kind,
-    type: typeForRelationshipMeta(store, meta),
+    type: typeForRelationshipMeta(meta),
     options:    meta.options,
     parentType: meta.parentType,
     isRelationship: true

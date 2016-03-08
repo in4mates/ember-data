@@ -41,7 +41,11 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ContainerInstanceCache.html">ContainerInstanceCache</a></li>
+            
                 <li><a href="../classes/DS.html">DS</a></li>
+            
+                <li><a href="../classes/DS.AbortError.html">DS.AbortError</a></li>
             
                 <li><a href="../classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a></li>
             
@@ -49,9 +53,13 @@
             
                 <li><a href="../classes/DS.Adapter.html">DS.Adapter</a></li>
             
+                <li><a href="../classes/DS.AdapterError.html">DS.AdapterError</a></li>
+            
                 <li><a href="../classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></li>
             
                 <li><a href="../classes/DS.BooleanTransform.html">DS.BooleanTransform</a></li>
+            
+                <li><a href="../classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></li>
             
                 <li><a href="../classes/DS.ContainerProxy.html">DS.ContainerProxy</a></li>
             
@@ -67,7 +75,13 @@
             
                 <li><a href="../classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a></li>
             
+                <li><a href="../classes/DS.InternalModel.html">DS.InternalModel</a></li>
+            
                 <li><a href="../classes/DS.InvalidError.html">DS.InvalidError</a></li>
+            
+                <li><a href="../classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a></li>
+            
+                <li><a href="../classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a></li>
             
                 <li><a href="../classes/DS.JSONSerializer.html">DS.JSONSerializer</a></li>
             
@@ -93,9 +107,17 @@
             
                 <li><a href="../classes/DS.RootState.html">DS.RootState</a></li>
             
+                <li><a href="../classes/DS.Serializer.html">DS.Serializer</a></li>
+            
+                <li><a href="../classes/DS.Snapshot.html">DS.Snapshot</a></li>
+            
+                <li><a href="../classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></li>
+            
                 <li><a href="../classes/DS.Store.html">DS.Store</a></li>
             
                 <li><a href="../classes/DS.StringTransform.html">DS.StringTransform</a></li>
+            
+                <li><a href="../classes/DS.TimeoutError.html">DS.TimeoutError</a></li>
             
                 <li><a href="../classes/DS.Transform.html">DS.Transform</a></li>
             
@@ -150,40 +172,42 @@ import {
   typeForRelationshipMeta,
   relationshipFromMeta
 } from &quot;ember-data/system/relationship-meta&quot;;
-import { Model } from &quot;ember-data/system/model&quot;;
+import Model from &quot;ember-data/system/model&quot;;
 import {
   Map,
   MapWithDefault
 } from &quot;ember-data/system/map&quot;;
+import EmptyObject from &quot;ember-data/system/empty-object&quot;;
+import ArrayPolyfills from &#x27;ember-data/ext/ember/array&#x27;;
 
 var get = Ember.get;
-var filter = Ember.ArrayPolyfills.filter;
+var filter = ArrayPolyfills.filter;
 
 var relationshipsDescriptor = Ember.computed(function() {
-   if (Ember.testing === true &amp;&amp; relationshipsDescriptor._cacheable === true) {
-      relationshipsDescriptor._cacheable = false;
+  if (Ember.testing === true &amp;&amp; relationshipsDescriptor._cacheable === true) {
+    relationshipsDescriptor._cacheable = false;
+  }
+
+  var map = new MapWithDefault({
+    defaultValue: function() { return []; }
+  });
+
+  // Loop through each computed property on the class
+  this.eachComputedProperty(function(name, meta) {
+    // If the computed property is a relationship, add
+    // it to the map.
+    if (meta.isRelationship) {
+      meta.key = name;
+      var relationshipsForType = map.get(typeForRelationshipMeta(meta));
+
+      relationshipsForType.push({
+        name: name,
+        kind: meta.kind
+      });
     }
+  });
 
-    var map = new MapWithDefault({
-      defaultValue: function() { return []; }
-    });
-
-    // Loop through each computed property on the class
-    this.eachComputedProperty(function(name, meta) {
-      // If the computed property is a relationship, add
-      // it to the map.
-      if (meta.isRelationship) {
-        meta.key = name;
-        var relationshipsForType = map.get(typeForRelationshipMeta(this.store, meta));
-
-        relationshipsForType.push({
-          name: name,
-          kind: meta.kind
-        });
-      }
-    });
-
-    return map;
+  return map;
 }).readOnly();
 
 var relatedTypesDescriptor = Ember.computed(function() {
@@ -191,7 +215,7 @@ var relatedTypesDescriptor = Ember.computed(function() {
     relatedTypesDescriptor._cacheable = false;
   }
 
-  var type;
+  var modelName;
   var types = Ember.A();
 
   // Loop through each computed property on the class,
@@ -200,13 +224,13 @@ var relatedTypesDescriptor = Ember.computed(function() {
   this.eachComputedProperty(function(name, meta) {
     if (meta.isRelationship) {
       meta.key = name;
-      type = typeForRelationshipMeta(this.store, meta);
+      modelName = typeForRelationshipMeta(meta);
 
-      Ember.assert(&quot;You specified a hasMany (&quot; + meta.type + &quot;) on &quot; + meta.parentType + &quot; but &quot; + meta.type + &quot; was not found.&quot;,  type);
+      Ember.assert(&quot;You specified a hasMany (&quot; + meta.type + &quot;) on &quot; + meta.parentType + &quot; but &quot; + meta.type + &quot; was not found.&quot;, modelName);
 
-      if (!types.contains(type)) {
-        Ember.assert(&quot;Trying to sideload &quot; + name + &quot; on &quot; + this.toString() + &quot; but the type doesn&#x27;t exist.&quot;, !!type);
-        types.push(type);
+      if (!types.contains(modelName)) {
+        Ember.assert(&quot;Trying to sideload &quot; + name + &quot; on &quot; + this.toString() + &quot; but the type doesn&#x27;t exist.&quot;, !!modelName);
+        types.push(modelName);
       }
     }
   });
@@ -224,8 +248,8 @@ var relationshipsByNameDescriptor = Ember.computed(function() {
   this.eachComputedProperty(function(name, meta) {
     if (meta.isRelationship) {
       meta.key = name;
-      var relationship = relationshipFromMeta(this.store, meta);
-      relationship.type = typeForRelationshipMeta(this.store, meta);
+      var relationship = relationshipFromMeta(meta);
+      relationship.type = typeForRelationshipMeta(meta);
       map.set(name, relationship);
     }
   });
@@ -312,8 +336,10 @@ Model.reopenClass({
 
     For example, if you define a model like this:
 
-   &#x60;&#x60;&#x60;javascript
-    App.Post = DS.Model.extend({
+    &#x60;&#x60;&#x60;app/models/post.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
       comments: DS.hasMany(&#x27;comment&#x27;)
     });
    &#x60;&#x60;&#x60;
@@ -323,15 +349,16 @@ Model.reopenClass({
     @method typeForRelationship
     @static
     @param {String} name the name of the relationship
-    @return {subclass of DS.Model} the type of the relationship, or undefined
+    @param {store} store an instance of DS.Store
+    @return {DS.Model} the type of the relationship, or undefined
   */
-  typeForRelationship: function(name) {
+  typeForRelationship: function(name, store) {
     var relationship = get(this, &#x27;relationshipsByName&#x27;).get(name);
-    return relationship &amp;&amp; relationship.type;
+    return relationship &amp;&amp; store.modelFor(relationship.type);
   },
 
   inverseMap: Ember.computed(function() {
-    return Ember.create(null);
+    return new EmptyObject();
   }),
 
   /**
@@ -339,45 +366,52 @@ Model.reopenClass({
 
     For example, if you define models like this:
 
-   &#x60;&#x60;&#x60;javascript
-      App.Post = DS.Model.extend({
-        comments: DS.hasMany(&#x27;message&#x27;)
-      });
+    &#x60;&#x60;&#x60;app/models/post.js
+    import DS from &#x27;ember-data&#x27;;
 
-      App.Message = DS.Model.extend({
-        owner: DS.belongsTo(&#x27;post&#x27;)
-      });
+    export default DS.Model.extend({
+      comments: DS.hasMany(&#x27;message&#x27;)
+    });
     &#x60;&#x60;&#x60;
 
-    App.Post.inverseFor(&#x27;comments&#x27;) -&gt; {type: App.Message, name:&#x27;owner&#x27;, kind:&#x27;belongsTo&#x27;}
-    App.Message.inverseFor(&#x27;owner&#x27;) -&gt; {type: App.Post, name:&#x27;comments&#x27;, kind:&#x27;hasMany&#x27;}
+    &#x60;&#x60;&#x60;app/models/message.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
+      owner: DS.belongsTo(&#x27;post&#x27;)
+    });
+    &#x60;&#x60;&#x60;
+
+    App.Post.inverseFor(&#x27;comments&#x27;) -&gt; { type: App.Message, name: &#x27;owner&#x27;, kind: &#x27;belongsTo&#x27; }
+    App.Message.inverseFor(&#x27;owner&#x27;) -&gt; { type: App.Post, name: &#x27;comments&#x27;, kind: &#x27;hasMany&#x27; }
 
     @method inverseFor
     @static
     @param {String} name the name of the relationship
     @return {Object} the inverse relationship, or null
   */
-  inverseFor: function(name) {
+  inverseFor: function(name, store) {
     var inverseMap = get(this, &#x27;inverseMap&#x27;);
     if (inverseMap[name]) {
       return inverseMap[name];
     } else {
-      var inverse = this._findInverseFor(name);
+      var inverse = this._findInverseFor(name, store);
       inverseMap[name] = inverse;
       return inverse;
     }
   },
 
   //Calculate the inverse, ignoring the cache
-  _findInverseFor: function(name) {
+  _findInverseFor: function(name, store) {
 
-    var inverseType = this.typeForRelationship(name);
+    var inverseType = this.typeForRelationship(name, store);
     if (!inverseType) {
       return null;
     }
 
-    //If inverse is manually specified to be null, like  &#x60;comments: DS.hasMany(&#x27;message&#x27;, {inverse: null})&#x60;
-    var options = this.metaForProperty(name).options;
+    var propertyMeta = this.metaForProperty(name);
+    //If inverse is manually specified to be null, like  &#x60;comments: DS.hasMany(&#x27;message&#x27;, { inverse: null })&#x60;
+    var options = propertyMeta.options;
     if (options.inverse === null) { return null; }
 
     var inverseName, inverseKind, inverse;
@@ -387,12 +421,18 @@ Model.reopenClass({
       inverseName = options.inverse;
       inverse = Ember.get(inverseType, &#x27;relationshipsByName&#x27;).get(inverseName);
 
-      Ember.assert(&quot;We found no inverse relationships by the name of &#x27;&quot; + inverseName + &quot;&#x27; on the &#x27;&quot; + inverseType.typeKey +
+      Ember.assert(&quot;We found no inverse relationships by the name of &#x27;&quot; + inverseName + &quot;&#x27; on the &#x27;&quot; + inverseType.modelName +
         &quot;&#x27; model. This is most likely due to a missing attribute on your model definition.&quot;, !Ember.isNone(inverse));
 
       inverseKind = inverse.kind;
     } else {
       //No inverse was specified manually, we need to use a heuristic to guess one
+      if (propertyMeta.type === propertyMeta.parentType.modelName) {
+        Ember.warn(&#x60;Detected a reflexive relationship by the name of &#x27;${name}&#x27; without an inverse option. Look at http://emberjs.com/guides/models/defining-models/#toc_reflexive-relation for how to explicitly specify inverses.&#x60;, false, {
+          id: &#x27;ds.model.reflexive-relationship-without-inverse&#x27;
+        });
+      }
+
       var possibleRelationships = findPossibleInverses(this, inverseType);
 
       if (possibleRelationships.length === 0) { return null; }
@@ -422,14 +462,14 @@ Model.reopenClass({
       var possibleRelationships = relationshipsSoFar || [];
 
       var relationshipMap = get(inverseType, &#x27;relationships&#x27;);
-      if (!relationshipMap) { return; }
+      if (!relationshipMap) { return possibleRelationships; }
 
-      var relationships = relationshipMap.get(type);
+      var relationships = relationshipMap.get(type.modelName);
 
       relationships = filter.call(relationships, function(relationship) {
         var optionsForRelationship = inverseType.metaForProperty(relationship.name).options;
 
-        if (!optionsForRelationship.inverse){
+        if (!optionsForRelationship.inverse) {
           return true;
         }
 
@@ -463,8 +503,10 @@ Model.reopenClass({
 
     For example, given the following model definition:
 
-    &#x60;&#x60;&#x60;javascript
-    App.Blog = DS.Model.extend({
+    &#x60;&#x60;&#x60;app/models/blog.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
       users: DS.hasMany(&#x27;user&#x27;),
       owner: DS.belongsTo(&#x27;user&#x27;),
       posts: DS.hasMany(&#x27;post&#x27;)
@@ -475,7 +517,10 @@ Model.reopenClass({
     relationships, like this:
 
     &#x60;&#x60;&#x60;javascript
-    var relationships = Ember.get(App.Blog, &#x27;relationships&#x27;);
+    import Ember from &#x27;ember&#x27;;
+    import Blog from &#x27;app/models/blog&#x27;;
+
+    var relationships = Ember.get(Blog, &#x27;relationships&#x27;);
     relationships.get(App.User);
     //=&gt; [ { name: &#x27;users&#x27;, kind: &#x27;hasMany&#x27; },
     //     { name: &#x27;owner&#x27;, kind: &#x27;belongsTo&#x27; } ]
@@ -496,8 +541,10 @@ Model.reopenClass({
     by the relationship kind. For example, given a model with this
     definition:
 
-    &#x60;&#x60;&#x60;javascript
-    App.Blog = DS.Model.extend({
+    &#x60;&#x60;&#x60;app/models/blog.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
       users: DS.hasMany(&#x27;user&#x27;),
       owner: DS.belongsTo(&#x27;user&#x27;),
 
@@ -508,7 +555,10 @@ Model.reopenClass({
     This property would contain the following:
 
     &#x60;&#x60;&#x60;javascript
-    var relationshipNames = Ember.get(App.Blog, &#x27;relationshipNames&#x27;);
+    import Ember from &#x27;ember&#x27;;
+    import Blog from &#x27;app/models/blog&#x27;;
+
+    var relationshipNames = Ember.get(Blog, &#x27;relationshipNames&#x27;);
     relationshipNames.hasMany;
     //=&gt; [&#x27;users&#x27;, &#x27;posts&#x27;]
     relationshipNames.belongsTo;
@@ -542,8 +592,10 @@ Model.reopenClass({
 
     For example, given a model with this definition:
 
-    &#x60;&#x60;&#x60;javascript
-    App.Blog = DS.Model.extend({
+    &#x60;&#x60;&#x60;app/models/blog.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
       users: DS.hasMany(&#x27;user&#x27;),
       owner: DS.belongsTo(&#x27;user&#x27;),
 
@@ -554,7 +606,10 @@ Model.reopenClass({
     This property would contain the following:
 
     &#x60;&#x60;&#x60;javascript
-    var relatedTypes = Ember.get(App.Blog, &#x27;relatedTypes&#x27;);
+    import Ember from &#x27;ember&#x27;;
+    import Blog from &#x27;app/models/blog&#x27;;
+
+    var relatedTypes = Ember.get(Blog, &#x27;relatedTypes&#x27;);
     //=&gt; [ App.User, App.Post ]
     &#x60;&#x60;&#x60;
 
@@ -572,8 +627,10 @@ Model.reopenClass({
     For example, given a model with this
     definition:
 
-    &#x60;&#x60;&#x60;javascript
-    App.Blog = DS.Model.extend({
+    &#x60;&#x60;&#x60;app/models/blog.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.Model.extend({
       users: DS.hasMany(&#x27;user&#x27;),
       owner: DS.belongsTo(&#x27;user&#x27;),
 
@@ -584,7 +641,10 @@ Model.reopenClass({
     This property would contain the following:
 
     &#x60;&#x60;&#x60;javascript
-    var relationshipsByName = Ember.get(App.Blog, &#x27;relationshipsByName&#x27;);
+    import Ember from &#x27;ember&#x27;;
+    import Blog from &#x27;app/models/blog&#x27;;
+
+    var relationshipsByName = Ember.get(Blog, &#x27;relationshipsByName&#x27;);
     relationshipsByName.get(&#x27;users&#x27;);
     //=&gt; { key: &#x27;users&#x27;, kind: &#x27;hasMany&#x27;, type: App.User }
     relationshipsByName.get(&#x27;owner&#x27;);
@@ -605,9 +665,10 @@ Model.reopenClass({
 
     For example:
 
-    &#x60;&#x60;&#x60;javascript
+    &#x60;&#x60;&#x60;app/models/blog.js
+    import DS from &#x27;ember-data&#x27;;
 
-    App.Blog = DS.Model.extend({
+    export default DS.Model.extend({
       users: DS.hasMany(&#x27;user&#x27;),
       owner: DS.belongsTo(&#x27;user&#x27;),
 
@@ -615,8 +676,13 @@ Model.reopenClass({
 
       title: DS.attr(&#x27;string&#x27;)
     });
+    &#x60;&#x60;&#x60;
 
-    var fields = Ember.get(App.Blog, &#x27;fields&#x27;);
+    &#x60;&#x60;&#x60;js
+    import Ember from &#x27;ember&#x27;;
+    import Blog from &#x27;app/models/blog&#x27;;
+
+    var fields = Ember.get(Blog, &#x27;fields&#x27;);
     fields.forEach(function(kind, field) {
       console.log(field, kind);
     });
@@ -680,10 +746,10 @@ Model.reopenClass({
     });
   },
 
-  determineRelationshipType: function(knownSide) {
+  determineRelationshipType: function(knownSide, store) {
     var knownKey = knownSide.key;
     var knownKind = knownSide.kind;
-    var inverse = this.inverseFor(knownKey);
+    var inverse = this.inverseFor(knownKey, store);
     var key, otherKind;
 
     if (!inverse) {
@@ -708,6 +774,49 @@ Model.reopen({
     invoking the callback with the name of each relationship and its relationship
     descriptor.
 
+
+    The callback method you provide should have the following signature (all
+    parameters are optional):
+
+    &#x60;&#x60;&#x60;javascript
+    function(name, descriptor);
+    &#x60;&#x60;&#x60;
+
+    - &#x60;name&#x60; the name of the current property in the iteration
+    - &#x60;descriptor&#x60; the meta object that describes this relationship
+
+    The relationship descriptor argument is an object with the following properties.
+
+   - **key** &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt; the name of this relationship on the Model
+   - **kind** &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt; &quot;hasMany&quot; or &quot;belongsTo&quot;
+   - **options** &lt;span class=&quot;type&quot;&gt;Object&lt;/span&gt; the original options hash passed when the relationship was declared
+   - **parentType** &lt;span class=&quot;type&quot;&gt;DS.Model&lt;/span&gt; the type of the Model that owns this relationship
+   - **type** &lt;span class=&quot;type&quot;&gt;DS.Model&lt;/span&gt; the type of the related Model
+
+    Note that in addition to a callback, you can also pass an optional target
+    object that will be set as &#x60;this&#x60; on the context.
+
+    Example
+
+    &#x60;&#x60;&#x60;app/serializers/application.js
+    import DS from &#x27;ember-data&#x27;;
+
+    export default DS.JSONSerializer.extend({
+      serialize: function(record, options) {
+        var json = {};
+
+        record.eachRelationship(function(name, descriptor) {
+          if (descriptor.kind === &#x27;hasMany&#x27;) {
+            var serializedHasManyName = name.toUpperCase() + &#x27;_IDS&#x27;;
+            json[name.toUpperCase()] = record.get(name).mapBy(&#x27;id&#x27;);
+          }
+        });
+
+        return json;
+      }
+    });
+    &#x60;&#x60;&#x60;
+
     @method eachRelationship
     @param {Function} callback the callback to invoke
     @param {any} binding the value to which the callback&#x27;s &#x60;this&#x60; should be bound
@@ -721,7 +830,7 @@ Model.reopen({
   },
 
   inverseFor: function(key) {
-    return this.constructor.inverseFor(key);
+    return this.constructor.inverseFor(key, this.store);
   }
 
 });
