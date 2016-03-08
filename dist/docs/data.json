@@ -5960,7 +5960,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 210,
+            "line": 215,
             "description": "Normalizes an array of resource payloads and returns a JSON-API Document\nwith primary data and, if any, included data as `{ data, included }`.",
             "itemtype": "method",
             "name": "normalizeArray",
@@ -5996,7 +5996,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 390,
+            "line": 395,
             "description": "Called when the server has returned a payload representing\na single record, such as in response to a `find` or `save`.\n\nIt is your opportunity to clean up the server's response into the normalized\nform expected by Ember Data.\n\nIf you want, you can just restructure the top-level of your payload, and\ndo more fine-grained normalization in the `normalize` method.\n\nFor example, if you have a payload like this in response to a request for\npost 1:\n\n```js\n{\n  \"id\": 1,\n  \"title\": \"Rails is omakase\",\n\n  \"_embedded\": {\n    \"comment\": [{\n      \"_id\": 1,\n      \"comment_title\": \"FIRST\"\n    }, {\n      \"_id\": 2,\n      \"comment_title\": \"Rails is unagi\"\n    }]\n  }\n}\n```\n\nYou could implement a serializer that looks like this to get your payload\ninto shape:\n\n```app/serializers/post.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  // First, restructure the top-level so it's organized by type\n  extractSingle: function(store, typeClass, payload, id) {\n    var comments = payload._embedded.comment;\n    delete payload._embedded;\n\n    payload = { comments: comments, post: payload };\n    return this._super(store, typeClass, payload, id);\n  },\n\n  normalizeHash: {\n    // Next, normalize individual comments, which (after `extract`)\n    // are now located under `comments`\n    comments: function(hash) {\n      hash.id = hash._id;\n      hash.title = hash.comment_title;\n      delete hash._id;\n      delete hash.comment_title;\n      return hash;\n    }\n  }\n})\n```\n\nWhen you call super from your own implementation of `extractSingle`, the\nbuilt-in implementation will find the primary record in your normalized\npayload and push the remaining records into the store.\n\nThe primary record is the single hash found under `post` or the first\nelement of the `posts` array.\n\nThe primary record has special meaning when the record is being created\nfor the first time or updated (`createRecord` or `updateRecord`). In\nparticular, it will update the properties of the record that was saved.",
             "itemtype": "method",
             "name": "extractSingle",
@@ -6032,7 +6032,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 528,
+            "line": 533,
             "description": "Called when the server has returned a payload representing\nmultiple records, such as in response to a `findAll` or `findQuery`.\n\nIt is your opportunity to clean up the server's response into the normalized\nform expected by Ember Data.\n\nIf you want, you can just restructure the top-level of your payload, and\ndo more fine-grained normalization in the `normalize` method.\n\nFor example, if you have a payload like this in response to a request for\nall posts:\n\n```js\n{\n  \"_embedded\": {\n    \"post\": [{\n      \"id\": 1,\n      \"title\": \"Rails is omakase\"\n    }, {\n      \"id\": 2,\n      \"title\": \"The Parley Letter\"\n    }],\n    \"comment\": [{\n      \"_id\": 1,\n      \"comment_title\": \"Rails is unagi\",\n      \"post_id\": 1\n    }, {\n      \"_id\": 2,\n      \"comment_title\": \"Don't tread on me\",\n      \"post_id\": 2\n    }]\n  }\n}\n```\n\nYou could implement a serializer that looks like this to get your payload\ninto shape:\n\n```app/serializers/post.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  // First, restructure the top-level so it's organized by type\n  // and the comments are listed under a post's `comments` key.\n  extractArray: function(store, type, payload) {\n    var posts = payload._embedded.post;\n    var comments = [];\n    var postCache = {};\n\n    posts.forEach(function(post) {\n      post.comments = [];\n      postCache[post.id] = post;\n    });\n\n    payload._embedded.comment.forEach(function(comment) {\n      comments.push(comment);\n      postCache[comment.post_id].comments.push(comment);\n      delete comment.post_id;\n    });\n\n    payload = { comments: comments, posts: posts };\n\n    return this._super(store, type, payload);\n  },\n\n  normalizeHash: {\n    // Next, normalize individual comments, which (after `extract`)\n    // are now located under `comments`\n    comments: function(hash) {\n      hash.id = hash._id;\n      hash.title = hash.comment_title;\n      delete hash._id;\n      delete hash.comment_title;\n      return hash;\n    }\n  }\n})\n```\n\nWhen you call super from your own implementation of `extractArray`, the\nbuilt-in implementation will find the primary array in your normalized\npayload and push the remaining records into the store.\n\nThe primary array is the array found under `posts`.\n\nThe primary record has special meaning when responding to `findQuery`\nor `findHasMany`. In particular, the primary array will become the\nlist of records in the record array that kicked off the request.\n\nIf your primary array contains secondary (embedded) records of the same type,\nyou cannot place these into the primary array `posts`. Instead, place the\nsecondary items into an underscore prefixed property `_posts`, which will\npush these items into the store and will not affect the resulting query.",
             "itemtype": "method",
             "name": "extractArray",
@@ -6063,7 +6063,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 681,
+            "line": 686,
             "description": "This method allows you to push a payload containing top-level\ncollections of records organized per type.\n\n```js\n{\n  \"posts\": [{\n    \"id\": \"1\",\n    \"title\": \"Rails is omakase\",\n    \"author\", \"1\",\n    \"comments\": [ \"1\" ]\n  }],\n  \"comments\": [{\n    \"id\": \"1\",\n    \"body\": \"FIRST\"\n  }],\n  \"users\": [{\n    \"id\": \"1\",\n    \"name\": \"@d2h\"\n  }]\n}\n```\n\nIt will first normalize the payload, so you can use this to push\nin data streaming in from your server structured the same way\nthat fetches and saves are structured.",
             "itemtype": "method",
             "name": "pushPayload",
@@ -6085,7 +6085,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 746,
+            "line": 751,
             "description": "This method is used to convert each JSON root key in the payload\ninto a modelName that it can use to look up the appropriate model for\nthat part of the payload.\n\nFor example, your server may send a model name that does not correspond with\nthe name of the model in your app. Let's take a look at an example model,\nand an example payload:\n\n```app/models/post.js\nimport DS from 'ember-data';\n\nexport default DS.Model.extend({\n});\n```\n\n```javascript\n  {\n    \"blog/post\": {\n      \"id\": \"1\n    }\n  }\n```\n\nEmber Data is going to normalize the payload's root key for the modelName. As a result,\nit will try to look up the \"blog/post\" model. Since we don't have a model called \"blog/post\"\n(or a file called app/models/blog/post.js in ember-cli), Ember Data will throw an error\nbecause it cannot find the \"blog/post\" model.\n\nSince we want to remove this namespace, we can define a serializer for the application that will\nremove \"blog/\" from the payload key whenver it's encountered by Ember Data:\n\n```app/serializers/application.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  modelNameFromPayloadKey: function(payloadKey) {\n    if (payloadKey === 'blog/post') {\n      return this._super(payloadKey.replace('blog/', ''));\n    } else {\n     return this._super(payloadKey);\n    }\n  }\n});\n```\n\nAfter refreshing, Ember Data will appropriately look up the \"post\" model.\n\nBy default the modelName for a model is its\nname in dasherized form. This means that a payload key like \"blogPost\" would be\nnormalized to \"blog-post\" when Ember Data looks up the model. Usually, Ember Data\ncan use the correct inflection to do this for you. Most of the time, you won't\nneed to override `modelNameFromPayloadKey` for this purpose.",
             "itemtype": "method",
             "name": "modelNameFromPayloadKey",
@@ -6106,7 +6106,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 810,
+            "line": 815,
             "description": "Called when a record is saved in order to convert the\nrecord into JSON.\n\nBy default, it creates a JSON object with a key for\neach attribute and belongsTo relationship.\n\nFor example, consider this model:\n\n```app/models/comment.js\nimport DS from 'ember-data';\n\nexport default DS.Model.extend({\n  title: DS.attr(),\n  body: DS.attr(),\n\n  author: DS.belongsTo('user')\n});\n```\n\nThe default serialization would create a JSON object like:\n\n```js\n{\n  \"title\": \"Rails is unagi\",\n  \"body\": \"Rails? Omakase? O_O\",\n  \"author\": 12\n}\n```\n\nBy default, attributes are passed through as-is, unless\nyou specified an attribute type (`DS.attr('date')`). If\nyou specify a transform, the JavaScript value will be\nserialized when inserted into the JSON hash.\n\nBy default, belongs-to relationships are converted into\nIDs when inserted into the JSON hash.\n\n## IDs\n\n`serialize` takes an options hash with a single option:\n`includeId`. If this option is `true`, `serialize` will,\nby default include the ID in the JSON object it builds.\n\nThe adapter passes in `includeId: true` when serializing\na record for `createRecord`, but not for `updateRecord`.\n\n## Customization\n\nYour server may expect a different JSON format than the\nbuilt-in serialization format.\n\nIn that case, you can implement `serialize` yourself and\nreturn a JSON hash of your choosing.\n\n```app/serializers/post.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  serialize: function(snapshot, options) {\n    var json = {\n      POST_TTL: snapshot.attr('title'),\n      POST_BDY: snapshot.attr('body'),\n      POST_CMS: snapshot.hasMany('comments', { ids: true })\n    }\n\n    if (options.includeId) {\n      json.POST_ID_ = snapshot.id;\n    }\n\n    return json;\n  }\n});\n```\n\n## Customizing an App-Wide Serializer\n\nIf you want to define a serializer for your entire\napplication, you'll probably want to use `eachAttribute`\nand `eachRelationship` on the record.\n\n```app/serializers/application.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  serialize: function(snapshot, options) {\n    var json = {};\n\n    snapshot.eachAttribute(function(name) {\n      json[serverAttributeName(name)] = snapshot.attr(name);\n    })\n\n    snapshot.eachRelationship(function(name, relationship) {\n      if (relationship.kind === 'hasMany') {\n        json[serverHasManyName(name)] = snapshot.hasMany(name, { ids: true });\n      }\n    });\n\n    if (options.includeId) {\n      json.ID_ = snapshot.id;\n    }\n\n    return json;\n  }\n});\n\nfunction serverAttributeName(attribute) {\n  return attribute.underscore().toUpperCase();\n}\n\nfunction serverHasManyName(name) {\n  return serverAttributeName(name.singularize()) + \"_IDS\";\n}\n```\n\nThis serializer will generate JSON that looks like this:\n\n```js\n{\n  \"TITLE\": \"Rails is omakase\",\n  \"BODY\": \"Yep. Omakase.\",\n  \"COMMENT_IDS\": [ 1, 2, 3 ]\n}\n```\n\n## Tweaking the Default JSON\n\nIf you just want to do some small tweaks on the default JSON,\nyou can call super first and make the tweaks on the returned\nJSON.\n\n```app/serializers/post.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  serialize: function(snapshot, options) {\n    var json = this._super(snapshot, options);\n\n    json.subject = json.title;\n    delete json.title;\n\n    return json;\n  }\n});\n```",
             "itemtype": "method",
             "name": "serialize",
@@ -6132,7 +6132,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 965,
+            "line": 970,
             "description": "You can use this method to customize the root keys serialized into the JSON.\nBy default the REST Serializer sends the modelName of a model, which is a camelized\nversion of the name.\n\nFor example, your server may expect underscored root objects.\n\n```app/serializers/application.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  serializeIntoHash: function(data, type, record, options) {\n    var root = Ember.String.decamelize(type.modelName);\n    data[root] = this.serialize(record, options);\n  }\n});\n```",
             "itemtype": "method",
             "name": "serializeIntoHash",
@@ -6164,7 +6164,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 994,
+            "line": 999,
             "description": "You can use `payloadKeyFromModelName` to override the root key for an outgoing\nrequest. By default, the RESTSerializer returns a camelized version of the\nmodel's name.\n\nFor a model called TacoParty, its `modelName` would be the string `taco-party`. The RESTSerializer\nwill send it to the server with `tacoParty` as the root key in the JSON payload:\n\n```js\n{\n  \"tacoParty\": {\n    \"id\": \"1\",\n    \"location\": \"Matthew Beale's House\"\n  }\n}\n```\n\nFor example, your server may expect dasherized root objects:\n\n```app/serializers/application.js\nimport DS from 'ember-data';\n\nexport default DS.RESTSerializer.extend({\n  payloadKeyFromModelName: function(modelName) {\n    return Ember.String.dasherize(modelName);\n  }\n});\n```\n\nGiven a `TacoParty' model, calling `save` on a tacoModel would produce an outgoing\nrequest like:\n\n```js\n{\n  \"taco-party\": {\n    \"id\": \"1\",\n    \"location\": \"Matthew Beale's House\"\n  }\n}\n```",
             "itemtype": "method",
             "name": "payloadKeyFromModelName",
@@ -6185,7 +6185,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 1043,
+            "line": 1048,
             "description": "Deprecated. Use modelNameFromPayloadKey instead",
             "itemtype": "method",
             "name": "typeForRoot",
@@ -6207,7 +6207,7 @@
         },
         {
             "file": "packages/ember-data/lib/serializers/rest-serializer.js",
-            "line": 1059,
+            "line": 1064,
             "description": "You can use this method to customize how polymorphic objects are serialized.\nBy default the JSON Serializer creates the key by appending `Type` to\nthe attribute and value from the model's camelcased model name.",
             "itemtype": "method",
             "name": "serializePolymorphicType",

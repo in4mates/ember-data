@@ -73,7 +73,7 @@ import {
 } from "ember-data/serializers";
 import "ember-inflector";
 import EmbeddedRecordsMixin from "ember-data/serializers/embedded-records-mixin";
-import EmbeddedModelMixin from "ember-data/system/model/embedded_model_mixin";
+import EmbeddedModelMixin from "ember-data/system/model/embedded-model-mixin";
 import {
   ActiveModelAdapter,
   ActiveModelSerializer

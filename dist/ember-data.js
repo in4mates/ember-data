@@ -6059,6 +6059,11 @@
         return hash;
       },
 
+      // base-class method that is overriden by EmbeddedRecordsMixin
+      storePush: function (store, modelName, hash) {
+        store.push(modelName, hash);
+      },
+
       /**
         Normalizes an array of resource payloads and returns a JSON-API Document
         with primary data and, if any, included data as `{ data, included }`.
@@ -6369,7 +6374,7 @@
             if (isFirstCreatedRecord || isUpdatedRecord) {
               primaryRecord = hash;
             } else {
-              store.push(modelName, hash);
+              this.storePush(store, modelName, hash);
             }
           }, this);
         }
@@ -15349,20 +15354,20 @@
 
         // if embedded hash contains client id, mimic a createRecord/save
         if (clientRecord) {
-          store.didSaveRecord(clientRecord, hash);
+          store.didSaveRecord(clientRecord._internalModel, hash);
         } else {
-          var record = store.getById(typeName, hash.id);
+          var record = store.peekRecord(typeName, hash.id);
           if (record && !record.get('isEmpty')) {
-            store.didSaveRecord(record, hash);
+            store.didSaveRecord(record._internalModel, hash);
           } else {
             store.push(typeName, hash);
           }
         }
       },
 
-      keyForEmbeddedAttribute: function (attr) {
-        var key = this.keyForAttribute(attr);
-        return this.formatEmbeddedKey ? this.formatEmbeddedKey(key) : key;
+      keyForEmbeddedRelationship: function (key, typeClass, method) {
+        var _key = this.keyForAttribute(key, method);
+        return this.formatEmbeddedKey ? this.formatEmbeddedKey(key, typeClass, method) : _key;
       },
 
       keyForRelationship: function (key, typeClass, method) {
@@ -15475,11 +15480,11 @@
             }
           }
         } else if (includeRecords) {
-          key = this.keyForAttribute(attr, 'serialize');
+          key = this.keyForEmbeddedRelationship(attr, relationship.kind, 'serialize');
           if (!embeddedSnapshot) {
             json[key] = null;
           } else {
-            embeddedRecord = embeddedSnapshot.record;
+            var embeddedRecord = embeddedSnapshot.record;
             var serializedEmbeddedRecord = embeddedRecord.serialize({ includeId: true });
             if (embeddedRecord.get('isDeleted')) {
               serializedEmbeddedRecord['_destroy'] = true;
@@ -15588,10 +15593,10 @@
         var includeRecords = this.hasSerializeRecordsOption(attr);
         var key, hasMany;
         if (includeIds) {
-          key = this.keyForEmbeddedAttribute(attr);
+          key = this.keyForRelationship(attr, relationship.kind, 'serialize');
           json[key] = snapshot.hasMany(attr, { ids: true });
         } else if (includeRecords) {
-          key = this.keyForAttribute(attr, 'serialize');
+          key = this.keyForEmbeddedRelationship(attr, relationship.kind, 'serialize');
           hasMany = snapshot.hasMany(attr);
 
           Ember.warn('The embedded relationship \'' + key + '\' is undefined for \'' + snapshot.modelName + '\' with id \'' + snapshot.id + '\'. Please include it in your original payload.', Ember.typeOf(hasMany) !== 'undefined', { id: 'ds.serializer.embedded-relationship-undefined' });
@@ -15937,10 +15942,10 @@
       var relationship = { data: belongsTo };
 
       ember$data$lib$serializers$embedded$records$mixin$$set(hash, 'data.relationships.' + key, relationship);
-    }var ember$data$lib$system$model$embedded_model_mixin$$forEach = Ember.EnumerableUtils.forEach;
+    }var ember$data$lib$system$model$embedded$model$mixin$$forEach = Ember.EnumerableUtils.forEach;
 
-    var ember$data$lib$system$model$embedded_model_mixin$$EmbeddedModelMixin = Ember.Mixin.create({
-      _setup: function () {
+    var ember$data$lib$system$model$embedded$model$mixin$$EmbeddedModelMixin = Ember.Mixin.create({
+      init: function () {
         this._inFlightEmbeddedRecords = Ember.Map.create();
         this._super();
       },
@@ -15996,14 +16001,14 @@
       forEachInFlightEmbeddedRecord: function (callback) {
         this._inFlightEmbeddedRecords.forEach(function (recordArray, relationKey) {
           var i = 0;
-          ember$data$lib$system$model$embedded_model_mixin$$forEach(recordArray, function (record) {
+          ember$data$lib$system$model$embedded$model$mixin$$forEach(recordArray, function (record) {
             callback(relationKey, record, i++);
           });
         });
       }
     });
 
-    var ember$data$lib$system$model$embedded_model_mixin$$default = ember$data$lib$system$model$embedded_model_mixin$$EmbeddedModelMixin;
+    var ember$data$lib$system$model$embedded$model$mixin$$default = ember$data$lib$system$model$embedded$model$mixin$$EmbeddedModelMixin;
 
     /**
       `DS.belongsTo` is used to define One-To-One and One-To-Many
@@ -17047,7 +17052,7 @@
       ember$data$lib$core$$default.ActiveModelSerializer = activemodel$adapter$lib$system$active$model$serializer$$default;
     }
     ember$data$lib$core$$default.EmbeddedRecordsMixin = ember$data$lib$serializers$embedded$records$mixin$$default;
-    ember$data$lib$core$$default.EmbeddedModelMixin = ember$data$lib$system$model$embedded_model_mixin$$default;
+    ember$data$lib$core$$default.EmbeddedModelMixin = ember$data$lib$system$model$embedded$model$mixin$$default;
 
     ember$data$lib$core$$default.belongsTo = ember$data$lib$system$relationships$belongs$to$$default;
     ember$data$lib$core$$default.hasMany = ember$data$lib$system$relationships$has$many$$default;

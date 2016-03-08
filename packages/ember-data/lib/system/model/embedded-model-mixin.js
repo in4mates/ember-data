@@ -1,7 +1,7 @@
 var forEach = Ember.EnumerableUtils.forEach;
 
 var EmbeddedModelMixin = Ember.Mixin.create({
-  _setup: function() {
+  init: function() {
     this._inFlightEmbeddedRecords = Ember.Map.create();
     this._super();
   },

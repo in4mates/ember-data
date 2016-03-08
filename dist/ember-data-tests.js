@@ -28778,7 +28778,7 @@ QUnit.test('ember-data/lib/serializers.js should pass jshint', function(assert) 
 if (!QUnit.urlParams.nojshint) {
 QUnit.module('JSHint - ember-data/lib/serializers');
 QUnit.test('ember-data/lib/serializers/embedded-records-mixin.js should pass jshint', function(assert) { 
-  assert.ok(false, 'ember-data/lib/serializers/embedded-records-mixin.js should pass jshint.\nember-data/lib/serializers/embedded-records-mixin.js: line 425, col 53, Missing semicolon.\nember-data/lib/serializers/embedded-records-mixin.js: line 288, col 9, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 289, col 40, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 290, col 13, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 292, col 11, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 296, col 73, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 298, col 11, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 298, col 63, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 299, col 11, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 301, col 9, \'embeddedRecord\' is not defined.\nember-data/lib/serializers/embedded-records-mixin.js: line 305, col 57, \'embeddedRecord\' is not defined.\n\n11 errors'); 
+  assert.ok(true, 'ember-data/lib/serializers/embedded-records-mixin.js should pass jshint.'); 
 });
 
 }
@@ -28903,8 +28903,8 @@ QUnit.test('ember-data/lib/system/model/attributes.js should pass jshint', funct
 }
 if (!QUnit.urlParams.nojshint) {
 QUnit.module('JSHint - ember-data/lib/system/model');
-QUnit.test('ember-data/lib/system/model/embedded_model_mixin.js should pass jshint', function(assert) { 
-  assert.ok(true, 'ember-data/lib/system/model/embedded_model_mixin.js should pass jshint.'); 
+QUnit.test('ember-data/lib/system/model/embedded-model-mixin.js should pass jshint', function(assert) { 
+  assert.ok(true, 'ember-data/lib/system/model/embedded-model-mixin.js should pass jshint.'); 
 });
 
 }

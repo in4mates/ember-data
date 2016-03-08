@@ -207,6 +207,11 @@ var RESTSerializer = JSONSerializer.extend({
     return hash;
   },
 
+  // base-class method that is overriden by EmbeddedRecordsMixin
+  storePush: function(store, modelName, hash) {
+    store.push(modelName, hash);
+  },
+
   /**
     Normalizes an array of resource payloads and returns a JSON-API Document
     with primary data and, if any, included data as `{ data, included }`.
@@ -517,7 +522,7 @@ var RESTSerializer = JSONSerializer.extend({
         if (isFirstCreatedRecord || isUpdatedRecord) {
           primaryRecord = hash;
         } else {
-          store.push(modelName, hash);
+          this.storePush(store, modelName, hash);
         }
       }, this);
     }

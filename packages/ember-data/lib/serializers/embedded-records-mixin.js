@@ -140,20 +140,20 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
 
     // if embedded hash contains client id, mimic a createRecord/save
     if (clientRecord) {
-      store.didSaveRecord(clientRecord, hash);
+      store.didSaveRecord(clientRecord._internalModel, hash);
     } else {
-      var record = store.getById(typeName, hash.id);
+      var record = store.peekRecord(typeName, hash.id);
       if(record && !record.get('isEmpty')){
-          store.didSaveRecord(record, hash);
+          store.didSaveRecord(record._internalModel, hash);
       }else{
         store.push(typeName, hash);
       }
     }
   },
 
-  keyForEmbeddedAttribute: function(attr){
-    var key = this.keyForAttribute(attr);
-    return this.formatEmbeddedKey ? this.formatEmbeddedKey(key) : key;
+  keyForEmbeddedRelationship: function(key, typeClass, method){
+    var _key = this.keyForAttribute(key, method);
+    return this.formatEmbeddedKey ? this.formatEmbeddedKey(key, typeClass, method) : _key;
   },
 
   keyForRelationship: function(key, typeClass, method) {
@@ -281,11 +281,11 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
         }
       }
     } else if (includeRecords) {
-      key = this.keyForAttribute(attr, 'serialize');
+      key = this.keyForEmbeddedRelationship(attr, relationship.kind, 'serialize');
       if (!embeddedSnapshot) {
         json[key] = null;
       } else {
-        embeddedRecord = embeddedSnapshot.record;
+        var embeddedRecord = embeddedSnapshot.record;
         var serializedEmbeddedRecord = embeddedRecord.serialize({ includeId: true });
         if (embeddedRecord.get('isDeleted')) {
           serializedEmbeddedRecord['_destroy'] = true;
@@ -409,10 +409,10 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
     var includeRecords = this.hasSerializeRecordsOption(attr);
     var key, hasMany;
     if (includeIds) {
-      key = this.keyForEmbeddedAttribute(attr);
+      key = this.keyForRelationship(attr, relationship.kind, 'serialize');
       json[key] = snapshot.hasMany(attr, { ids: true });
     } else if (includeRecords) {
-      key = this.keyForAttribute(attr, 'serialize');
+      key = this.keyForEmbeddedRelationship(attr, relationship.kind, 'serialize');
       hasMany = snapshot.hasMany(attr);
 
       Ember.warn(
@@ -422,7 +422,7 @@ var EmbeddedRecordsMixin = Ember.Mixin.create({
       );
 
       json[key] = Ember.A(hasMany).map(function(embeddedSnapshot) {
-        var embeddedRecord = embeddedSnapshot.record
+        var embeddedRecord = embeddedSnapshot.record;
         var embeddedJson = embeddedRecord.serialize({ includeId: true });
         this.removeEmbeddedForeignKey(snapshot, embeddedSnapshot, relationship, embeddedJson);
 
