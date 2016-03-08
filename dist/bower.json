@@ -1,6 +1,6 @@
 {
   "name": "ember-data",
-  "version": "1.13.16",
+  "version": "1.13.16#embedded-client-id-1_13",
   "main": "ember-data.js",
   "dependencies": {
     "ember": ">= 1.8.1 < 2.0.0"

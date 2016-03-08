@@ -7744,7 +7744,7 @@
     });
 
     var ember$data$lib$core$$DS = Ember.Namespace.create({
-      VERSION: '1.13.16'
+      VERSION: '1.13.16#embedded-client-id-1_13'
     });
 
     if (Ember.libraries) {
